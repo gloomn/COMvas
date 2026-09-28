@@ -56,11 +56,17 @@ async def get_stage_viewer():
     viewer_html = os.path.join(frontend_dir, "viewer", "index.html")
     return FileResponse(viewer_html)
 
+@app.get("/qrcode")
+async def get_qrcode_page():
+    qr_html = os.path.join(frontend_dir, "qrcode", "index.html")
+    return FileResponse(qr_html)
+
 @app.get("/")
 async def root():
     return {
         "project": settings.PROJECT_NAME,
         "status": "online",
         "viewer_url": "/viewer",
-        "draw_pad_url": "/draw"
+        "draw_pad_url": "/draw",
+        "qrcode_url": "/qrcode"
     }
