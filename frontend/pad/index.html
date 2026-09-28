@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>라이브 스케치 단체 댄스 - 드로잉 패드</title>
+  <link rel="stylesheet" href="/frontend/pad/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">🎨 Live Sketch Stage</div>
+      <div class="token-badge" id="tokenBadge">토큰 검증 중...</div>
+    </header>
+
+    <!-- Error Banner -->
+    <div id="errorBanner" class="error-banner hidden">
+      유효하지 않거나 이미 사용된 QR 코드입니다. 부스에서 새로운 QR 코드를 받으세요!
+    </div>
+
+    <!-- Drawing Canvas Section -->
+    <main class="canvas-wrapper">
+      <div class="canvas-card">
+        <!-- Transparent Vitruvian Da-ja Silhouette Overlay Canvas -->
+        <canvas id="guideCanvas" width="512" height="512" class="guide-canvas"></canvas>
+        <!-- Main User Drawing Canvas -->
+        <canvas id="drawCanvas" width="512" height="512" class="draw-canvas"></canvas>
+      </div>
+
+      <div class="guide-tip">
+        <span>💡 <b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>
+      </div>
+    </main>
+
+    <!-- Toolbar Controls -->
+    <footer class="controls">
+      <div class="color-palette">
+        <button class="color-btn active" style="background-color: #000000;" data-color="#000000"></button>
+        <button class="color-btn" style="background-color: #ff3b30;" data-color="#ff3b30"></button>
+        <button class="color-btn" style="background-color: #ff9500;" data-color="#ff9500"></button>
+        <button class="color-btn" style="background-color: #34c759;" data-color="#34c759"></button>
+        <button class="color-btn" style="background-color: #007aff;" data-color="#007aff"></button>
+        <button class="color-btn" style="background-color: #af52de;" data-color="#af52de"></button>
+      </div>
+
+      <div class="brush-tools">
+        <button id="clearBtn" class="btn btn-secondary">🗑️ 다시 그리기</button>
+        <button id="submitBtn" class="btn btn-primary">🚀 무대에 전송하기</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/frontend/pad/js/silhouette.js"></script>
+  <script src="/frontend/pad/js/canvas.js"></script>
+  <script src="/frontend/pad/js/app.js"></script>
+</body>
+</html>

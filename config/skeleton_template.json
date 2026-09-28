@@ -1,0 +1,21 @@
+{
+  "width": 512,
+  "height": 512,
+  "skeleton": [
+    {"loc": [256, 90], "name": "head"},
+    {"loc": [256, 140], "name": "neck"},
+    {"loc": [256, 260], "name": "root"},
+    {"loc": [200, 160], "name": "right_shoulder"},
+    {"loc": [140, 160], "name": "right_elbow"},
+    {"loc": [80, 160], "name": "right_wrist"},
+    {"loc": [312, 160], "name": "left_shoulder"},
+    {"loc": [372, 160], "name": "left_elbow"},
+    {"loc": [432, 160], "name": "left_wrist"},
+    {"loc": [220, 270], "name": "right_hip"},
+    {"loc": [180, 370], "name": "right_knee"},
+    {"loc": [150, 460], "name": "right_ankle"},
+    {"loc": [292, 270], "name": "left_hip"},
+    {"loc": [332, 370], "name": "left_knee"},
+    {"loc": [362, 460], "name": "left_ankle"}
+  ]
+}

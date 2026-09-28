@@ -1,0 +1,20 @@
+# FastAPI & Web Framework
+fastapi==0.110.0
+uvicorn[standard]==0.28.0
+pydantic==2.6.4
+pydantic-settings==2.2.1
+websockets==12.0
+python-multipart==0.0.9
+
+# Database & ORM
+SQLAlchemy==2.0.28
+
+# Image Processing & AI (Note: PyTorch & torchvision must be installed via NVIDIA Jetson wheel / source build)
+Pillow==10.2.0
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
+scipy==1.12.0
+
+# Utility & QR Generation
+qrcode[pil]==7.4.2
+jinja2==3.1.3
