@@ -19,11 +19,11 @@ class StageCharacter {
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
     this.sprite.scale.set(0.35);
     
-    // Spawn at random location near screen center
+    // Spawn at random horizontal location but fixed vertical middle
     const w = window.innerWidth;
     const h = window.innerHeight;
-    this.x = w * 0.2 + Math.random() * (w * 0.6);
-    this.y = h * 0.3 + Math.random() * (h * 0.5);
+    this.x = w * 0.1 + Math.random() * (w * 0.8);
+    this.y = h * 0.5; // Strictly spawn in the vertical middle
     this.sprite.x = this.x;
     this.sprite.y = this.y;
 
@@ -38,27 +38,25 @@ class StageCharacter {
   }
 
   pickNewTarget() {
-    const margin = 100;
+    const margin = 50;
     const w = window.innerWidth - margin * 2;
-    const h = window.innerHeight - margin * 2;
     
+    // Only pick a new target horizontally (좌우로만 이동)
     this.targetX = margin + Math.random() * w;
-    this.targetY = margin + Math.random() * h;
+    this.targetY = this.y; // Keep Y coordinate exactly the same!
   }
 
   update(delta) {
     if (this.isFadingOut) return;
 
-    // Move character along random stage path
+    // Move character along horizontal path
     const dx = this.targetX - this.sprite.x;
-    const dy = this.targetY - this.sprite.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
+    const dist = Math.abs(dx);
 
-    if (dist < 20) {
+    if (dist < 10) {
       this.pickNewTarget();
     } else {
-      this.sprite.x += (dx / dist) * this.speed * delta;
-      this.sprite.y += (dy / dist) * this.speed * delta;
+      this.sprite.x += Math.sign(dx) * this.speed * delta;
       
       // Flip sprite orientation depending on movement direction
       if (dx > 0) this.sprite.scale.x = Math.abs(this.sprite.scale.x);
@@ -68,7 +66,7 @@ class StageCharacter {
     // Strict border clamping to keep characters strictly within the screen
     const margin = 50;
     this.sprite.x = Math.max(margin, Math.min(this.sprite.x, window.innerWidth - margin));
-    this.sprite.y = Math.max(margin, Math.min(this.sprite.y, window.innerHeight - margin));
+    this.sprite.y = this.y; // Force Y coordinate lock
 
     // Sort z-index by Y coordinate for natural depth sorting
     this.sprite.zIndex = this.sprite.y;

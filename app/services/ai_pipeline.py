@@ -12,7 +12,7 @@ from config.settings import settings
 
 os.makedirs(settings.OUTPUT_DIR, exist_ok=True)
 
-async def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: dict = None, progress_callback=None) -> dict:
+def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: dict = None, progress_callback=None) -> dict:
     """
     Executes complete Meta Animated Drawings AI pipeline:
     1. Removes background to create `texture.png` and `mask.png`
@@ -34,8 +34,14 @@ async def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skele
     
     # Save mask.png (Required by Meta Animated Drawings)
     # Extract alpha channel to create a binary mask
+    import cv2
     np_img = np.array(transparent_img)
     mask = (np_img[:, :, 3] > 0).astype(np.uint8) * 255
+    
+    # 널럴하게(Aggressively) dilate the mask to ensure skeleton points fall inside the mesh!
+    kernel = np.ones((35, 35), np.uint8)
+    mask = cv2.dilate(mask, kernel, iterations=1)
+    
     mask_img = Image.fromarray(mask, mode="L")
     mask_path = os.path.join(char_dir, "mask.png")
     mask_img.save(mask_path, "PNG")

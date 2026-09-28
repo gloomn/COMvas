@@ -63,7 +63,12 @@ class JetsonAIQueueManager:
                 def progress_cb(p, s):
                     self.update_progress(task_id, p, s)
 
-                result = await process_sketch_pipeline(task_id, image_bytes, custom_skeleton, progress_callback=progress_cb)
+                # The pipeline contains heavily CPU-bound synchronous code (OpenCV, MediaPipe, rendering).
+                # We MUST run it in a thread, otherwise it blocks the entire FastAPI event loop,
+                # causing progress polling requests to hang until it's finished!
+                result = await asyncio.to_thread(
+                    process_sketch_pipeline, task_id, image_bytes, custom_skeleton, progress_cb
+                )
                 
                 self.update_progress(task_id, 100, "완료!")
                 # Broadcast new character to HDMI WebGL viewer
