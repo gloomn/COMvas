@@ -2,6 +2,13 @@ import os
 import io
 import base64
 from PIL import Image
+
+# Fix GLFW and PyOpenGL headless/SSH rendering errors on Jetson
+if "DISPLAY" not in os.environ:
+    os.environ["DISPLAY"] = ":0"
+if "PYOPENGL_PLATFORM" not in os.environ:
+    os.environ["PYOPENGL_PLATFORM"] = "egl"
+
 from animated_drawings import render
 from config.settings import settings
 import yaml
