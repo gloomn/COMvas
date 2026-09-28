@@ -66,7 +66,7 @@ class MetaAnimator:
             render.start(mvc_cfg_path)
         except Exception as e:
             print(f"[Animator] Error rendering animation: {e}")
-            return []
+            return [], chosen_motion.split('/')[-1].split('.')[0]
 
         # Extract frames from generated GIF
         frames_b64 = []
@@ -88,6 +88,6 @@ class MetaAnimator:
             except:
                 pass
                 
-        return frames_b64
+        return frames_b64, chosen_motion.split('/')[-1].split('.')[0]
 
 animator = MetaAnimator()

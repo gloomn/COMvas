@@ -27,7 +27,14 @@ class StageCharacter {
 
     // Movement Velocity (Walk horizontally left or right)
     this.speed = 1.0 + Math.random() * 0.6;
-    this.vx = (Math.random() > 0.5 ? 1 : -1) * this.speed;
+    
+    // Check animation type: only moving animations (e.g. running jump) should travel across the screen
+    if (data.motion === 'jumping') {
+      this.vx = (Math.random() > 0.5 ? 1 : -1) * this.speed;
+    } else {
+      // Stationary animations (jumping_jacks, dab, jesse_dance) stay exactly where they spawn
+      this.vx = 0;
+    }
 
     // Add to WebGL stage
     this.stageApp.stage.addChild(this.sprite);
@@ -40,7 +47,9 @@ class StageCharacter {
     this.sprite.x += this.vx * delta;
 
     // 2. Exact Border Bouncing Logic
-    const margin = 90; // Half of character's physical width (512 * 0.35 / 2 = ~90)
+    // margin=40 allows the visible pixels (arms) to perfectly touch the screen edge
+    // because the 512x512 GIF has some transparent padding around the character.
+    const margin = 40; 
     
     // Left border hit
     if (this.sprite.x <= margin) {

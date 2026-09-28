@@ -84,7 +84,7 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     
     try:
         # 3. Meta Animated Drawings render to GIF -> extract frames
-        dance_frames_b64 = animator.generate_dance_frames(char_dir)
+        dance_frames_b64, motion_name = animator.generate_dance_frames(char_dir)
     finally:
         rendering_active = False
         sim_thread.join()
@@ -97,5 +97,6 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
         "image_base64": f"data:image/png;base64,{img_b64}",
         "frames": dance_frames_b64,
         "skeleton": skeleton_data,
-        "frame_count": len(dance_frames_b64)
+        "frame_count": len(dance_frames_b64),
+        "motion": motion_name
     }
