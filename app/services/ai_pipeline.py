@@ -66,8 +66,28 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     
     if progress_callback: progress_callback(50, "애니메이션 렌더링 중... (최대 30초 소요)")
     
-    # 3. Meta Animated Drawings render to GIF -> extract frames
-    dance_frames_b64 = animator.generate_dance_frames(char_dir)
+    import threading
+    import time
+    
+    # Simulate smooth progress from 50% to 95% while the synchronous render is blocking
+    rendering_active = True
+    def progress_simulator():
+        curr_progress = 50
+        while rendering_active and curr_progress < 95:
+            time.sleep(0.7) # Increment roughly every 0.7s (reaches 95% in ~30 seconds)
+            curr_progress += 1
+            if rendering_active and progress_callback:
+                progress_callback(curr_progress, "애니메이션 렌더링 중... (최대 30초 소요)")
+                
+    sim_thread = threading.Thread(target=progress_simulator)
+    sim_thread.start()
+    
+    try:
+        # 3. Meta Animated Drawings render to GIF -> extract frames
+        dance_frames_b64 = animator.generate_dance_frames(char_dir)
+    finally:
+        rendering_active = False
+        sim_thread.join()
     
     if progress_callback: progress_callback(99, "비디오 변환 및 전송 준비 중...")
     
