@@ -12,11 +12,11 @@ from config.settings import settings
 
 os.makedirs(settings.OUTPUT_DIR, exist_ok=True)
 
-async def process_sketch_pipeline(task_id: str, image_bytes: bytes) -> dict:
+async def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: dict = None) -> dict:
     """
     Executes complete Meta Animated Drawings AI pipeline:
     1. Removes background to create `texture.png` and `mask.png`
-    2. Auto-aligns pose using MediaPipe to create `char_cfg.yaml`
+    2. Auto-aligns pose using MediaPipe (or uses custom skeleton from UI) to create `char_cfg.yaml`
     3. Generates rendered GIF frames of a normal dance
     """
     # Create specific character directory for Meta Animated Drawings
@@ -43,8 +43,11 @@ async def process_sketch_pipeline(task_id: str, image_bytes: bytes) -> dict:
     transparent_img.save(buffered, format="PNG")
     img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
-    # 2. Skeleton alignment (MediaPipe)
-    skeleton_data = pose_estimator.get_aligned_skeleton(texture_path)
+    # 2. Skeleton alignment
+    if custom_skeleton:
+        skeleton_data = custom_skeleton
+    else:
+        skeleton_data = pose_estimator.get_aligned_skeleton(texture_path)
     
     # Save char_cfg.yaml (Required by Meta Animated Drawings)
     char_cfg_path = os.path.join(char_dir, "char_cfg.yaml")

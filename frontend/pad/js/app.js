@@ -27,6 +27,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     showError("서버와 통신할 수 없습니다. Jetson 서버 상태를 확인하세요.");
   }
 
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+  const drawingControls = document.getElementById('drawingControls');
+  const jointControls = document.getElementById('jointControls');
+  const guideTip = document.getElementById('guideTip');
+  
+  // Initialize Skeleton UI
+  const skeletonUI = new window.SkeletonUI('skeletonLayer');
+
+  // Next Button (Switch to Skeleton Mode)
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      drawingControls.classList.add('hidden');
+      jointControls.classList.remove('hidden');
+      guideTip.classList.add('hidden');
+      skeletonUI.show();
+    });
+  }
+
+  // Back Button (Switch to Drawing Mode)
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      jointControls.classList.add('hidden');
+      drawingControls.classList.remove('hidden');
+      guideTip.classList.remove('hidden');
+      skeletonUI.hide();
+    });
+  }
+
   // 2. Submit drawing handler
   submitBtn.addEventListener('click', async () => {
     submitBtn.disabled = true;
@@ -37,6 +66,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const formData = new FormData();
       formData.append('token', token);
       formData.append('file', blob, 'drawing.png');
+      
+      // Export custom skeleton and append to form
+      const skeletonData = skeletonUI.exportSkeleton();
+      formData.append('skeleton_json', JSON.stringify(skeletonData));
 
       const res = await fetch('/api/v1/drawing/submit', {
         method: 'POST',

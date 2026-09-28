@@ -43,16 +43,16 @@ class JetsonAIQueueManager:
         for ws in disconnected:
             self.unregister_websocket(ws)
 
-    async def enqueue_task(self, task_id: str, image_bytes: bytes):
-        await self.queue.put((task_id, image_bytes))
+    async def enqueue_task(self, task_id: str, image_bytes: bytes, custom_skeleton: dict = None):
+        await self.queue.put((task_id, image_bytes, custom_skeleton))
         print(f"[JetsonAIQueueManager] Enqueued task {task_id}. Queue size: {self.queue.qsize()}")
 
     async def _worker_loop(self):
         while True:
-            task_id, image_bytes = await self.queue.get()
+            task_id, image_bytes, custom_skeleton = await self.queue.get()
             try:
                 print(f"[JetsonAIQueueManager] Processing task {task_id}...")
-                result = await process_sketch_pipeline(task_id, image_bytes)
+                result = await process_sketch_pipeline(task_id, image_bytes, custom_skeleton)
                 
                 # Broadcast new character to HDMI WebGL viewer
                 await self.broadcast({

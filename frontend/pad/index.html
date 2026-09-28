@@ -21,21 +21,25 @@
     </div>
 
     <!-- Drawing Canvas Section -->
-    <main class="canvas-wrapper">
-      <div class="canvas-card">
+    <main class="canvas-wrapper" style="position: relative;">
+      <div class="canvas-card" style="position: relative;">
         <!-- Transparent Vitruvian Da-ja Silhouette Overlay Canvas -->
         <canvas id="guideCanvas" width="512" height="512" class="guide-canvas"></canvas>
         <!-- Main User Drawing Canvas -->
         <canvas id="drawCanvas" width="512" height="512" class="draw-canvas"></canvas>
+        <!-- Interactive Skeleton Layer (Hidden initially) -->
+        <div id="skeletonLayer" class="skeleton-layer hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; pointer-events: none;">
+            <!-- Draggable joint dots will be injected here via JS -->
+        </div>
       </div>
 
-      <div class="guide-tip">
+      <div class="guide-tip" id="guideTip">
         <span>💡 <b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>
       </div>
     </main>
 
     <!-- Toolbar Controls -->
-    <footer class="controls">
+    <footer class="controls" id="drawingControls">
       <div class="color-palette">
         <button class="color-btn active" style="background-color: #000000;" data-color="#000000"></button>
         <button class="color-btn" style="background-color: #ff3b30;" data-color="#ff3b30"></button>
@@ -51,7 +55,16 @@
       </div>
 
       <div class="brush-tools">
-        <button id="clearBtn" class="btn btn-secondary">🗑️ 다시 그리기</button>
+        <button id="clearBtn" class="btn btn-secondary">🗑️ 지우기</button>
+        <button id="nextBtn" class="btn btn-primary">➡️ 뼈대 맞추기</button>
+      </div>
+    </footer>
+
+    <!-- Joint Adjust Controls (Hidden initially) -->
+    <footer class="controls hidden" id="jointControls">
+      <div class="brush-tools" style="width: 100%; justify-content: space-between;">
+        <button id="backBtn" class="btn btn-secondary">⬅️ 다시 그리기</button>
+        <div style="font-size: 0.9rem; color: #555;">점을 드래그하여 관절에 맞추세요</div>
         <button id="submitBtn" class="btn btn-primary">🚀 무대에 전송하기</button>
       </div>
     </footer>
@@ -59,6 +72,7 @@
 
   <script src="/frontend/pad/js/silhouette.js"></script>
   <script src="/frontend/pad/js/canvas.js"></script>
+  <script src="/frontend/pad/js/skeleton_ui.js"></script>
   <script src="/frontend/pad/js/app.js"></script>
 </body>
 </html>

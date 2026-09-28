@@ -36,11 +36,6 @@ class MetaAnimator:
                     'retarget_cfg': retarget_cfg
                 }]
             },
-            'view': {
-                # Bring the camera closer to make it bigger, but keep it at 1.5 so it doesn't leave the screen!
-                'CAMERA_POS': [0.0, 0.7, 1.5],
-                'WINDOW_DIMENSIONS': [512, 512]
-            },
             'controller': {
                 'MODE': 'video_render',
                 'OUTPUT_VIDEO_PATH': output_gif

@@ -10,6 +10,7 @@ router = APIRouter(prefix="/api/v1/drawing", tags=["Drawing Submission"])
 @router.post("/submit")
 async def submit_drawing(
     token: str = Form(...),
+    skeleton_json: str = Form(None),
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
@@ -32,9 +33,18 @@ async def submit_drawing(
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Empty image file provided.")
 
+    # Parse custom skeleton if provided
+    custom_skeleton = None
+    if skeleton_json:
+        import json
+        try:
+            custom_skeleton = json.loads(skeleton_json)
+        except:
+            pass
+
     # 3. Create task ID and enqueue for AI processing
     task_id = f"char_{uuid.uuid4().hex[:8]}"
-    await queue_manager.enqueue_task(task_id, image_bytes)
+    await queue_manager.enqueue_task(task_id, image_bytes, custom_skeleton)
 
     return {
         "status": "ACCEPTED",
