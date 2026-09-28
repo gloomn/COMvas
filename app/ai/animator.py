@@ -15,7 +15,7 @@ class MetaAnimator:
     def __init__(self):
         pass
 
-    def generate_dance_frames(self, char_dir: str) -> list:
+    def generate_dance_frames(self, char_dir: str, requested_motion: str = "random") -> list:
         """
         Runs Meta Animated Drawings pipeline.
         Returns a list of base64 PNG frames for PIXI.AnimatedSprite.
@@ -25,15 +25,20 @@ class MetaAnimator:
         import random
         
         # Define available dynamic motions and their corresponding retarget configs
-        available_motions = [
-            ('motion/dab.yaml', 'retarget/fair1_ppf.yaml'),
-            ('motion/jumping.yaml', 'retarget/fair1_ppf.yaml'),          # running jump
-            ('motion/jumping_jacks.yaml', 'retarget/cmu1_pfp.yaml'),
-            ('motion/jesse_dance.yaml', 'retarget/mixamo_fff.yaml')
-        ]
+        available_motions = {
+            'dab': ('motion/dab.yaml', 'retarget/fair1_ppf.yaml'),
+            'jumping': ('motion/jumping.yaml', 'retarget/fair1_ppf.yaml'),
+            'jumping_jacks': ('motion/jumping_jacks.yaml', 'retarget/cmu1_pfp.yaml'),
+            'jesse_dance': ('motion/jesse_dance.yaml', 'retarget/mixamo_fff.yaml'),
+            'wave_hello': ('motion/wave_hello.yaml', 'retarget/fair1_ppf.yaml'),
+            'zombie': ('motion/zombie.yaml', 'retarget/fair1_ppf.yaml')
+        }
         
-        # Randomly select a motion for this character
-        chosen_motion, chosen_retarget = random.choice(available_motions)
+        # Select motion
+        if requested_motion in available_motions:
+            chosen_motion, chosen_retarget = available_motions[requested_motion]
+        else:
+            chosen_motion, chosen_retarget = random.choice(list(available_motions.values()))
         
         motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config', chosen_motion)
         retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config', chosen_retarget)

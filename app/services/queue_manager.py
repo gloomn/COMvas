@@ -48,14 +48,14 @@ class JetsonAIQueueManager:
         for ws in disconnected:
             self.unregister_websocket(ws)
 
-    async def enqueue_task(self, task_id: str, image_bytes: bytes, custom_skeleton: dict = None):
+    async def enqueue_task(self, task_id: str, image_bytes: bytes, custom_skeleton: dict = None, motion: str = "random"):
         self.update_progress(task_id, 0, "대기열 진입 중...")
-        await self.queue.put((task_id, image_bytes, custom_skeleton))
+        await self.queue.put((task_id, image_bytes, custom_skeleton, motion))
         print(f"[JetsonAIQueueManager] Enqueued task {task_id}. Queue size: {self.queue.qsize()}")
 
     async def _worker_loop(self):
         while True:
-            task_id, image_bytes, custom_skeleton = await self.queue.get()
+            task_id, image_bytes, custom_skeleton, motion = await self.queue.get()
             try:
                 self.update_progress(task_id, 5, "처리 준비 중...")
                 
@@ -67,7 +67,7 @@ class JetsonAIQueueManager:
                 # We MUST run it in a thread, otherwise it blocks the entire FastAPI event loop,
                 # causing progress polling requests to hang until it's finished!
                 result = await asyncio.to_thread(
-                    process_sketch_pipeline, task_id, image_bytes, custom_skeleton, progress_cb
+                    process_sketch_pipeline, task_id, image_bytes, custom_skeleton, progress_cb, motion
                 )
                 
                 self.update_progress(task_id, 100, "완료!")

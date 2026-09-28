@@ -17,7 +17,7 @@ class StageCharacter {
     }
 
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
-    this.sprite.scale.set(0.35);
+    this.sprite.scale.set(0.45); // Increased scale slightly as requested
 
     // Spawn strictly in the exact center of the PIXI screen
     this.x = this.stageApp.screen.width / 2;
@@ -31,8 +31,10 @@ class StageCharacter {
     // Check animation type: only moving animations (e.g. running jump) should travel across the screen
     if (data.motion === 'jumping') {
       this.vx = (Math.random() > 0.5 ? 1 : -1) * this.speed;
+    } else if (data.motion === 'zombie') {
+      this.vx = (Math.random() > 0.5 ? 1 : -1) * (this.speed * 0.4); // Zombies walk slower!
     } else {
-      // Stationary animations (jumping_jacks, dab, jesse_dance) stay exactly where they spawn
+      // Stationary animations (jumping_jacks, dab, jesse_dance, wave_hello) stay exactly where they spawn
       this.vx = 0;
     }
 
@@ -47,9 +49,9 @@ class StageCharacter {
     this.sprite.x += this.vx * delta;
 
     // 2. Exact Border Bouncing Logic using PIXI logical screen width
-    // margin=40 allows the visible pixels (arms) to perfectly touch the screen edge
+    // margin=50 allows the visible pixels (arms) to perfectly touch the screen edge
     // because the 512x512 GIF has some transparent padding around the character.
-    const margin = 40; 
+    const margin = 50; 
     
     // Left border hit
     if (this.sprite.x <= margin) {

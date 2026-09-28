@@ -11,6 +11,7 @@ router = APIRouter(prefix="/api/v1/drawing", tags=["Drawing Submission"])
 async def submit_drawing(
     token: str = Form(...),
     skeleton_json: str = Form(None),
+    motion: str = Form("random"),
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
@@ -44,7 +45,7 @@ async def submit_drawing(
 
     # 3. Create task ID and enqueue for AI processing
     task_id = f"char_{uuid.uuid4().hex[:8]}"
-    await queue_manager.enqueue_task(task_id, image_bytes, custom_skeleton)
+    await queue_manager.enqueue_task(task_id, image_bytes, custom_skeleton, motion)
 
     return {
         "status": "ACCEPTED",

@@ -73,10 +73,22 @@
 
     <!-- Joint Adjust Controls (Hidden initially) -->
     <footer class="controls hidden" id="jointControls">
-      <div class="brush-tools" style="width: 100%; justify-content: space-between;">
-        <button id="backBtn" class="btn btn-secondary">⬅️ 다시 그리기</button>
-        <div style="font-size: 0.9rem; color: #555;">점을 드래그하여 관절에 맞추세요</div>
-        <button id="submitBtn" class="btn btn-primary">🚀 무대에 전송하기</button>
+      <div style="width: 100%; margin-bottom: 12px;">
+        <label for="motionSelect" style="font-size: 0.85rem; color: #555; font-weight: 600; display: block; margin-bottom: 6px;">🎬 어떤 모션으로 춤출까요?</label>
+        <select id="motionSelect" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; font-size: 0.95rem; background: #fff; color: #333; outline: none; cursor: pointer;">
+          <option value="random">🎲 아무거나 랜덤 (Random)</option>
+          <option value="jumping">🏃‍♂️ 달리기 (Running Jump)</option>
+          <option value="jumping_jacks">🤸 점핑잭 (Jumping Jacks)</option>
+          <option value="dab">😎 댑 댄스 (Dab Dance)</option>
+          <option value="jesse_dance">🕺 제시 댄스 (Jesse Dance)</option>
+          <option value="wave_hello">👋 인사하기 (Wave Hello)</option>
+          <option value="zombie">🧟 좀비 워킹 (Zombie Walk)</option>
+        </select>
+      </div>
+      <div class="brush-tools" style="width: 100%; justify-content: space-between; align-items: center;">
+        <button id="backBtn" class="btn btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;">⬅️ 다시 그리기</button>
+        <div style="font-size: 0.8rem; color: #777; text-align: center; line-height: 1.2;">점을 드래그하여<br>관절에 맞추세요</div>
+        <button id="submitBtn" class="btn btn-primary" style="padding: 8px 12px; font-size: 0.9rem;">🚀 무대에 전송하기</button>
       </div>
     </footer>
   </div>
@@ -84,7 +96,7 @@
   <script src="/frontend/pad/js/silhouette.js?v=3"></script>
   <script src="/frontend/pad/js/canvas.js?v=3"></script>
   <script src="/frontend/pad/js/skeleton_ui.js?v=3"></script>
-  <script src="/frontend/pad/js/app.js?v=3"></script>
+  <script src="/frontend/pad/js/app.js?v=4"></script>
 </body>
 
 </html>

@@ -77,6 +77,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const skeletonData = skeletonUI.exportSkeleton();
       formData.append('skeleton_json', JSON.stringify(skeletonData));
 
+      // Append selected motion
+      const motionSelect = document.getElementById('motionSelect');
+      if (motionSelect) {
+        formData.append('motion', motionSelect.value);
+      }
+
       const res = await fetch('/api/v1/drawing/submit', {
         method: 'POST',
         body: formData

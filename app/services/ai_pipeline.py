@@ -12,7 +12,7 @@ from config.settings import settings
 
 os.makedirs(settings.OUTPUT_DIR, exist_ok=True)
 
-def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: dict = None, progress_callback=None) -> dict:
+def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: dict = None, progress_callback=None, motion: str = "random") -> dict:
     """
     Executes complete Meta Animated Drawings AI pipeline:
     1. Removes background to create `texture.png` and `mask.png`
@@ -84,7 +84,7 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     
     try:
         # 3. Meta Animated Drawings render to GIF -> extract frames
-        dance_frames_b64, motion_name = animator.generate_dance_frames(char_dir)
+        dance_frames_b64, motion_name = animator.generate_dance_frames(char_dir, motion)
     finally:
         rendering_active = False
         sim_thread.join()
