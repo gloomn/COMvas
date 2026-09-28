@@ -1,7 +1,13 @@
 #!/bin/bash
 # Launches Chromium in Fullscreen Kiosk Mode for HDMI Display Output
 
-SERVER_URL="http://localhost:8000/viewer"
+# Gets the primary local IP address of the Jetson (so mobile phones can connect via Wi-Fi)
+LOCAL_IP=$(hostname -I | awk '{print $1}')
+if [ -z "$LOCAL_IP" ]; then
+  LOCAL_IP="localhost"
+fi
+
+SERVER_URL="http://${LOCAL_IP}:8000/viewer"
 
 echo "Launching Jetson HDMI Display Kiosk Mode..."
 echo "Connecting to: $SERVER_URL"

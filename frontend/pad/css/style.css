@@ -81,12 +81,14 @@ body {
   align-items: center;
   justify-content: center;
   margin: auto 0;
+  width: 100%;
 }
 
 .canvas-card {
   position: relative;
-  width: 340px;
-  height: 340px;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(168, 85, 247, 0.3);
@@ -187,4 +189,47 @@ body {
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.color-picker-wrapper.active {
+  transform: scale(1.15);
+  border-color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+.custom-color-input {
+  width: 150%;
+  height: 150%;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  opacity: 0;
+}
+
+.eraser-btn {
+  background-color: #f1f5f9;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #cbd5e1;
+}
+
+.eraser-btn.active {
+  border-color: #60a5fa;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
 }

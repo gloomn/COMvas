@@ -1,6 +1,9 @@
 import os
 import io
+import json
+import yaml
 import base64
+import numpy as np
 from PIL import Image
 from app.ai.bg_remover import bg_remover
 from app.ai.pose_estimator import pose_estimator
@@ -11,32 +14,49 @@ os.makedirs(settings.OUTPUT_DIR, exist_ok=True)
 
 async def process_sketch_pipeline(task_id: str, image_bytes: bytes) -> dict:
     """
-    Executes complete AI pipeline:
-    1. Removes background (PyTorch CUDA FP16)
-    2. Auto-aligns pose skeleton with fixed Vitruvian Da-ja template
-    3. Generates 2D Joint FK Breakdance animation frame sequence
+    Executes complete Meta Animated Drawings AI pipeline:
+    1. Removes background to create `texture.png` and `mask.png`
+    2. Auto-aligns pose using MediaPipe to create `char_cfg.yaml`
+    3. Generates rendered GIF frames of a normal dance
     """
+    # Create specific character directory for Meta Animated Drawings
+    char_dir = os.path.join(settings.OUTPUT_DIR, task_id)
+    os.makedirs(char_dir, exist_ok=True)
+    
     # 1. Background removal
     transparent_img = bg_remover.process_image(image_bytes)
     
-    # Save processed base image
-    img_filename = f"{task_id}_transparent.png"
-    output_path = os.path.join(settings.OUTPUT_DIR, img_filename)
-    transparent_img.save(output_path, "PNG")
+    # Save texture.png (Required by Meta Animated Drawings)
+    texture_path = os.path.join(char_dir, "texture.png")
+    transparent_img.save(texture_path, "PNG")
     
+    # Save mask.png (Required by Meta Animated Drawings)
+    # Extract alpha channel to create a binary mask
+    np_img = np.array(transparent_img)
+    mask = (np_img[:, :, 3] > 0).astype(np.uint8) * 255
+    mask_img = Image.fromarray(mask, mode="L")
+    mask_path = os.path.join(char_dir, "mask.png")
+    mask_img.save(mask_path, "PNG")
+    
+    # Convert base image to Base64 for the frontend payload
     buffered = io.BytesIO()
     transparent_img.save(buffered, format="PNG")
     img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
-    # 2. Skeleton alignment
-    skeleton_data = pose_estimator.get_aligned_skeleton(output_path)
+    # 2. Skeleton alignment (MediaPipe)
+    skeleton_data = pose_estimator.get_aligned_skeleton(texture_path)
     
-    # 3. 2D Joint FK Breakdance Animation Frame Sequence (16 Frames)
-    dance_frames_b64 = animator.generate_bboy_dance_frames(transparent_img, skeleton_data)
+    # Save char_cfg.yaml (Required by Meta Animated Drawings)
+    char_cfg_path = os.path.join(char_dir, "char_cfg.yaml")
+    with open(char_cfg_path, 'w', encoding='utf-8') as f:
+        yaml.dump(skeleton_data, f, sort_keys=False)
+    
+    # 3. Meta Animated Drawings render to GIF -> extract frames
+    dance_frames_b64 = animator.generate_dance_frames(char_dir)
     
     return {
         "character_id": task_id,
-        "image_url": f"/outputs/{img_filename}",
+        "image_url": f"/outputs/{task_id}/texture.png",
         "image_base64": f"data:image/png;base64,{img_b64}",
         "frames": dance_frames_b64,
         "skeleton": skeleton_data,
