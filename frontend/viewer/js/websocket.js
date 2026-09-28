@@ -21,6 +21,8 @@ function connectStageWebSocket() {
         if (window.liveQRKiosk) {
           window.liveQRKiosk.onCharacterSubmitted();
         }
+      } else if (msg.type === 'NEW_STATIC' || msg.event === 'NEW_STATIC') {
+        window.queueManager.addStatic(msg.data);
       }
     } catch (e) {
       console.error('[StageWS] Failed to parse WebSocket message:', e);

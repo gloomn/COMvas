@@ -61,6 +61,11 @@ async def get_qrcode_page():
     qr_html = os.path.join(frontend_dir, "qrcode", "index.html")
     return FileResponse(qr_html)
 
+@app.get("/keepdraw")
+async def get_keepdraw_page():
+    keepdraw_html = os.path.join(frontend_dir, "keepdraw", "index.html")
+    return FileResponse(keepdraw_html)
+
 @app.get("/")
 async def root():
     return {

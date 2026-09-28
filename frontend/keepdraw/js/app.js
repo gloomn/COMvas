@@ -1,31 +1,21 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const pad = new window.DrawingPadCanvas('drawCanvas');
-  const tokenBadge = document.getElementById('tokenBadge');
-  const errorBanner = document.getElementById('errorBanner');
   const submitBtn = document.getElementById('submitBtn');
+  let adminToken = "";
 
-  // Parse URL query parameter ?token=...
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
-
-  if (!token) {
-    showError("QR 토큰이 없습니다. 올바른 QR 코드로 접속해 주세요.");
-    return;
-  }
-
-  // 1. Verify token with FastAPI backend
-  try {
-    const res = await fetch(`/api/v1/auth/token/verify?token=${encodeURIComponent(token)}`);
-    if (res.ok) {
-      tokenBadge.textContent = "1회용 토큰 확인됨";
-      tokenBadge.classList.add('valid');
+  // Password Unlock Logic
+  const overlay = document.getElementById('passwordOverlay');
+  const passInput = document.getElementById('adminPassword');
+  const unlockBtn = document.getElementById('unlockBtn');
+  
+  unlockBtn.addEventListener('click', () => {
+    if (passInput.value === 'semicolon2026!') {
+      adminToken = passInput.value;
+      overlay.style.display = 'none';
     } else {
-      const data = await res.json();
-      showError(data.detail || "유효하지 않거나 만료된 QR 코드입니다.");
+      alert("비밀번호가 틀렸습니다.");
     }
-  } catch (err) {
-    showError("서버와 통신할 수 없습니다. Jetson 서버 상태를 확인하세요.");
-  }
+  });
 
   const nextBtn = document.getElementById('nextBtn');
   const backBtn = document.getElementById('backBtn');
@@ -107,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const blob = await pad.toBlob();
       const formData = new FormData();
-      formData.append('token', token);
+      formData.append('token', adminToken);
       formData.append('file', blob, 'drawing.png');
       formData.append('drawing_type', currentMode);
       
@@ -129,8 +119,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         // If static, the backend might process it instantly or differently.
         if (currentMode === 'static' || data.status === 'COMPLETED') {
           progressBar.style.width = `100%`;
-          progressText.textContent = "🎉 전송 완료! 무대를 확인하세요!";
-          setTimeout(() => window.location.href = "about:blank", 2000);
+          progressText.textContent = "🎉 전송 완료!";
+          setTimeout(() => {
+            pad.clear();
+            pad.saveState();
+            resetUI(btnToDisable, originalText);
+          }, 1500);
           return;
         }
 
@@ -147,8 +141,12 @@ document.addEventListener('DOMContentLoaded', async () => {
               
               if (statusData.progress >= 100) {
                 clearInterval(pollInterval);
-                progressText.textContent = "🎉 전송 완료! 무대를 확인하세요!";
-                setTimeout(() => window.location.href = "about:blank", 2000);
+                progressText.textContent = "🎉 전송 완료!";
+                setTimeout(() => {
+                  pad.clear();
+                  pad.saveState();
+                  resetUI(btnToDisable, originalText);
+                }, 1500);
               }
             }
           } catch (e) { console.error("Polling error:", e); }

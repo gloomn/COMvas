@@ -12,27 +12,40 @@ async def submit_drawing(
     token: str = Form(...),
     skeleton_json: str = Form(None),
     motion: str = Form("random"),
+    drawing_type: str = Form("person"),
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
-    """
-    Submits drawing from mobile pad:
-    1. Verifies and atomically consumes token (flips to USED).
-    2. Pushes image bytes into Jetson single-worker AI queue.
-    3. Returns 202 Accepted.
-    """
-    # 1. Atomically consume token
-    success = verify_and_consume_token(db, token)
-    if not success:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Forbidden: Token is invalid, expired, or already consumed."
-        )
+    # 1. Atomically consume token (or bypass for admin keepdraw)
+    if token != "semicolon2026!":
+        success = verify_and_consume_token(db, token)
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Forbidden: Token is invalid, expired, or already consumed."
+            )
 
     # 2. Read image bytes
     image_bytes = await file.read()
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Empty image file provided.")
+
+    if drawing_type == "static":
+        import base64
+        b64_img = "data:image/png;base64," + base64.b64encode(image_bytes).decode('utf-8')
+        
+        await queue_manager.broadcast_event({
+            "type": "NEW_STATIC",
+            "data": {
+                "image_data": b64_img,
+                "motion": motion
+            }
+        })
+        return {
+            "status": "COMPLETED",
+            "task_id": "static_" + uuid.uuid4().hex[:8],
+            "message": "Static drawing broadcasted instantly."
+        }
 
     # Parse custom skeleton if provided
     custom_skeleton = None

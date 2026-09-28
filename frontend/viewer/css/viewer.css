@@ -140,3 +140,14 @@ body, html {
   z-index: 100;
   letter-spacing: 0.5px;
 }
+
+/* Neon Sign Animation */
+@keyframes neon-pulse {
+  0% { opacity: 1; text-shadow: 0 0 10px #e879f9, 0 0 20px #e879f9, 0 0 30px #c026d3, 0 0 40px #c026d3, 0 0 70px #a21caf, 0 0 80px #a21caf, 0 0 100px #a21caf; }
+  50% { opacity: 0.8; text-shadow: 0 0 5px #e879f9, 0 0 10px #e879f9, 0 0 15px #c026d3, 0 0 20px #c026d3, 0 0 35px #a21caf, 0 0 40px #a21caf, 0 0 50px #a21caf; }
+  100% { opacity: 1; text-shadow: 0 0 10px #e879f9, 0 0 20px #e879f9, 0 0 30px #c026d3, 0 0 40px #c026d3, 0 0 70px #a21caf, 0 0 80px #a21caf, 0 0 100px #a21caf; }
+}
+
+.neon-text-animated {
+  animation: neon-pulse 2s infinite alternate;
+}

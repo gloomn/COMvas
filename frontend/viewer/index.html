@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COMvas Viewer</title>
-  <link rel="stylesheet" href="/frontend/viewer/css/viewer.css?v=4">
+  <link rel="stylesheet" href="/frontend/viewer/css/viewer.css?v=5">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Pretendard:wght@600;800&display=swap"
     rel="stylesheet">
   <!-- Pixi.js v7 WebGL Hardware Acceleration Engine -->
@@ -28,14 +28,26 @@
       무대 연동 캐릭터: <span id="charCount">0</span> / 15명
     </div>
   </div>
+  <!-- COMvas Neon Arch Sign -->
+  <div class="stage-neon-sign" style="position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 600px; height: 300px; z-index: 100; pointer-events: none;">
+    <svg viewBox="0 0 600 300" width="100%" height="100%">
+      <path id="archPath" d="M 50,250 A 250,150 0 0,1 550,250" fill="transparent" />
+      <text width="600" fill="#fff" font-family="'Outfit', sans-serif" font-size="70px" font-weight="900" class="neon-text-animated">
+        <textPath href="#archPath" startOffset="50%" text-anchor="middle" dominant-baseline="middle">
+          COMvas
+        </textPath>
+      </text>
+    </svg>
+  </div>
+
   <!-- Developer Credit Footer -->
   <div class="developer-credit">
     Semicolon(;) | Lee Ki Joon
   </div>
   <script src="/frontend/viewer/js/stage.js?v=5"></script>
-  <script src="/frontend/viewer/js/character.js?v=13"></script>
-  <script src="/frontend/viewer/js/queue.js"></script>
-  <script src="/frontend/viewer/js/websocket.js"></script>
+  <script src="/frontend/viewer/js/character.js?v=14"></script>
+  <script src="/frontend/viewer/js/queue.js?v=2"></script>
+  <script src="/frontend/viewer/js/websocket.js?v=2"></script>
 </body>
 
 </html>

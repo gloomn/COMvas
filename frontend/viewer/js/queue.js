@@ -29,6 +29,46 @@ class CharacterQueueManager {
     this.stageEngine.app.stage.children.sort((a, b) => a.zIndex - b.zIndex);
   }
 
+  addStatic(data) {
+    // Generate a static sprite and place it at the top of the stage (Sky area)
+    const texture = PIXI.Texture.from(data.image_data);
+    const sprite = new PIXI.Sprite(texture);
+    
+    // Scale it down slightly so it's not huge
+    sprite.scale.set(0.4);
+    sprite.anchor.set(0.5);
+    
+    // Random position in the top 40% of the screen (Sky/Background area)
+    const padding = 100;
+    const minX = padding;
+    const maxX = this.stageEngine.app.screen.width - padding;
+    sprite.x = minX + Math.random() * (maxX - minX);
+    sprite.y = padding + Math.random() * (this.stageEngine.app.screen.height * 0.35);
+    
+    // Z-index sorting for static props (they should be strictly behind the characters, but in front of background)
+    sprite.zIndex = -50 + sprite.y;
+    
+    // Add glowing effect or slight bobbing?
+    this.stageEngine.app.stage.addChild(sprite);
+    
+    // Bobbing animation logic
+    const startY = sprite.y;
+    const randomPhase = Math.random() * Math.PI * 2;
+    this.stageEngine.app.ticker.add(() => {
+      sprite.y = startY + Math.sin(Date.now() / 1000 + randomPhase) * 10;
+    });
+    
+    // Fade in
+    sprite.alpha = 0;
+    let fadeInterval = setInterval(() => {
+      sprite.alpha += 0.05;
+      if (sprite.alpha >= 1) {
+        sprite.alpha = 1;
+        clearInterval(fadeInterval);
+      }
+    }, 50);
+  }
+
   updateHUD() {
     if (this.charCountEl) {
       this.charCountEl.textContent = this.activeCharacters.length;
