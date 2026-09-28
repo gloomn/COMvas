@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Sketch Stage - HDMI Kiosk Display</title>
   <link rel="stylesheet" href="/frontend/viewer/css/viewer.css">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Pretendard:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Pretendard:wght@600;800&display=swap"
+    rel="stylesheet">
   <!-- Pixi.js v7 WebGL Hardware Acceleration Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
   <!-- QRCode.js Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
+
 <body>
   <div id="stageContainer" class="stage-container">
     <!-- WebGL Canvas will be injected here by Pixi.js -->
@@ -19,7 +22,7 @@
   <!-- HUD Top Bar -->
   <div class="hud-overlay">
     <div class="brand-badge">
-      <span class="live-dot"></span> LIVE SKETCH STAGE
+      COMvas
     </div>
     <div class="stats-counter" id="statsCounter">
       무대 연동 캐릭터: <span id="charCount">0</span> / 15명
@@ -31,4 +34,5 @@
   <script src="/frontend/viewer/js/queue.js"></script>
   <script src="/frontend/viewer/js/websocket.js"></script>
 </body>
+
 </html>
