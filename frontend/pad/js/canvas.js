@@ -19,7 +19,7 @@ class DrawingPadCanvas {
     this.ctx.lineCap = 'round';
     this.ctx.lineJoin = 'round';
     this.ctx.lineWidth = this.brushSize;
-    this.ctx.strokeStyle = this.currentColor;
+    this.setColor(this.currentColor);
     this.isErasing = false;
     this.clear();
     // Clear undo/redo on init
@@ -65,12 +65,16 @@ class DrawingPadCanvas {
     this.ctx.globalCompositeOperation = 'source-over';
     this.currentColor = color;
     this.ctx.strokeStyle = color;
+    // Neon glow effect
+    this.ctx.shadowBlur = 15;
+    this.ctx.shadowColor = color;
   }
 
   setEraser() {
     this.isErasing = true;
     this.ctx.globalCompositeOperation = 'destination-out';
     this.ctx.strokeStyle = 'rgba(0,0,0,1)'; // The color doesn't matter for destination-out, but alpha must be 1
+    this.ctx.shadowBlur = 0; // Turn off glow for eraser
   }
 
   getPointerPos(e) {

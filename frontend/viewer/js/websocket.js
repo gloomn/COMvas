@@ -23,6 +23,8 @@ function connectStageWebSocket() {
         }
       } else if (msg.type === 'NEW_STATIC' || msg.event === 'NEW_STATIC') {
         window.queueManager.addStatic(msg.data);
+      } else if (msg.event === 'DELETE_OBJECT') {
+        window.queueManager.removeObject(msg.data.id);
       }
     } catch (e) {
       console.error('[StageWS] Failed to parse WebSocket message:', e);

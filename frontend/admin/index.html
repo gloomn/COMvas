@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COMvas - Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #0a0b10;
+      color: #fff;
+      font-family: 'Pretendard', sans-serif;
+      margin: 0; padding: 20px;
+    }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+    h1 { margin: 0; font-size: 1.5rem; color: #a855f7; }
+    .refresh-btn { background: #333; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+    .card { background: #1e1e24; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #333; }
+    .card img { max-width: 100%; height: 120px; object-fit: contain; background: #000; border-radius: 8px; margin-bottom: 10px; }
+    .card .type { font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px; }
+    .card .id { font-size: 0.7rem; color: #555; word-break: break-all; margin-bottom: 10px; }
+    .delete-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
+    .delete-btn:hover { background: #dc2626; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>COMvas Stage Admin</h1>
+    <button class="refresh-btn" id="refreshBtn">새로고침</button>
+  </header>
+  
+  <div class="grid" id="objectsGrid">
+    <div style="color: #666;">로딩 중...</div>
+  </div>
+
+  <script src="/frontend/admin/js/app.js?v=1"></script>
+</body>
+</html>

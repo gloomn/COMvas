@@ -7,6 +7,7 @@ from app.core.database import init_db
 from app.services.queue_manager import queue_manager
 from app.api.auth import router as auth_router
 from app.api.drawing import router as drawing_router
+from app.api.admin import router as admin_router
 from config.settings import settings
 
 @asynccontextmanager
@@ -26,6 +27,7 @@ app = FastAPI(
 # Include API routers
 app.include_router(auth_router)
 app.include_router(drawing_router)
+app.include_router(admin_router)
 
 # Mount outputs & static files
 os.makedirs(settings.OUTPUT_DIR, exist_ok=True)
@@ -65,6 +67,11 @@ async def get_qrcode_page():
 async def get_keepdraw_page():
     keepdraw_html = os.path.join(frontend_dir, "keepdraw", "index.html")
     return FileResponse(keepdraw_html)
+
+@app.get("/admin")
+async def get_admin_page():
+    admin_html = os.path.join(frontend_dir, "admin", "index.html")
+    return FileResponse(admin_html)
 
 @app.get("/")
 async def root():

@@ -33,6 +33,7 @@ class CharacterQueueManager {
     // Generate a static sprite and place it at the top of the stage (Sky area)
     const texture = PIXI.Texture.from(data.image_data);
     const sprite = new PIXI.Sprite(texture);
+    sprite.id = data.id; // Important for deletion
     
     // Scale it down slightly so it's not huge
     sprite.scale.set(0.4);
@@ -54,9 +55,14 @@ class CharacterQueueManager {
     // Bobbing animation logic
     const startY = sprite.y;
     const randomPhase = Math.random() * Math.PI * 2;
-    this.stageEngine.app.ticker.add(() => {
+    const tickerFunc = () => {
       sprite.y = startY + Math.sin(Date.now() / 1000 + randomPhase) * 10;
-    });
+    };
+    this.stageEngine.app.ticker.add(tickerFunc);
+    
+    // Store in dictionary to allow deletion later
+    if (!this.staticObjects) this.staticObjects = {};
+    this.staticObjects[data.id] = { sprite, tickerFunc };
     
     // Fade in
     sprite.alpha = 0;
@@ -67,6 +73,37 @@ class CharacterQueueManager {
         clearInterval(fadeInterval);
       }
     }, 50);
+  }
+
+  removeObject(id) {
+    // Try to remove character
+    const charIndex = this.activeCharacters.findIndex(c => c.id === id);
+    if (charIndex !== -1) {
+      const char = this.activeCharacters[charIndex];
+      char.fadeOutAndDestroy(500, () => {
+        this.activeCharacters = this.activeCharacters.filter(c => c.id !== id);
+        this.updateHUD();
+      });
+      return;
+    }
+
+    // Try to remove static
+    if (this.staticObjects && this.staticObjects[id]) {
+      const { sprite, tickerFunc } = this.staticObjects[id];
+      this.stageEngine.app.ticker.remove(tickerFunc);
+      
+      // Fade out static
+      let fadeOutInterval = setInterval(() => {
+        sprite.alpha -= 0.1;
+        if (sprite.alpha <= 0) {
+          sprite.alpha = 0;
+          this.stageEngine.app.stage.removeChild(sprite);
+          sprite.destroy();
+          delete this.staticObjects[id];
+          clearInterval(fadeOutInterval);
+        }
+      }, 50);
+    }
   }
 
   updateHUD() {

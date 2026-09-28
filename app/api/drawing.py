@@ -33,17 +33,18 @@ async def submit_drawing(
     if drawing_type == "static":
         import base64
         b64_img = "data:image/png;base64," + base64.b64encode(image_bytes).decode('utf-8')
-        
+        task_id = "static_" + uuid.uuid4().hex[:8]
         await queue_manager.broadcast({
             "type": "NEW_STATIC",
             "data": {
+                "id": task_id,
                 "image_data": b64_img,
                 "motion": motion
             }
         })
         return {
             "status": "COMPLETED",
-            "task_id": "static_" + uuid.uuid4().hex[:8],
+            "task_id": task_id,
             "message": "Static drawing broadcasted instantly."
         }
 

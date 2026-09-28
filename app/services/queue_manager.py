@@ -15,6 +15,7 @@ class JetsonAIQueueManager:
         self.active_websockets: Set[WebSocket] = set()
         self.worker_task = None
         self.task_progress = {}
+        self.recent_objects = []
 
     def update_progress(self, task_id: str, progress: int, status: str):
         self.task_progress[task_id] = {"progress": progress, "status": status}
@@ -36,6 +37,30 @@ class JetsonAIQueueManager:
 
     async def broadcast(self, message: dict):
         """Broadcast message to all connected Stage Display Viewers."""
+        
+        # Track objects for Admin deletion
+        event_type = message.get("type") or message.get("event")
+        if event_type in ["NEW_STATIC", "NEW_CHARACTER"]:
+            data = message.get("data", {})
+            obj_id = data.get("id") or data.get("character_id")
+            if obj_id:
+                thumb = data.get("image_data") or data.get("image_base64")
+                if not thumb and data.get("frames"):
+                    thumb = data.get("frames")[0]
+                
+                self.recent_objects.append({
+                    "id": obj_id,
+                    "type": "STATIC" if event_type == "NEW_STATIC" else "CHARACTER",
+                    "thumbnail": thumb
+                })
+                if len(self.recent_objects) > 50:
+                    self.recent_objects.pop(0)
+                    
+        # Remove deleted objects from recent list
+        if event_type == "DELETE_OBJECT":
+            obj_id = message.get("data", {}).get("id")
+            self.recent_objects = [obj for obj in self.recent_objects if obj["id"] != obj_id]
+
         if not self.active_websockets:
             return
         payload = json.dumps(message)
