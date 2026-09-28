@@ -34,7 +34,7 @@ async def submit_drawing(
         import base64
         b64_img = "data:image/png;base64," + base64.b64encode(image_bytes).decode('utf-8')
         
-        await queue_manager.broadcast_event({
+        await queue_manager.broadcast({
             "type": "NEW_STATIC",
             "data": {
                 "image_data": b64_img,
