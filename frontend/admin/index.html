@@ -27,8 +27,18 @@
 <body>
   <header>
     <h1>COMvas Stage Admin</h1>
-    <button class="refresh-btn" id="refreshBtn">새로고침</button>
+    <div style="display: flex; gap: 15px; align-items: center;">
+      <a href="/viewer" target="_blank" style="color: #a7f3d0; text-decoration: none; font-weight: bold;">🖥️ 뷰어 띄우기</a>
+      <a href="/qrcode" target="_blank" style="color: #93c5fd; text-decoration: none; font-weight: bold;">📱 QR코드 띄우기</a>
+      <a href="/keepdraw" target="_blank" style="color: #fca5a5; text-decoration: none; font-weight: bold;">♾️ 무제한모드 띄우기</a>
+      <button class="refresh-btn" id="refreshBtn">새로고침</button>
+    </div>
   </header>
+  
+  <div style="margin-bottom: 20px; font-size: 1.1rem; color: #cbd5e1; display: flex; gap: 20px;">
+    <div>정적 모형(소품): <span id="staticCount" style="color: #a855f7; font-weight: bold;">0</span>개</div>
+    <div>사람 모형(캐릭터): <span id="charCount" style="color: #3b82f6; font-weight: bold;">0</span>개</div>
+  </div>
   
   <div class="grid" id="objectsGrid">
     <div style="color: #666;">로딩 중...</div>

@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.getElementById('objectsGrid');
   const refreshBtn = document.getElementById('refreshBtn');
 
+  const staticCountEl = document.getElementById('staticCount');
+  const charCountEl = document.getElementById('charCount');
+
   async function loadObjects() {
     try {
       grid.innerHTML = '<div style="color: #666;">로딩 중...</div>';
@@ -9,12 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await res.json();
       
       grid.innerHTML = '';
+      
+      let staticCount = 0;
+      let charCount = 0;
+
       if (!data.objects || data.objects.length === 0) {
         grid.innerHTML = '<div style="color: #666;">현재 무대에 아무것도 없습니다.</div>';
+        staticCountEl.textContent = '0';
+        charCountEl.textContent = '0';
         return;
       }
 
       data.objects.forEach(obj => {
+        if (obj.type === 'STATIC') staticCount++;
+        else charCount++;
+
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
@@ -25,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         grid.appendChild(card);
       });
+      
+      staticCountEl.textContent = staticCount;
+      charCountEl.textContent = charCount;
 
       // Bind delete buttons
       document.querySelectorAll('.delete-btn').forEach(btn => {

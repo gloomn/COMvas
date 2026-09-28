@@ -64,17 +64,32 @@ class DrawingPadCanvas {
     this.isErasing = false;
     this.ctx.globalCompositeOperation = 'source-over';
     this.currentColor = color;
-    this.ctx.strokeStyle = color;
-    // Neon glow effect
-    this.ctx.shadowBlur = 15;
-    this.ctx.shadowColor = color;
+    
+    if (this.useNeon) {
+      this.ctx.strokeStyle = '#ffffff'; // White core for neon
+      this.ctx.shadowBlur = 15;
+      this.ctx.shadowColor = color; // Glowing aura
+      this.ctx.lineWidth = this.brushSize - 2; // Slightly thinner core
+    } else {
+      this.ctx.strokeStyle = color;
+      this.ctx.shadowBlur = 0;
+      this.ctx.lineWidth = this.brushSize;
+    }
   }
 
   setEraser() {
     this.isErasing = true;
     this.ctx.globalCompositeOperation = 'destination-out';
-    this.ctx.strokeStyle = 'rgba(0,0,0,1)'; // The color doesn't matter for destination-out, but alpha must be 1
-    this.ctx.shadowBlur = 0; // Turn off glow for eraser
+    this.ctx.strokeStyle = 'rgba(0,0,0,1)';
+    this.ctx.shadowBlur = 0;
+    this.ctx.lineWidth = this.brushSize + 5; // Make eraser slightly bigger
+  }
+
+  toggleNeon(isActive) {
+    this.useNeon = isActive;
+    if (!this.isErasing) {
+      this.setColor(this.currentColor);
+    }
   }
 
   getPointerPos(e) {
@@ -132,9 +147,9 @@ class DrawingPadCanvas {
     this.canvas.addEventListener('touchend', (e) => this.stopDrawing(e));
 
     // Color buttons
-    document.querySelectorAll('.color-btn:not(.eraser-btn)').forEach(btn => {
+    document.querySelectorAll('.color-btn:not(.eraser-btn):not(.neon-toggle-btn)').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.color-btn:not(.neon-toggle-btn)').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         this.setColor(e.target.dataset.color);
         // Sync custom picker background if we want, but it's fine as is.
@@ -145,10 +160,19 @@ class DrawingPadCanvas {
     const customColorInput = document.getElementById('customColor');
     if (customColorInput) {
       customColorInput.addEventListener('input', (e) => {
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.color-btn:not(.neon-toggle-btn)').forEach(b => b.classList.remove('active'));
         // Make its wrapper look active
         customColorInput.parentElement.classList.add('active');
         this.setColor(e.target.value);
+      });
+    }
+
+    // Neon Toggle Button
+    const neonBtn = document.getElementById('neonToggleBtn');
+    if (neonBtn) {
+      neonBtn.addEventListener('click', () => {
+        neonBtn.classList.toggle('active');
+        this.toggleNeon(neonBtn.classList.contains('active'));
       });
     }
 
@@ -156,7 +180,7 @@ class DrawingPadCanvas {
     const eraserBtn = document.getElementById('eraserBtn');
     if (eraserBtn) {
       eraserBtn.addEventListener('click', () => {
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.color-btn:not(.neon-toggle-btn)').forEach(b => b.classList.remove('active'));
         if (customColorInput) customColorInput.parentElement.classList.remove('active');
         eraserBtn.classList.add('active');
         this.setEraser();
