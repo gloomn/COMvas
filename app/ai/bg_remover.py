@@ -1,5 +1,6 @@
 import io
 import numpy as np
+import cv2
 from PIL import Image
 
 class LineDrawingBackgroundRemover:
@@ -29,10 +30,17 @@ class LineDrawingBackgroundRemover:
         white_dist = (255 - r_i)**2 + (255 - g_i)**2 + (255 - b_i)**2
         transparent_areas = white_dist < 1000
         
+        # Keep original colors, just make the background transparent
         data[..., 3][transparent_areas.T] = 0
         
-        # To make sure Animated Drawings gets a solid mesh, we should make sure the lines are 100% opaque
-        # and any anti-aliased edge is preserved.
+        # DILATE THE ALPHA CHANNEL!
+        # If the user drew thin lines (e.g. didn't refresh cache), Animated Drawings will shred them into dots.
+        # By artificially thickening the alpha channel (mask), the mesh becomes a solid block, keeping lines intact!
+        alpha = data[..., 3]
+        kernel = np.ones((5, 5), np.uint8)
+        thick_alpha = cv2.dilate(alpha, kernel, iterations=1)
+        data[..., 3] = thick_alpha
+        
         return Image.fromarray(data)
 
 bg_remover = LineDrawingBackgroundRemover()

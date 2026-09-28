@@ -22,9 +22,9 @@ class MetaAnimator:
         """
         output_gif = os.path.join(char_dir, "video.gif")
         
-        # Use the 'dab' motion which is short (339 frames) and finishes in under 30 seconds!
-        motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config/motion/dab.yaml')
-        # dab uses FAIR1 BVH, which requires the fair1_ppf retarget config
+        # Use the 'jumping' motion which is the closest to a running jump in the FAIR1 dataset
+        motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config/motion/jumping.yaml')
+        # jumping uses FAIR1 BVH, which requires the fair1_ppf retarget config
         retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config/retarget/fair1_ppf.yaml')
         
         # Build the MVC config exactly as Animated Drawings expects
@@ -35,6 +35,11 @@ class MetaAnimator:
                     'motion_cfg': motion_cfg,
                     'retarget_cfg': retarget_cfg
                 }]
+            },
+            'view': {
+                # Bring the camera closer so the character appears much larger! (default Z is 2.0)
+                'CAMERA_POS': [0.0, 0.7, 1.0],
+                'WINDOW_DIMENSIONS': [512, 512]
             },
             'controller': {
                 'MODE': 'video_render',
