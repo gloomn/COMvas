@@ -38,7 +38,7 @@ class StageCharacter {
   }
 
   pickNewTarget() {
-    const margin = 50;
+    const margin = 250;
     const w = window.innerWidth - margin * 2;
     
     // Only pick a new target horizontally (좌우로만 이동)
@@ -64,7 +64,7 @@ class StageCharacter {
     }
     
     // Strict border clamping to keep characters strictly within the screen
-    const margin = 50;
+    const margin = 250;
     this.sprite.x = Math.max(margin, Math.min(this.sprite.x, window.innerWidth - margin));
     this.sprite.y = this.y; // Force Y coordinate lock
 
