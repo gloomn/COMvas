@@ -4,12 +4,19 @@ class StageCharacter {
     this.stageApp = stageApp;
     this.isFadingOut = false;
     
-    // Create Sprite from base64/URL image
-    this.texture = PIXI.Texture.from(data.image_base64 || data.image_url);
-    this.sprite = new PIXI.Sprite(this.texture);
+    // Create PIXI.AnimatedSprite from joint animation keyframe PNG sequence
+    if (data.frames && data.frames.length > 0) {
+      const textures = data.frames.map(b64 => PIXI.Texture.from(b64));
+      this.sprite = new PIXI.AnimatedSprite(textures);
+      this.sprite.animationSpeed = 0.22; // ~14 FPS Joint Dance Motion
+      this.sprite.play();
+    } else {
+      // Fallback single texture
+      const texture = PIXI.Texture.from(data.image_base64 || data.image_url);
+      this.sprite = new PIXI.Sprite(texture);
+    }
+
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
-    
-    // Scale character
     this.sprite.scale.set(0.35);
     
     // Spawn at random location near screen center
@@ -21,16 +28,12 @@ class StageCharacter {
     this.sprite.y = this.y;
 
     // Movement & Random Path Variables
-    this.speed = 1.2 + Math.random() * 0.8;
+    this.speed = 1.0 + Math.random() * 0.6;
     this.targetX = this.x;
     this.targetY = this.y;
     this.pickNewTarget();
 
-    // Dance Animation Swaying Variables
-    this.timeCounter = Math.random() * 100;
-    this.swaySpeed = 0.08 + Math.random() * 0.04;
-    
-    // Add to stage
+    // Add to WebGL stage
     this.stageApp.stage.addChild(this.sprite);
   }
 
@@ -46,7 +49,7 @@ class StageCharacter {
   update(delta) {
     if (this.isFadingOut) return;
 
-    // 1. Move towards random target path
+    // Move character along random stage path
     const dx = this.targetX - this.sprite.x;
     const dy = this.targetY - this.sprite.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
@@ -57,17 +60,12 @@ class StageCharacter {
       this.sprite.x += (dx / dist) * this.speed * delta;
       this.sprite.y += (dy / dist) * this.speed * delta;
       
-      // Flip sprite based on movement direction
+      // Flip sprite orientation depending on movement direction
       if (dx > 0) this.sprite.scale.x = Math.abs(this.sprite.scale.x);
       else if (dx < 0) this.sprite.scale.x = -Math.abs(this.sprite.scale.x);
     }
 
-    // 2. Dance Loop (Sway & Bounce)
-    this.timeCounter += this.swaySpeed * delta;
-    this.sprite.rotation = Math.sin(this.timeCounter) * 0.15;
-    this.sprite.scale.y = 0.35 + Math.cos(this.timeCounter * 2) * 0.02;
-
-    // Sort z-index by Y coordinate for depth sorting
+    // Sort z-index by Y coordinate for natural depth sorting
     this.sprite.zIndex = this.sprite.y;
   }
 
