@@ -1,6 +1,6 @@
 filepath: examples/bvh/rokoko/jesse_dance.bvh
 start_frame_idx: 0
-end_frame_idx: null
+end_frame_idx: 300
 groundplane_joint: LeftFoot
 forward_perp_joint_vectors:
   - - LeftShoulder

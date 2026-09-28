@@ -15,24 +15,29 @@ class LineDrawingBackgroundRemover:
     def process_image(self, image_bytes: bytes) -> Image.Image:
         """Removes white background and returns RGBA transparent PIL Image."""
         img = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
-        data = np.array(img)
+        data = np.array(img).astype(np.float32)
         
-        # Calculate distance from white (255, 255, 255)
-        r, g, b, a = data.T
+        r = data[..., 0]
+        g = data[..., 1]
+        b = data[..., 2]
         
-        # Prevent numpy uint8 overflow by casting to int32!
-        r_i = r.astype(np.int32)
-        g_i = g.astype(np.int32)
-        b_i = b.astype(np.int32)
+        # Calculate alpha based on the darkest channel
+        min_rgb = np.min(data[..., :3], axis=2)
+        alpha = 255.0 - min_rgb
         
-        # If it's pure white (which is the canvas background) or very close, make it transparent
-        # 1000 is a safe squared distance for "near white"
-        white_dist = (255 - r_i)**2 + (255 - g_i)**2 + (255 - b_i)**2
-        transparent_areas = white_dist < 1000
+        # Un-premultiply the RGB colors to mathematically remove the white background mixing.
+        # This completely eliminates "white halos" and keeps the drawing perfectly crisp!
+        alpha_norm = np.maximum(alpha, 1.0) / 255.0
         
-        # Keep original colors, just make the background transparent
-        data[..., 3][transparent_areas.T] = 0
+        data[..., 0] = np.clip(255.0 + (r - 255.0) / alpha_norm, 0, 255)
+        data[..., 1] = np.clip(255.0 + (g - 255.0) / alpha_norm, 0, 255)
+        data[..., 2] = np.clip(255.0 + (b - 255.0) / alpha_norm, 0, 255)
         
-        return Image.fromarray(data)
+        # Heavy threshold to make the drawing "찡하게" (crisp)
+        # We boost the alpha curve so that even light strokes become fully opaque
+        boosted_alpha = np.clip(alpha * 1.5, 0, 255)
+        data[..., 3] = boosted_alpha
+        
+        return Image.fromarray(data.astype(np.uint8))
 
 bg_remover = LineDrawingBackgroundRemover()

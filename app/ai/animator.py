@@ -22,10 +22,21 @@ class MetaAnimator:
         """
         output_gif = os.path.join(char_dir, "video.gif")
         
-        # Use the 'dab' motion which stays perfectly centered and moves side-to-side (좌우로 움직임)
-        motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config/motion/dab.yaml')
-        # dab uses FAIR1 BVH, which requires the fair1_ppf retarget config
-        retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config/retarget/fair1_ppf.yaml')
+        import random
+        
+        # Define available dynamic motions and their corresponding retarget configs
+        available_motions = [
+            ('motion/dab.yaml', 'retarget/fair1_ppf.yaml'),
+            ('motion/jumping.yaml', 'retarget/fair1_ppf.yaml'),          # running jump
+            ('motion/jumping_jacks.yaml', 'retarget/cmu1_pfp.yaml'),
+            ('motion/jesse_dance.yaml', 'retarget/mixamo_fff.yaml')
+        ]
+        
+        # Randomly select a motion for this character
+        chosen_motion, chosen_retarget = random.choice(available_motions)
+        
+        motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config', chosen_motion)
+        retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config', chosen_retarget)
         
         # Build the MVC config exactly as Animated Drawings expects
         mvc_cfg = {
