@@ -20,8 +20,8 @@ class StageCharacter {
     this.sprite.scale.set(0.35);
 
     // Spawn strictly in the exact center of the PIXI screen
-    this.x = this.stageApp.app.screen.width / 2;
-    this.y = this.stageApp.app.screen.height / 2;
+    this.x = this.stageApp.screen.width / 2;
+    this.y = this.stageApp.screen.height / 2;
     this.sprite.x = this.x;
     this.sprite.y = this.y;
 
@@ -57,8 +57,8 @@ class StageCharacter {
       this.vx = Math.abs(this.vx); // Bounce right
     } 
     // Right border hit
-    else if (this.sprite.x >= this.stageApp.app.screen.width - margin) {
-      this.sprite.x = this.stageApp.app.screen.width - margin;
+    else if (this.sprite.x >= this.stageApp.screen.width - margin) {
+      this.sprite.x = this.stageApp.screen.width - margin;
       this.vx = -Math.abs(this.vx); // Bounce left
     }
 
