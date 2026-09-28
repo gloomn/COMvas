@@ -1,4 +1,3 @@
-import mediapipe as mp
 import numpy as np
 from PIL import Image
 
@@ -9,13 +8,23 @@ class AutomaticPoseEstimator:
     Optimized for Jetson Orin Nano Super.
     """
     def __init__(self):
-        self.mp_pose = mp.solutions.pose
-        self.pose = self.mp_pose.Pose(
-            static_image_mode=True,
-            model_complexity=1,
-            enable_segmentation=False,
-            min_detection_confidence=0.5
-        )
+        self.use_mediapipe = False
+        try:
+            import mediapipe as mp
+            if hasattr(mp, 'solutions'):
+                self.mp_pose = mp.solutions.pose
+                self.pose = self.mp_pose.Pose(
+                    static_image_mode=True,
+                    model_complexity=1,
+                    enable_segmentation=False,
+                    min_detection_confidence=0.5
+                )
+                self.use_mediapipe = True
+                print("[PoseEstimator] MediaPipe loaded successfully.")
+            else:
+                print("[PoseEstimator] Warning: Installed mediapipe package is invalid. Using fallback skeleton.")
+        except ImportError:
+            print("[PoseEstimator] Warning: MediaPipe not found. Using fallback skeleton.")
 
     def get_aligned_skeleton(self, transparent_image_path: str) -> dict:
         """
@@ -23,8 +32,11 @@ class AutomaticPoseEstimator:
         """
         img = Image.open(transparent_image_path).convert("RGB")
         w, h = img.size
-        img_np = np.array(img)
         
+        if not self.use_mediapipe:
+            return self._get_fallback_skeleton(w, h)
+            
+        img_np = np.array(img)
         results = self.pose.process(img_np)
         
         # Default fallback skeleton if no pose is found
