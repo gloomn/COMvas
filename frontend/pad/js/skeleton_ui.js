@@ -72,8 +72,11 @@ class SkeletonUI {
 
   updateDotPos(name) {
     const joint = this.joints[name];
-    joint.el.style.left = `${joint.x}px`;
-    joint.el.style.top = `${joint.y}px`;
+    // Convert 512x512 virtual coordinates to percentages for responsive rendering
+    const pctX = (joint.x / 512) * 100;
+    const pctY = (joint.y / 512) * 100;
+    joint.el.style.left = `${pctX}%`;
+    joint.el.style.top = `${pctY}%`;
   }
 
   show() {
