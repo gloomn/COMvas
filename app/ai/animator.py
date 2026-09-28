@@ -81,6 +81,14 @@ class MetaAnimator:
                     gif.seek(frame_idx)
                     frame = gif.convert("RGBA")
                     
+                    # Make pure white background transparent (Vectorized with NumPy for speed)
+                    import numpy as np
+                    frame_array = np.array(frame)
+                    # Mask where R, G, B are all > 240
+                    white_mask = (frame_array[:, :, 0] > 240) & (frame_array[:, :, 1] > 240) & (frame_array[:, :, 2] > 240)
+                    frame_array[white_mask, 3] = 0 # Set alpha to 0
+                    frame = Image.fromarray(frame_array)
+                    
                     buffered = io.BytesIO()
                     frame.save(buffered, format="PNG")
                     b64_str = "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")

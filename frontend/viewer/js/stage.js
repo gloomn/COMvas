@@ -3,7 +3,7 @@ class StageEngine {
     this.container = document.getElementById('stageContainer');
     this.app = new PIXI.Application({
       resizeTo: window,
-      backgroundColor: 0xffffff,
+      backgroundAlpha: 0,
       antialias: true,
       resolution: window.devicePixelRatio || 1,
       autoDensity: true
@@ -14,19 +14,9 @@ class StageEngine {
   }
 
   initBackgroundGrid() {
-    const gridGraphics = new PIXI.Graphics();
-    gridGraphics.lineStyle(1, 0xe2e8f0, 0.8);
-
-    const step = 80;
-    for (let x = 0; x < window.innerWidth; x += step) {
-      gridGraphics.moveTo(x, 0);
-      gridGraphics.lineTo(x, window.innerHeight);
-    }
-    for (let y = 0; y < window.innerHeight; y += step) {
-      gridGraphics.moveTo(0, y);
-      gridGraphics.lineTo(window.innerWidth, y);
-    }
-    this.app.stage.addChild(gridGraphics);
+    // We moved the background to CSS (stage_background.jpg) for better responsive scaling
+    // Just ensure sorting is enabled for characters
+    this.app.stage.sortableChildren = true;
   }
 }
 

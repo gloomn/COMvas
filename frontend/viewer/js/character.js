@@ -23,10 +23,14 @@ class StageCharacter {
     this.margin = 50;
 
     // Spawn character at the bottom border of the screen (ground level)
+    // Add a slight random Y offset (-40 to +20) for pseudo-3D depth on the stage
     this.x = this.stageApp.screen.width / 2;
-    this.y = this.stageApp.screen.height - this.margin;
+    this.y = this.stageApp.screen.height - this.margin - (Math.random() * 60 - 20);
     this.sprite.x = this.x;
     this.sprite.y = this.y;
+    
+    // Set zIndex based on Y position (pseudo-3D depth sorting)
+    this.sprite.zIndex = this.y;
 
     // Movement Velocity (Walk horizontally left or right)
     this.speed = 1.0 + Math.random() * 0.6;
