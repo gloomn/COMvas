@@ -33,14 +33,6 @@ class LineDrawingBackgroundRemover:
         # Keep original colors, just make the background transparent
         data[..., 3][transparent_areas.T] = 0
         
-        # DILATE THE ALPHA CHANNEL!
-        # If the user drew thin lines (e.g. didn't refresh cache), Animated Drawings will shred them into dots.
-        # By artificially thickening the alpha channel (mask), the mesh becomes a solid block, keeping lines intact!
-        alpha = data[..., 3]
-        kernel = np.ones((5, 5), np.uint8)
-        thick_alpha = cv2.dilate(alpha, kernel, iterations=1)
-        data[..., 3] = thick_alpha
-        
         return Image.fromarray(data)
 
 bg_remover = LineDrawingBackgroundRemover()
