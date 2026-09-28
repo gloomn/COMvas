@@ -19,9 +19,14 @@ class LineDrawingBackgroundRemover:
         # Calculate distance from white (255, 255, 255)
         r, g, b, a = data.T
         
+        # Prevent numpy uint8 overflow by casting to int32!
+        r_i = r.astype(np.int32)
+        g_i = g.astype(np.int32)
+        b_i = b.astype(np.int32)
+        
         # If it's pure white (which is the canvas background) or very close, make it transparent
         # 1000 is a safe squared distance for "near white"
-        white_dist = (255 - r)**2 + (255 - g)**2 + (255 - b)**2
+        white_dist = (255 - r_i)**2 + (255 - g_i)**2 + (255 - b_i)**2
         transparent_areas = white_dist < 1000
         
         data[..., 3][transparent_areas.T] = 0
