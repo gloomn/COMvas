@@ -19,7 +19,6 @@ class MetaAnimator:
         Runs Meta Animated Drawings pipeline.
         Returns a list of base64 PNG frames for PIXI.AnimatedSprite.
         """
-        # We output a GIF to extract frames from
         output_gif = os.path.join(char_dir, "video.gif")
         
         # In Animated Drawings, 'jesse_dance' is a standard normal dance
@@ -27,14 +26,28 @@ class MetaAnimator:
         motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config/motion/jesse_dance.yaml')
         retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config/retarget/fair1_ppf.yaml')
         
-        # Render the animation
+        # Build the MVC config exactly as Animated Drawings expects
+        mvc_cfg = {
+            'scene': {
+                'ANIMATED_CHARACTERS': [{
+                    'character_cfg': os.path.join(char_dir, 'char_cfg.yaml'),
+                    'motion_cfg': motion_cfg,
+                    'retarget_cfg': retarget_cfg
+                }]
+            },
+            'controller': {
+                'MODE': 'video_render',
+                'OUTPUT_VIDEO_PATH': output_gif
+            }
+        }
+        
+        mvc_cfg_path = os.path.join(char_dir, 'mvc_cfg.yaml')
+        with open(mvc_cfg_path, 'w') as f:
+            yaml.dump(mvc_cfg, f)
+
+        # Render the animation (it only takes the single mvc config path)
         try:
-            render.start(
-                char_dir,
-                motion_cfg,
-                retarget_cfg,
-                output_video_path=output_gif
-            )
+            render.start(mvc_cfg_path)
         except Exception as e:
             print(f"[Animator] Error rendering animation: {e}")
             return []
@@ -55,6 +68,7 @@ class MetaAnimator:
             # Cleanup
             try:
                 os.remove(output_gif)
+                os.remove(mvc_cfg_path)
             except:
                 pass
                 
