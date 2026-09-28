@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image
+from scipy.spatial import cKDTree
 
 class AutomaticPoseEstimator:
     """
@@ -26,23 +27,56 @@ class AutomaticPoseEstimator:
         except ImportError:
             print("[PoseEstimator] Warning: MediaPipe not found. Using fallback skeleton.")
 
+    def snap_to_mask(self, skeleton, img_np):
+        """
+        Snaps all joints to the nearest non-transparent pixel using a KDTree.
+        This completely eliminates 'point not inside mesh' warnings from Animated Drawings.
+        """
+        alpha = img_np[:, :, 3]
+        ys, xs = np.where(alpha > 0)
+        
+        if len(xs) == 0:
+            return skeleton  # Image is completely transparent, shouldn't happen
+            
+        solid_pixels = np.column_stack((xs, ys))
+        tree = cKDTree(solid_pixels)
+        
+        for joint in skeleton:
+            x, y = joint["loc"]
+            # Clamp coordinates to image bounds safely
+            x = max(0, min(x, img_np.shape[1] - 1))
+            y = max(0, min(y, img_np.shape[0] - 1))
+            
+            # If the joint is on a transparent pixel, snap it!
+            if alpha[y, x] == 0:
+                dist, idx = tree.query([x, y])
+                nearest_x, nearest_y = solid_pixels[idx]
+                joint["loc"] = [int(nearest_x), int(nearest_y)]
+        
+        return skeleton
+
     def get_aligned_skeleton(self, transparent_image_path: str) -> dict:
         """
         Extracts pose from the image and returns a char_cfg.yaml style dictionary.
         """
-        img = Image.open(transparent_image_path).convert("RGB")
+        img = Image.open(transparent_image_path).convert("RGBA")
         w, h = img.size
+        img_np = np.array(img)
         
         if not self.use_mediapipe:
-            return self._get_fallback_skeleton(w, h)
+            skeleton = self._get_fallback_skeleton(w, h)
+            skeleton["skeleton"] = self.snap_to_mask(skeleton["skeleton"], img_np)
+            return skeleton
             
-        img_np = np.array(img)
-        results = self.pose.process(img_np)
+        rgb_np = np.array(img.convert("RGB"))
+        results = self.pose.process(rgb_np)
         
         # Default fallback skeleton if no pose is found
         if not results.pose_landmarks:
             print("[PoseEstimator] No pose found, using fallback.")
-            return self._get_fallback_skeleton(w, h)
+            skeleton = self._get_fallback_skeleton(w, h)
+            skeleton["skeleton"] = self.snap_to_mask(skeleton["skeleton"], img_np)
+            return skeleton
             
         landmarks = results.pose_landmarks.landmark
         
@@ -91,6 +125,8 @@ class AutomaticPoseEstimator:
             {"loc": l_kn, "name": "left_knee", "parent": "left_hip"},
             {"loc": l_an, "name": "left_foot", "parent": "left_knee"},
         ]
+        
+        skeleton = self.snap_to_mask(skeleton, img_np)
         
         return {
             "width": w,
