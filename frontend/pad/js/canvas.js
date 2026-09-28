@@ -4,7 +4,8 @@ class DrawingPadCanvas {
     this.ctx = this.canvas.getContext('2d');
     this.isDrawing = false;
     this.currentColor = '#000000';
-    this.brushSize = 6;
+    // Increase brush size to 15 to prevent lines from breaking into dots
+    this.brushSize = 15;
     
     this.initCanvas();
     this.bindEvents();

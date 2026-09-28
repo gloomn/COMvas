@@ -22,11 +22,10 @@ class MetaAnimator:
         """
         output_gif = os.path.join(char_dir, "video.gif")
         
-        # In Animated Drawings, 'jesse_dance' is a standard normal dance
-        # We use the examples directory copied into the project root
-        motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config/motion/jesse_dance.yaml')
-        # Jesse dance uses Rokoko BVH, which requires the mixamo_fff retarget config
-        retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config/retarget/mixamo_fff.yaml')
+        # Use the 'dab' motion which is short (339 frames) and finishes in under 30 seconds!
+        motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config/motion/dab.yaml')
+        # dab uses FAIR1 BVH, which requires the fair1_ppf retarget config
+        retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config/retarget/fair1_ppf.yaml')
         
         # Build the MVC config exactly as Animated Drawings expects
         mvc_cfg = {
