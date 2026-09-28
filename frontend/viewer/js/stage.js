@@ -5,7 +5,8 @@ class StageEngine {
       resizeTo: window,
       backgroundColor: 0xffffff,
       antialias: true,
-      resolution: window.devicePixelRatio || 1
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true
     });
 
     this.container.appendChild(this.app.view);
