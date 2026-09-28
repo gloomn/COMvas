@@ -19,9 +19,12 @@ class StageCharacter {
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
     this.sprite.scale.set(0.45); // Increased scale slightly as requested
 
-    // Spawn strictly in the exact center of the PIXI screen
+    // Exact Border Bouncing Margin
+    this.margin = 50;
+
+    // Spawn character at the bottom border of the screen (ground level)
     this.x = this.stageApp.screen.width / 2;
-    this.y = this.stageApp.screen.height / 2;
+    this.y = this.stageApp.screen.height - this.margin;
     this.sprite.x = this.x;
     this.sprite.y = this.y;
 
@@ -51,7 +54,7 @@ class StageCharacter {
     // 2. Exact Border Bouncing Logic using PIXI logical screen width
     // margin=50 allows the visible pixels (arms) to perfectly touch the screen edge
     // because the 512x512 GIF has some transparent padding around the character.
-    const margin = 50; 
+    const margin = this.margin; 
     
     // Left border hit
     if (this.sprite.x <= margin) {

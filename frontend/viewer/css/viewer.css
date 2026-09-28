@@ -126,10 +126,13 @@ body, html {
   bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.4);
+  color: #64748b; /* Slate 500, visible against white */
+  background: rgba(255, 255, 255, 0.8); /* Subtle background block to cover grid lines */
+  padding: 4px 12px;
+  border-radius: 12px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   pointer-events: none;
-  z-index: 10;
+  z-index: 100;
   letter-spacing: 0.5px;
 }
