@@ -16,6 +16,11 @@ function connectStageWebSocket() {
 
       if (msg.event === 'NEW_CHARACTER') {
         window.queueManager.addCharacter(msg.data);
+        
+        // Auto-refresh screen QR code to a fresh 1-time token for next participant!
+        if (window.liveQRKiosk) {
+          window.liveQRKiosk.onCharacterSubmitted();
+        }
       }
     } catch (e) {
       console.error('[StageWS] Failed to parse WebSocket message:', e);
