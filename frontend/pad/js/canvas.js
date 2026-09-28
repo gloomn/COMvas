@@ -16,18 +16,26 @@ class DrawingPadCanvas {
     this.ctx.lineJoin = 'round';
     this.ctx.lineWidth = this.brushSize;
     this.ctx.strokeStyle = this.currentColor;
+    this.isErasing = false;
     this.clear();
   }
 
   clear() {
-    // Fill white background initially
-    this.ctx.fillStyle = '#ffffff';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    // Clear canvas completely to keep it transparent (Signature style)
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   setColor(color) {
+    this.isErasing = false;
+    this.ctx.globalCompositeOperation = 'source-over';
     this.currentColor = color;
     this.ctx.strokeStyle = color;
+  }
+
+  setEraser() {
+    this.isErasing = true;
+    this.ctx.globalCompositeOperation = 'destination-out';
+    this.ctx.strokeStyle = 'rgba(0,0,0,1)'; // The color doesn't matter for destination-out, but alpha must be 1
   }
 
   getPointerPos(e) {
@@ -111,8 +119,7 @@ class DrawingPadCanvas {
         document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
         if (customColorInput) customColorInput.parentElement.classList.remove('active');
         eraserBtn.classList.add('active');
-        // Erasing is drawing with white color
-        this.setColor('#ffffff');
+        this.setEraser();
       });
     }
 

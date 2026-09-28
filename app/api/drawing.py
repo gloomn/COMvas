@@ -51,3 +51,10 @@ async def submit_drawing(
         "task_id": task_id,
         "message": "Drawing received and queued for stage dance animation."
     }
+
+@router.get("/status/{task_id}")
+async def get_task_status(task_id: str):
+    progress = queue_manager.task_progress.get(task_id)
+    if not progress:
+        raise HTTPException(status_code=404, detail="Task not found or not yet started.")
+    return progress

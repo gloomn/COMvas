@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +10,12 @@
   <!-- QRCode.js Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
+
 <body>
   <div class="qr-station-container">
     <!-- Header -->
     <header class="station-header">
-      <div class="logo">🎨 Live Sketch Stage</div>
-      <div class="live-badge"><span class="pulse-dot"></span> QR 발급 중</div>
+      <div class="logo">COMvas</div>
     </header>
 
     <!-- Main Content -->
@@ -26,10 +27,6 @@
         <div id="qrBox" class="qr-box"></div>
         <div class="url-display" id="urlDisplay">https://comvas.gloomn.site/draw</div>
       </div>
-
-      <div class="notice-badge">
-        <span>🔒 1인 1회 전송 전용 (제출 시 자동으로 다음 QR 교체)</span>
-      </div>
     </main>
 
     <!-- Footer Controls -->
@@ -40,4 +37,5 @@
 
   <script src="/frontend/qrcode/js/app.js"></script>
 </body>
+
 </html>

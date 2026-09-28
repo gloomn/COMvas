@@ -47,6 +47,10 @@ class MetaAnimator:
                     'retarget_cfg': retarget_cfg
                 }]
             },
+            'view': {
+                'USE_TRACKING_CAMERA': True,
+                'WINDOW_DIMENSIONS': [512, 512]
+            },
             'controller': {
                 'MODE': 'video_render',
                 'OUTPUT_VIDEO_PATH': output_gif

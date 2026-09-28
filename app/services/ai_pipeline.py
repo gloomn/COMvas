@@ -12,13 +12,15 @@ from config.settings import settings
 
 os.makedirs(settings.OUTPUT_DIR, exist_ok=True)
 
-async def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: dict = None) -> dict:
+async def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: dict = None, progress_callback=None) -> dict:
     """
     Executes complete Meta Animated Drawings AI pipeline:
     1. Removes background to create `texture.png` and `mask.png`
     2. Auto-aligns pose using MediaPipe (or uses custom skeleton from UI) to create `char_cfg.yaml`
     3. Generates rendered GIF frames of a normal dance
     """
+    if progress_callback: progress_callback(10, "이미지 저장 및 배경 처리 중...")
+    
     # Create specific character directory for Meta Animated Drawings
     char_dir = os.path.join(settings.OUTPUT_DIR, task_id)
     os.makedirs(char_dir, exist_ok=True)
@@ -43,6 +45,8 @@ async def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skele
     transparent_img.save(buffered, format="PNG")
     img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
+    if progress_callback: progress_callback(30, "AI 골격 분석 중...")
+    
     # 2. Skeleton alignment
     if custom_skeleton:
         skeleton_data = custom_skeleton
@@ -54,8 +58,12 @@ async def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skele
     with open(char_cfg_path, 'w', encoding='utf-8') as f:
         yaml.dump(skeleton_data, f, sort_keys=False)
     
+    if progress_callback: progress_callback(50, "애니메이션 렌더링 중... (최대 30초 소요)")
+    
     # 3. Meta Animated Drawings render to GIF -> extract frames
     dance_frames_b64 = animator.generate_dance_frames(char_dir)
+    
+    if progress_callback: progress_callback(99, "비디오 변환 및 전송 준비 중...")
     
     return {
         "character_id": task_id,

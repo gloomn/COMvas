@@ -64,6 +64,11 @@ class StageCharacter {
       if (dx > 0) this.sprite.scale.x = Math.abs(this.sprite.scale.x);
       else if (dx < 0) this.sprite.scale.x = -Math.abs(this.sprite.scale.x);
     }
+    
+    // Strict border clamping to keep characters strictly within the screen
+    const margin = 50;
+    this.sprite.x = Math.max(margin, Math.min(this.sprite.x, window.innerWidth - margin));
+    this.sprite.y = Math.max(margin, Math.min(this.sprite.y, window.innerHeight - margin));
 
     // Sort z-index by Y coordinate for natural depth sorting
     this.sprite.zIndex = this.sprite.y;

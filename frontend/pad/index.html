@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>라이브 스케치 단체 댄스 - 드로잉 패드</title>
-  <link rel="stylesheet" href="/frontend/pad/css/style.css?v=2">
+  <title>COMvas - Drawing Pad</title>
+  <link rel="stylesheet" href="/frontend/pad/css/style.css?v=4">
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <div class="app-container">
     <!-- Header -->
     <header class="app-header">
-      <div class="logo">🎨 Live Sketch Stage</div>
+      <div class="logo">COMvas</div>
       <div class="token-badge" id="tokenBadge">토큰 검증 중...</div>
     </header>
 
@@ -28,13 +30,22 @@
         <!-- Main User Drawing Canvas -->
         <canvas id="drawCanvas" width="512" height="512" class="draw-canvas"></canvas>
         <!-- Interactive Skeleton Layer (Hidden initially) -->
-        <div id="skeletonLayer" class="skeleton-layer hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; pointer-events: none;">
-            <!-- Draggable joint dots will be injected here via JS -->
+        <div id="skeletonLayer" class="skeleton-layer hidden"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; pointer-events: none;">
+          <!-- Draggable joint dots will be injected here via JS -->
         </div>
       </div>
 
       <div class="guide-tip" id="guideTip">
         <span>💡 <b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>
+      </div>
+
+      <!-- Real-time Loading Bar -->
+      <div id="progressContainer" class="hidden" style="margin-top: 20px; width: 100%; text-align: center;">
+        <div style="font-size: 0.85rem; color: #a855f7; margin-bottom: 8px; font-weight: 700;" id="progressText">대기열 진입 중... (0%)</div>
+        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+          <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #a855f7, #6366f1); transition: width 0.3s ease;"></div>
+        </div>
       </div>
     </main>
 
@@ -44,12 +55,12 @@
         <button class="color-btn active" style="background-color: #000000;" data-color="#000000"></button>
         <button class="color-btn" style="background-color: #ff3b30;" data-color="#ff3b30"></button>
         <button class="color-btn" style="background-color: #007aff;" data-color="#007aff"></button>
-        
+
         <!-- Custom Color Picker -->
         <div class="color-picker-wrapper">
           <input type="color" id="customColor" class="custom-color-input" value="#ff00ff">
         </div>
-        
+
         <!-- Eraser -->
         <button class="color-btn eraser-btn" id="eraserBtn" title="지우개">🧽</button>
       </div>
@@ -70,9 +81,10 @@
     </footer>
   </div>
 
-  <script src="/frontend/pad/js/silhouette.js?v=2"></script>
-  <script src="/frontend/pad/js/canvas.js?v=2"></script>
-  <script src="/frontend/pad/js/skeleton_ui.js?v=2"></script>
-  <script src="/frontend/pad/js/app.js?v=2"></script>
+  <script src="/frontend/pad/js/silhouette.js?v=3"></script>
+  <script src="/frontend/pad/js/canvas.js?v=3"></script>
+  <script src="/frontend/pad/js/skeleton_ui.js?v=3"></script>
+  <script src="/frontend/pad/js/app.js?v=3"></script>
 </body>
+
 </html>

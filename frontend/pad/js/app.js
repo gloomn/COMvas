@@ -56,10 +56,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const progressContainer = document.getElementById('progressContainer');
+  const progressText = document.getElementById('progressText');
+  const progressBar = document.getElementById('progressBar');
+
   // 2. Submit drawing handler
   submitBtn.addEventListener('click', async () => {
     submitBtn.disabled = true;
-    submitBtn.textContent = "⌛ 전송 중...";
+    submitBtn.textContent = "⌛ 전송 준비 중...";
+    jointControls.classList.add('hidden'); // Hide buttons to prevent clicking again
+    progressContainer.classList.remove('hidden');
 
     try {
       const blob = await pad.toBlob();
@@ -77,18 +83,45 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       if (res.ok) {
-        alert("🎉 전송 완료! 대형 스크린 무대에서 나의 캐릭터 댄스를 확인하세요!");
-        window.location.href = "about:blank"; // Close/exit page
+        const data = await res.json();
+        const taskId = data.task_id;
+        
+        // Start polling for progress
+        const pollInterval = setInterval(async () => {
+          try {
+            const statusRes = await fetch(`/api/v1/drawing/status/${taskId}`);
+            if (statusRes.ok) {
+              const statusData = await statusRes.json();
+              progressBar.style.width = `${statusData.progress}%`;
+              progressText.textContent = `${statusData.status} (${statusData.progress}%)`;
+              
+              if (statusData.progress >= 100) {
+                clearInterval(pollInterval);
+                progressText.textContent = "🎉 전송 완료! 무대를 확인하세요!";
+                setTimeout(() => {
+                  window.location.href = "about:blank"; // Close/exit page
+                }, 2000);
+              }
+            }
+          } catch (e) {
+            console.error("Polling error:", e);
+          }
+        }, 1000); // Poll every 1 second
+        
       } else {
         const errorData = await res.json();
         alert(`전송 실패: ${errorData.detail || "오류가 발생했습니다."}`);
         submitBtn.disabled = false;
         submitBtn.textContent = "🚀 무대에 전송하기";
+        jointControls.classList.remove('hidden');
+        progressContainer.classList.add('hidden');
       }
     } catch (err) {
       alert("전송 중 네트워크 오류가 발생했습니다.");
       submitBtn.disabled = false;
       submitBtn.textContent = "🚀 무대에 전송하기";
+      jointControls.classList.remove('hidden');
+      progressContainer.classList.add('hidden');
     }
   });
 

@@ -11,17 +11,17 @@ body {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #0d0f17;
   color: #f0f2f5;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .app-container {
   width: 100%;
   max-width: 480px;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -87,7 +87,7 @@ body {
 .canvas-card {
   position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: min(400px, 60vh);
   aspect-ratio: 1 / 1;
   background: #ffffff;
   border-radius: 20px;

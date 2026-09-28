@@ -14,6 +14,11 @@ class JetsonAIQueueManager:
         self.queue = asyncio.Queue()
         self.active_websockets: Set[WebSocket] = set()
         self.worker_task = None
+        self.task_progress = {}
+
+    def update_progress(self, task_id: str, progress: int, status: str):
+        self.task_progress[task_id] = {"progress": progress, "status": status}
+        print(f"[JetsonAIQueueManager] Task {task_id}: {progress}% - {status}")
 
     def start_worker(self):
         if self.worker_task is None:
@@ -44,6 +49,7 @@ class JetsonAIQueueManager:
             self.unregister_websocket(ws)
 
     async def enqueue_task(self, task_id: str, image_bytes: bytes, custom_skeleton: dict = None):
+        self.update_progress(task_id, 0, "대기열 진입 중...")
         await self.queue.put((task_id, image_bytes, custom_skeleton))
         print(f"[JetsonAIQueueManager] Enqueued task {task_id}. Queue size: {self.queue.qsize()}")
 
@@ -51,9 +57,15 @@ class JetsonAIQueueManager:
         while True:
             task_id, image_bytes, custom_skeleton = await self.queue.get()
             try:
-                print(f"[JetsonAIQueueManager] Processing task {task_id}...")
-                result = await process_sketch_pipeline(task_id, image_bytes, custom_skeleton)
+                self.update_progress(task_id, 5, "처리 준비 중...")
                 
+                # We pass a callback to ai_pipeline to update progress!
+                def progress_cb(p, s):
+                    self.update_progress(task_id, p, s)
+
+                result = await process_sketch_pipeline(task_id, image_bytes, custom_skeleton, progress_callback=progress_cb)
+                
+                self.update_progress(task_id, 100, "완료!")
                 # Broadcast new character to HDMI WebGL viewer
                 await self.broadcast({
                     "event": "NEW_CHARACTER",
