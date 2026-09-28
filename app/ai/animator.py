@@ -31,7 +31,8 @@ class MetaAnimator:
         # In Animated Drawings, 'jesse_dance' is a standard normal dance
         # We use the examples directory copied into the project root
         motion_cfg = os.path.join(settings.BASE_DIR, 'examples/config/motion/jesse_dance.yaml')
-        retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config/retarget/fair1_ppf.yaml')
+        # Jesse dance uses Rokoko BVH, which requires the mixamo_fff retarget config
+        retarget_cfg = os.path.join(settings.BASE_DIR, 'examples/config/retarget/mixamo_fff.yaml')
         
         # Build the MVC config exactly as Animated Drawings expects
         mvc_cfg = {
