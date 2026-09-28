@@ -26,24 +26,39 @@ if ! grep -q "CUDA_HOME=/usr/local/cuda" ~/.bashrc; then
     echo 'export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}' >> ~/.bashrc
 fi
 
+<<<<<<< HEAD
 # 3. Jetson 전용 CUDA 가속 PyTorch & torchvision 설치
+=======
+# 3. Detect Python Version & Install PyTorch for Jetson
+>>>>>>> d9b155df8e96f03fa19986ad32150f1b334d3921
 echo "[3/5] Checking PyTorch for Jetson..."
 if python3 -c "import torch; assert torch.cuda.is_available()" 2>/dev/null; then
     echo "✓ PyTorch with CUDA is already installed and working!"
 else
     echo "Installing Jetson-optimized PyTorch with CUDA acceleration..."
     
+<<<<<<< HEAD
     # 1순위: Jetson AI Lab 전용 인덱스 서버 (JetPack 6.0/6.1 / CUDA 12.2 최적화)
     if pip3 install --no-cache-dir torch torchvision --index-url https://pypi.jetson-ai-lab.io/jp6/cu122; then
         echo "✓ Successfully installed PyTorch via Jetson AI Lab Index!"
     else
         # 2순위: NVIDIA 공식 PyTorch Wheel 폴백
+=======
+    # Try Jetson AI Lab Index Server (Best for JetPack 6.0/6.1 - CUDA 12.2)
+    if pip3 install --no-cache-dir torch torchvision --index-url https://pypi.jetson-ai-lab.io/jp6/cu122; then
+        echo "✓ Successfully installed PyTorch via Jetson AI Lab Index!"
+    else
+>>>>>>> d9b155df8e96f03fa19986ad32150f1b334d3921
         echo "Fallback: Installing official NVIDIA PyTorch wheel for JetPack 6.0..."
         pip3 install --no-cache-dir https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-2.4.0a0+07cecf4168.nv24.05.14710581-cp310-cp310-linux_aarch64.whl
     fi
 fi
 
+<<<<<<< HEAD
 # 4. CUDA 가속 정상 연동 여부 검증
+=======
+# 4. Verify PyTorch CUDA Acceleration
+>>>>>>> d9b155df8e96f03fa19986ad32150f1b334d3921
 echo "[4/5] Verifying PyTorch CUDA Acceleration..."
 python3 -c "import torch; print('PyTorch Version:', torch.__version__); print('CUDA Available:', torch.cuda.is_available())"
 
@@ -51,10 +66,18 @@ python3 -c "import torch; print('PyTorch Version:', torch.__version__); print('C
 echo "[5/5] Installing Python requirements..."
 pip3 install -r requirements.txt
 
+<<<<<<< HEAD
 # 6. 필수 데이터/DB 저장 디렉토리 생성
+=======
+# 6. Create required directory structure
+>>>>>>> d9b155df8e96f03fa19986ad32150f1b334d3921
 mkdir -p data/db data/models data/outputs data/qr_codes
 
 echo "=========================================================="
 echo "  Setup Complete! Jetson Orin Nano Super Environment Ready "
 echo "  Start Server: uvicorn app.main:app --host 0.0.0.0 --port 8000"
+<<<<<<< HEAD
 echo "=========================================================="
+=======
+echo "=========================================================="
+>>>>>>> d9b155df8e96f03fa19986ad32150f1b334d3921

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Sketch Stage - 1회용 QR 코드 스테이션</title>
+  <link rel="stylesheet" href="/frontend/qrcode/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <!-- QRCode.js Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <div class="qr-station-container">
+    <!-- Header -->
+    <header class="station-header">
+      <div class="logo">🎨 Live Sketch Stage</div>
+      <div class="live-badge"><span class="pulse-dot"></span> QR 발급 중</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="qr-main">
+      <h1 class="headline">스마트폰 카메라로<br>QR 코드를 스캔하세요!</h1>
+      <p class="subhead">그림을 완성하면 대형 무대에서 내 캐릭터가 춤추기 시작합니다.</p>
+
+      <div class="qr-card">
+        <div id="qrBox" class="qr-box"></div>
+        <div class="url-display" id="urlDisplay">https://comvas.gloomn.site/draw</div>
+      </div>
+
+      <div class="notice-badge">
+        <span>🔒 1인 1회 전송 전용 (제출 시 자동으로 다음 QR 교체)</span>
+      </div>
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="station-footer">
+      <button id="refreshBtn" class="refresh-btn">🔄 새 QR 코드 생성하기</button>
+    </footer>
+  </div>
+
+  <script src="/frontend/qrcode/js/app.js"></script>
+</body>
+</html>
