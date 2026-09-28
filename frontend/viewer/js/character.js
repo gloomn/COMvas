@@ -19,56 +19,49 @@ class StageCharacter {
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
     this.sprite.scale.set(0.35);
     
-    // Spawn at random horizontal location but fixed vertical middle
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    this.x = w * 0.1 + Math.random() * (w * 0.8);
-    this.y = h * 0.5; // Strictly spawn in the vertical middle
+    // Spawn strictly in the exact center of the screen
+    this.x = window.innerWidth / 2;
+    this.y = window.innerHeight / 2;
     this.sprite.x = this.x;
     this.sprite.y = this.y;
 
-    // Movement & Random Path Variables
+    // Movement Velocity (Walk horizontally left or right)
     this.speed = 1.0 + Math.random() * 0.6;
-    this.targetX = this.x;
-    this.targetY = this.y;
-    this.pickNewTarget();
+    this.vx = (Math.random() > 0.5 ? 1 : -1) * this.speed;
 
     // Add to WebGL stage
     this.stageApp.stage.addChild(this.sprite);
   }
 
-  pickNewTarget() {
-    const margin = 90; // Half of character's physical width (512 * 0.35 / 2 = ~90)
-    const w = window.innerWidth - margin * 2;
-    
-    // Only pick a new target horizontally (좌우로만 이동)
-    this.targetX = margin + Math.random() * w;
-    this.targetY = this.y; // Keep Y coordinate exactly the same!
-  }
-
   update(delta) {
     if (this.isFadingOut) return;
 
-    // Move character along horizontal path
-    const dx = this.targetX - this.sprite.x;
-    const dist = Math.abs(dx);
+    // 1. Move character horizontally
+    this.sprite.x += this.vx * delta;
 
-    if (dist < 10) {
-      this.pickNewTarget();
-    } else {
-      this.sprite.x += Math.sign(dx) * this.speed * delta;
-      
-      // Flip sprite orientation depending on movement direction
-      if (dx > 0) this.sprite.scale.x = Math.abs(this.sprite.scale.x);
-      else if (dx < 0) this.sprite.scale.x = -Math.abs(this.sprite.scale.x);
+    // 2. Exact Border Bouncing Logic
+    const margin = 90; // Half of character's physical width (512 * 0.35 / 2 = ~90)
+    
+    // Left border hit
+    if (this.sprite.x <= margin) {
+      this.sprite.x = margin;
+      this.vx = Math.abs(this.vx); // Bounce right
+    } 
+    // Right border hit
+    else if (this.sprite.x >= window.innerWidth - margin) {
+      this.sprite.x = window.innerWidth - margin;
+      this.vx = -Math.abs(this.vx); // Bounce left
+    }
+
+    // 3. Flip sprite orientation depending on movement direction
+    if (this.vx > 0) {
+      this.sprite.scale.x = Math.abs(this.sprite.scale.x);
+    } else if (this.vx < 0) {
+      this.sprite.scale.x = -Math.abs(this.sprite.scale.x);
     }
     
-    // Strict border clamping to keep characters strictly within the screen
-    const margin = 90;
-    this.sprite.x = Math.max(margin, Math.min(this.sprite.x, window.innerWidth - margin));
-    this.sprite.y = this.y; // Force Y coordinate lock
-
-    // Sort z-index by Y coordinate for natural depth sorting
+    // 4. Strict Y Coordinate Lock
+    this.sprite.y = this.y;
     this.sprite.zIndex = this.sprite.y;
   }
 
