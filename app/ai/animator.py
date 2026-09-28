@@ -22,10 +22,13 @@ class MetaAnimator:
         # We output a GIF to extract frames from
         output_gif = os.path.join(char_dir, "video.gif")
         
-        # In Animated Drawings, 'jesse_dance' is a standard normal dance
-        # By default, AD includes these configs in its package.
-        motion_cfg = 'config/motion/jesse_dance.yaml'
-        retarget_cfg = 'config/retarget/fair1_ppf.yaml'
+        # Find absolute paths to configs within the animated_drawings package
+        import animated_drawings
+        from pathlib import Path
+        ad_pkg_dir = Path(animated_drawings.__file__).parent
+        
+        motion_cfg = str(ad_pkg_dir / 'config' / 'motion' / 'jesse_dance.yaml')
+        retarget_cfg = str(ad_pkg_dir / 'config' / 'retarget' / 'fair1_ppf.yaml')
         
         # Render the animation
         try:
