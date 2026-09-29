@@ -74,6 +74,10 @@ class MetaAnimator:
             render.start(mvc_cfg_path)
         except Exception as e:
             print(f"[Animator] Error rendering animation: {e}")
+            import traceback
+            os.makedirs(settings.DATA_DIR, exist_ok=True)
+            with open(os.path.join(settings.DATA_DIR, "error_log.txt"), "w") as err_f:
+                err_f.write(traceback.format_exc())
             return [], chosen_motion.split('/')[-1].split('.')[0]
 
         # Extract frames from generated GIF
