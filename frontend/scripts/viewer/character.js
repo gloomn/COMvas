@@ -22,8 +22,8 @@ class StageCharacter {
     // Exact Border Bouncing Margin
     this.margin = 50;
 
-    // Check animation type (removed movement logic as requested)
-    this.vx = 0;
+    // Give characters random initial velocity
+    this.vx = (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 1.5);
 
     // Spawn character across the stage randomly, but keep them strictly inside bounds
     // Margin prevents them from spawning half-off the screen
