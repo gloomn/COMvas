@@ -191,8 +191,10 @@ class DrawingPadCanvas {
     const clearBtn = document.getElementById('clearBtn');
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
-        this.clear();
-        this.saveState();
+        if (confirm('정말 지우시겠습니까? 지운 그림은 복구할 수 없습니다.')) {
+          this.clear();
+          this.saveState();
+        }
       });
     }
 

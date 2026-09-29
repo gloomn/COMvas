@@ -31,16 +31,18 @@ body {
   width: 100%;
   max-width: 600px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  padding-top: 20px;
 }
 
 .logo {
-  font-size: 1.3rem;
+  font-size: 3.5rem;
   font-weight: 900;
   background: linear-gradient(135deg, #a855f7, #60a5fa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: -1px;
 }
 
 .live-badge {

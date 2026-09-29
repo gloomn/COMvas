@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COMvas - Admin Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/frontend/assets/logo.png">
   <style>
     :root { --bg: #0f111a; --surface: #1e1e28; --primary: #a855f7; --text: #f1f5f9; --text-dim: #94a3b8; }
     body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
@@ -104,7 +105,7 @@
   <!-- Password Lock Overlay -->
   <div id="passwordOverlay">
     <div class="login-box">
-      <h2>COMvas Admin</h2>
+      <h2 style="display:flex; justify-content:center; align-items:center; gap:10px;"><img src="/frontend/assets/logo.png" alt="logo" style="width: 32px; height: 32px; border-radius: 8px;">COMvas Admin</h2>
       <p>시스템에 안전하게 로그인하세요.</p>
       <input type="password" id="adminPassword" placeholder="비밀번호 입력">
       <button id="unlockBtn">시스템 접속</button>
@@ -112,7 +113,7 @@
   </div>
 
   <header>
-    <h1>COMvas Admin Center</h1>
+    <h1 style="display:flex; align-items:center; gap:10px;"><img src="/frontend/assets/logo.png" alt="logo" style="width: 28px; height: 28px; border-radius: 6px;">COMvas Admin Center</h1>
     <div style="display: flex; gap: 12px;">
       <a href="/viewer" target="_blank" class="btn" style="display: flex; align-items: center; gap: 6px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
