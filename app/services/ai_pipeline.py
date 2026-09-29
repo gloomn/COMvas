@@ -5,6 +5,9 @@ import yaml
 import base64
 import numpy as np
 from PIL import Image
+import cv2
+import threading
+import time
 from app.ai.bg_remover import bg_remover
 from app.ai.pose_estimator import pose_estimator
 from app.ai.animator import animator
@@ -34,7 +37,6 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     
     # Save mask.png (Required by Meta Animated Drawings)
     # Extract alpha channel to create a binary mask
-    import cv2
     np_img = np.array(transparent_img)
     mask = (np_img[:, :, 3] > 0).astype(np.uint8) * 255
     
@@ -65,9 +67,6 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
         yaml.dump(skeleton_data, f, sort_keys=False)
     
     if progress_callback: progress_callback(50, "애니메이션 렌더링 중... (최대 30초 소요)")
-    
-    import threading
-    import time
     
     # Simulate smooth progress from 50% to 95% while the synchronous render is blocking
     rendering_active = True

@@ -6,6 +6,8 @@ from PIL import Image
 from animated_drawings import render
 from config.settings import settings
 import yaml
+import random
+import numpy as np
 
 class MetaAnimator:
     """
@@ -21,8 +23,6 @@ class MetaAnimator:
         Returns a list of base64 PNG frames for PIXI.AnimatedSprite.
         """
         output_gif = os.path.join(char_dir, "video.gif")
-        
-        import random
         
         # Define available dynamic motions and their corresponding retarget configs
         available_motions = {
@@ -82,7 +82,6 @@ class MetaAnimator:
                     frame = gif.convert("RGBA")
                     
                     # Make pure white background transparent (Vectorized with NumPy for speed)
-                    import numpy as np
                     frame_array = np.array(frame)
                     # Mask where R, G, B are all > 240
                     white_mask = (frame_array[:, :, 0] > 240) & (frame_array[:, :, 1] > 240) & (frame_array[:, :, 2] > 240)

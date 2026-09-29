@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import List
 from app.services.queue_manager import queue_manager
 
 router = APIRouter(prefix="/api/v1/admin", tags=["Admin"])
