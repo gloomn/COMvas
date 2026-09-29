@@ -10,7 +10,7 @@ body, html {
   width: 100vw;
   height: 100vh;
   background-color: #0a0b10;
-  background-image: url('/frontend/viewer/assets/stage_background.jpg');
+  background-image: url('/frontend/assets/viewer/stage_background.jpg');
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;

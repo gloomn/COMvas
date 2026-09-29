@@ -50,27 +50,27 @@ async def stage_websocket_endpoint(websocket: WebSocket):
 # HTML Page Routes
 @app.get("/draw")
 async def get_drawing_pad():
-    pad_html = os.path.join(frontend_dir, "pad", "index.html")
+    pad_html = os.path.join(frontend_dir, "pages", "pad", "index.html")
     return FileResponse(pad_html)
 
 @app.get("/viewer")
 async def get_stage_viewer():
-    viewer_html = os.path.join(frontend_dir, "viewer", "index.html")
+    viewer_html = os.path.join(frontend_dir, "pages", "viewer", "index.html")
     return FileResponse(viewer_html)
 
 @app.get("/qrcode")
 async def get_qrcode_page():
-    qr_html = os.path.join(frontend_dir, "qrcode", "index.html")
+    qr_html = os.path.join(frontend_dir, "pages", "qrcode", "index.html")
     return FileResponse(qr_html)
 
 @app.get("/keepdraw")
 async def get_keepdraw_page():
-    keepdraw_html = os.path.join(frontend_dir, "keepdraw", "index.html")
+    keepdraw_html = os.path.join(frontend_dir, "pages", "keepdraw", "index.html")
     return FileResponse(keepdraw_html)
 
 @app.get("/admin")
 async def get_admin_page():
-    admin_html = os.path.join(frontend_dir, "admin", "index.html")
+    admin_html = os.path.join(frontend_dir, "pages", "admin", "index.html")
     return FileResponse(admin_html)
 
 @app.get("/")
