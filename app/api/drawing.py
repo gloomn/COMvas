@@ -31,6 +31,26 @@ async def remove_background(file: UploadFile = File(...)):
     b64 = base64.b64encode(out_io.getvalue()).decode("utf-8")
     return {"image": f"data:image/png;base64,{b64}"}
 
+@router.post("/detect-pose")
+async def detect_pose(file: UploadFile = File(...)):
+    import tempfile
+    import os
+    from app.ai.pose_estimator import pose_estimator
+    
+    image_bytes = await file.read()
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
+        tmp.write(image_bytes)
+        tmp_path = tmp.name
+        
+    try:
+        skeleton_data = pose_estimator.get_aligned_skeleton(tmp_path)
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+            
+    return skeleton_data
+
 @router.post("/submit")
 async def submit_drawing(
     token: str = Form(...),

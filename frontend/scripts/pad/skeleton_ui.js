@@ -5,8 +5,27 @@ class SkeletonUI {
     this.isDragging = false;
     this.activeJoint = null;
     
+    // Parent map for hierarchy and drawing lines
+    this.parentMap = {
+      root: null,
+      hip: 'root',
+      torso: 'hip',
+      neck: 'torso',
+      right_shoulder: 'torso',
+      right_elbow: 'right_shoulder',
+      right_hand: 'right_elbow',
+      left_shoulder: 'torso',
+      left_elbow: 'left_shoulder',
+      left_hand: 'left_elbow',
+      right_hip: 'root',
+      right_knee: 'right_hip',
+      right_foot: 'right_knee',
+      left_hip: 'root',
+      left_knee: 'left_hip',
+      left_foot: 'left_knee'
+    };
+    
     // Standard 16 joints required by Animated Drawings
-    // Default coordinates matched roughly to the Da-ja guide silhouette
     this.defaultJoints = {
       root: [256, 260],
       hip: [256, 260],
@@ -33,6 +52,16 @@ class SkeletonUI {
   init() {
     this.layer.innerHTML = '';
     
+    // Create SVG for skeleton lines
+    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.svg.style.position = 'absolute';
+    this.svg.style.top = '0';
+    this.svg.style.left = '0';
+    this.svg.style.width = '100%';
+    this.svg.style.height = '100%';
+    this.svg.style.pointerEvents = 'none';
+    this.layer.appendChild(this.svg);
+    
     for (const [name, pos] of Object.entries(this.defaultJoints)) {
       const dot = document.createElement('div');
       dot.className = 'joint-dot';
@@ -40,12 +69,13 @@ class SkeletonUI {
       dot.style.position = 'absolute';
       dot.style.width = '20px';
       dot.style.height = '20px';
-      dot.style.backgroundColor = 'red';
+      dot.style.backgroundColor = '#ec4899';
       dot.style.border = '2px solid white';
       dot.style.borderRadius = '50%';
       dot.style.transform = 'translate(-50%, -50%)';
       dot.style.cursor = 'grab';
       dot.style.pointerEvents = 'auto'; // allow dragging
+      dot.style.boxShadow = '0 0 5px rgba(236,72,153,0.8)';
       
       // Create label
       const label = document.createElement('div');
@@ -55,9 +85,9 @@ class SkeletonUI {
       label.style.left = '50%';
       label.style.transform = 'translateX(-50%)';
       label.style.color = 'white';
-      label.style.background = 'rgba(0,0,0,0.5)';
+      label.style.background = 'rgba(0,0,0,0.6)';
       label.style.padding = '2px 4px';
-      label.style.fontSize = '10px';
+      label.style.fontSize = '9px';
       label.style.borderRadius = '4px';
       label.style.pointerEvents = 'none';
       label.style.whiteSpace = 'nowrap';
@@ -66,17 +96,69 @@ class SkeletonUI {
       this.layer.appendChild(dot);
       
       this.joints[name] = { el: dot, x: pos[0], y: pos[1] };
+    }
+    
+    this.updateAllLines();
+    for (const name of Object.keys(this.joints)) {
       this.updateDotPos(name);
+    }
+  }
+
+  updateAllLines() {
+    this.svg.innerHTML = '';
+    for (const [name, joint] of Object.entries(this.joints)) {
+      const parentName = this.parentMap[name];
+      if (parentName && this.joints[parentName]) {
+        const parentJoint = this.joints[parentName];
+        
+        const pctX1 = (joint.x / 512) * 100;
+        const pctY1 = (joint.y / 512) * 100;
+        const pctX2 = (parentJoint.x / 512) * 100;
+        const pctY2 = (parentJoint.y / 512) * 100;
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', `${pctX1}%`);
+        line.setAttribute('y1', `${pctY1}%`);
+        line.setAttribute('x2', `${pctX2}%`);
+        line.setAttribute('y2', `${pctY2}%`);
+        line.setAttribute('stroke', '#a855f7');
+        line.setAttribute('stroke-width', '4');
+        line.setAttribute('stroke-linecap', 'round');
+        line.dataset.child = name;
+        this.svg.appendChild(line);
+      }
     }
   }
 
   updateDotPos(name) {
     const joint = this.joints[name];
-    // Convert 512x512 virtual coordinates to percentages for responsive rendering
     const pctX = (joint.x / 512) * 100;
     const pctY = (joint.y / 512) * 100;
     joint.el.style.left = `${pctX}%`;
     joint.el.style.top = `${pctY}%`;
+    
+    const lines = this.svg.querySelectorAll('line');
+    lines.forEach(line => {
+      const childName = line.dataset.child;
+      if (childName === name) {
+        line.setAttribute('x1', `${pctX}%`);
+        line.setAttribute('y1', `${pctY}%`);
+      } else if (this.parentMap[childName] === name) {
+        line.setAttribute('x2', `${pctX}%`);
+        line.setAttribute('y2', `${pctY}%`);
+      }
+    });
+  }
+
+  setJoints(skeletonArray) {
+    skeletonArray.forEach(j => {
+      if (this.joints[j.name]) {
+        this.joints[j.name].x = j.loc[0];
+        this.joints[j.name].y = j.loc[1];
+        this.updateDotPos(j.name);
+      }
+    });
+    this.updateAllLines();
   }
 
   show() {
@@ -109,11 +191,9 @@ class SkeletonUI {
       let x = clientX - rect.left;
       let y = clientY - rect.top;
       
-      // Clamp to bounds
       x = Math.max(0, Math.min(x, rect.width));
       y = Math.max(0, Math.min(y, rect.height));
       
-      // Map back to 512x512 virtual canvas space
       const scaleX = 512 / rect.width;
       const scaleY = 512 / rect.height;
       
@@ -141,30 +221,10 @@ class SkeletonUI {
 
   exportSkeleton() {
     const exported = [];
-    // Need to provide hierarchy as expected by Animated Drawings
-    const parentMap = {
-      root: null,
-      hip: 'root',
-      torso: 'hip',
-      neck: 'torso',
-      right_shoulder: 'torso',
-      right_elbow: 'right_shoulder',
-      right_hand: 'right_elbow',
-      left_shoulder: 'torso',
-      left_elbow: 'left_shoulder',
-      left_hand: 'left_elbow',
-      right_hip: 'root',
-      right_knee: 'right_hip',
-      right_foot: 'right_knee',
-      left_hip: 'root',
-      left_knee: 'left_hip',
-      left_foot: 'left_knee'
-    };
-    
     for (const [name, joint] of Object.entries(this.joints)) {
       exported.push({
         name: name,
-        parent: parentMap[name],
+        parent: this.parentMap[name],
         loc: [joint.x, joint.y]
       });
     }
