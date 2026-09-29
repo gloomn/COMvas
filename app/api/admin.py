@@ -21,3 +21,10 @@ async def delete_object(req: DeleteRequest):
         "data": {"id": obj_id}
     })
     return {"status": "success", "message": f"Object {obj_id} deletion broadcasted."}
+
+@router.post("/qr/refresh")
+async def refresh_qr():
+    await queue_manager.broadcast({
+        "event": "QR_REFRESH_REQUEST"
+    })
+    return {"status": "success", "message": "QR refresh broadcasted."}

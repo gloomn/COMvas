@@ -42,14 +42,15 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (msg.event === 'QR_SCANNED') {
           console.log('[QRCodePage] QR was scanned by a user! Generating fresh QR for the next person...');
           fetchAndRenderQR();
+        } else if (msg.event === 'QR_REFRESH_REQUEST') {
+          console.log('[QRCodePage] Admin requested QR refresh! Generating fresh QR...');
+          fetchAndRenderQR();
         }
       } catch (e) {}
     };
 
     ws.onclose = () => setTimeout(initWebSocket, 3000);
   }
-
-  refreshBtn.addEventListener('click', fetchAndRenderQR);
 
   // Initial load
   fetchAndRenderQR();

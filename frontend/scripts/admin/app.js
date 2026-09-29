@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const charCountEl = document.getElementById('charCount');
   const logContainer = document.getElementById('logContainer');
   const clearLogBtn = document.getElementById('clearLogBtn');
+  const refreshQrBtn = document.getElementById('refreshQrBtn');
 
   function addLog(msg, type = '') {
     const logItem = document.createElement('div');
@@ -48,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
         card.className = 'card';
         card.innerHTML = `
           <img src="${obj.thumbnail}" alt="Thumbnail">
-          <div class="type">${obj.type === 'STATIC' ? '⭐ 무대 소품' : '🕺 춤추는 캐릭터'}</div>
+          <div class="type">${obj.type === 'STATIC' ? '[Static] 무대 소품' : '[Char] 춤추는 캐릭터'}</div>
           <div class="id">${obj.id}</div>
-          <button class="delete-btn" data-id="${obj.id}">🗑️ 무대에서 삭제</button>
+          <button class="delete-btn" data-id="${obj.id}">[DELETE] 무대에서 삭제</button>
         `;
         grid.appendChild(card);
       });
@@ -63,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', async (e) => {
           const id = e.target.getAttribute('data-id');
           if (confirm('정말 삭제하시겠습니까? 무대에서 즉시 사라집니다.')) {
-            addLog(`삭제 명령 전송: ${id}`, 'log-delete');
+            addLog(`> DELETE_CMD: ${id}`, 'log-delete');
             await fetch('/api/v1/admin/delete', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -80,12 +81,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   refreshBtn.addEventListener('click', () => {
-    addLog("수동 데이터 동기화 요청...");
+    addLog("> SYNC_CMD: 수동 데이터 동기화 요청...");
     loadObjects();
   });
   
+  if (refreshQrBtn) {
+    refreshQrBtn.addEventListener('click', async () => {
+      addLog("> QR_REFRESH_CMD: QR코드 강제 갱신 요청...");
+      try {
+        await fetch('/api/v1/admin/qr/refresh', { method: 'POST' });
+      } catch (e) {
+        addLog("> ERROR: QR 갱신 실패", "log-delete");
+      }
+    });
+  }
+  
   loadObjects();
-  addLog("관리자 패널 로드 완료. 시스템 대기 중...");
+  addLog("> SYSTEM_READY: 관리자 패널 로드 완료. 시스템 대기 중...");
 
   // WebSocket for Live Logs
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -96,29 +108,33 @@ document.addEventListener('DOMContentLoaded', () => {
     ws = new WebSocket(wsUrl);
     
     ws.onopen = () => {
-      addLog("🟢 실시간 시스템 연결됨", "log-new");
+      addLog("> WS_CONNECTED: 실시간 시스템 연결됨", "log-new");
     };
     
     ws.onmessage = (event) => {
       try {
         const msg = JSON.parse(event.data);
-        if (msg.type === 'NEW_CHARACTER') {
-          addLog(`✨ NEW_CHAR: ${msg.data.character_id}`, 'log-new');
+        if (msg.type === 'NEW_CHARACTER' || msg.event === 'NEW_CHARACTER') {
+          addLog(`> NEW_CHAR: ${msg.data.character_id}`, 'log-new');
           loadObjects();
-        } else if (msg.type === 'NEW_STATIC') {
-          addLog(`🌟 NEW_STATIC: ${msg.data.object_id}`, 'log-new');
+        } else if (msg.type === 'NEW_STATIC' || msg.event === 'NEW_STATIC') {
+          addLog(`> NEW_STATIC: ${msg.data.object_id}`, 'log-new');
           loadObjects();
-        } else if (msg.type === 'DELETE_OBJECT') {
-          addLog(`🗑️ DEL_OBJ: ${msg.data.id}`, 'log-delete');
+        } else if (msg.type === 'DELETE_OBJECT' || msg.event === 'DELETE_OBJECT') {
+          addLog(`> DEL_OBJ: ${msg.data.id}`, 'log-delete');
           loadObjects();
-        } else if (msg.type === 'SERVER_LOG') {
+        } else if (msg.type === 'SERVER_LOG' || msg.event === 'SERVER_LOG') {
           addLog(`> ${msg.message}`, 'log-server');
+        } else if (msg.type === 'QR_REFRESH_REQUEST' || msg.event === 'QR_REFRESH_REQUEST') {
+          addLog(`> EVENT: QR코드 갱신 브로드캐스트 전송됨`, 'log-server');
+        } else if (msg.type === 'QR_SCANNED' || msg.event === 'QR_SCANNED') {
+          addLog(`> EVENT: 사용자 QR 스캔 감지됨`, 'log-server');
         }
       } catch(e) {}
     };
     
     ws.onclose = () => {
-      addLog("🔴 실시간 연결 끊김. 3초 후 재연결 시도...", "log-delete");
+      addLog("> WS_DISCONNECTED: 실시간 연결 끊김. 3초 후 재연결 시도...", "log-delete");
       setTimeout(connectWebSocket, 3000);
     };
   }
