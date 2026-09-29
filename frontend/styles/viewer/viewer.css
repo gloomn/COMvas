@@ -146,3 +146,62 @@ body, html {
 .neon-text-animated {
   animation: neon-pulse 2s infinite alternate;
 }
+
+/* Stage Lighting Effects */
+.stage-lights-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1; /* Above background, below characters */
+  overflow: hidden;
+}
+
+.spotlight {
+  position: absolute;
+  top: -10vh;
+  width: 30vw;
+  height: 120vh;
+  background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(168,85,247,0.15) 40%, rgba(0,0,0,0) 100%);
+  clip-path: polygon(40% 0, 60% 0, 100% 100%, 0% 100%);
+  transform-origin: top center;
+  mix-blend-mode: screen;
+  filter: blur(8px);
+}
+
+.spotlight-left {
+  left: 10vw;
+  animation: sweep-left 8s ease-in-out infinite alternate;
+}
+
+.spotlight-right {
+  right: 10vw;
+  animation: sweep-right 7s ease-in-out infinite alternate;
+}
+
+.spotlight-center {
+  left: 35vw;
+  width: 40vw;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(236,72,153,0.1) 50%, rgba(0,0,0,0) 100%);
+  animation: sweep-center 10s ease-in-out infinite alternate;
+}
+
+@keyframes sweep-left {
+  0% { transform: rotate(15deg); opacity: 0.5; }
+  50% { transform: rotate(-30deg); opacity: 0.8; }
+  100% { transform: rotate(20deg); opacity: 0.4; }
+}
+
+@keyframes sweep-right {
+  0% { transform: rotate(-15deg); opacity: 0.6; }
+  50% { transform: rotate(35deg); opacity: 0.3; }
+  100% { transform: rotate(-25deg); opacity: 0.7; }
+}
+
+@keyframes sweep-center {
+  0% { transform: rotate(-10deg); opacity: 0.4; }
+  50% { transform: rotate(10deg); opacity: 0.7; }
+  100% { transform: rotate(-15deg); opacity: 0.5; }
+}
