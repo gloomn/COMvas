@@ -1,7 +1,7 @@
 import uuid
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, status
 from sqlalchemy.orm import Session
-from app.api.deps import get_db
+from app.api.deps import get_db, ACTIVE_ADMIN_TOKENS
 from app.services.token_service import verify_and_consume_token
 from app.services.queue_manager import queue_manager
 
@@ -73,7 +73,7 @@ async def submit_drawing(
     db: Session = Depends(get_db)
 ):
     # 1. Atomically consume token (or bypass for admin keepdraw)
-    if token != "semicolon2026!":
+    if token not in ACTIVE_ADMIN_TOKENS:
         success = verify_and_consume_token(db, token)
         if not success:
             raise HTTPException(

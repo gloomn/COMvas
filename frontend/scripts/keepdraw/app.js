@@ -8,12 +8,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   const passInput = document.getElementById('adminPassword');
   const unlockBtn = document.getElementById('unlockBtn');
   
-  unlockBtn.addEventListener('click', () => {
-    if (passInput.value === 'semicolon2026!') {
-      adminToken = passInput.value;
-      overlay.style.display = 'none';
-    } else {
-      alert("비밀번호가 틀렸습니다.");
+  unlockBtn.addEventListener('click', async () => {
+    const password = passInput.value;
+    try {
+      const res = await fetch('/api/v1/auth/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        adminToken = data.admin_token;
+        overlay.style.display = 'none';
+      } else {
+        alert("비밀번호가 틀렸습니다.");
+      }
+    } catch (err) {
+      alert("서버 연결 실패");
     }
   });
 

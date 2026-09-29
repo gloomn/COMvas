@@ -25,3 +25,20 @@ def verify_token_endpoint(token: str, db: Session = Depends(get_db)):
             detail="Token is invalid, expired, or already used."
         )
     return {"valid": True, "token": token}
+
+from pydantic import BaseModel
+import secrets
+from app.api.deps import ACTIVE_ADMIN_TOKENS
+
+class AdminLoginRequest(BaseModel):
+    password: str
+
+@router.post("/admin/login")
+def admin_login(req: AdminLoginRequest):
+    """Verifies admin password and issues a session token."""
+    if req.password == "semicolon2026!":
+        # Generate a secure 32-byte hex token
+        token = secrets.token_hex(32)
+        ACTIVE_ADMIN_TOKENS.add(token)
+        return {"admin_token": token}
+    raise HTTPException(status_code=401, detail="Invalid password")

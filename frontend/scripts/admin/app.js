@@ -12,13 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const passInput = document.getElementById('adminPassword');
   const unlockBtn = document.getElementById('unlockBtn');
   let isAdminUnlocked = false;
+  let adminToken = "";
 
-  unlockBtn.addEventListener('click', () => {
-    if (passInput.value === 'semicolon2026!') {
-      isAdminUnlocked = true;
-      overlay.style.display = 'none';
-    } else {
-      alert("비밀번호가 틀렸습니다.");
+  unlockBtn.addEventListener('click', async () => {
+    const password = passInput.value;
+    try {
+      const res = await fetch('/api/v1/auth/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        adminToken = data.admin_token;
+        isAdminUnlocked = true;
+        overlay.style.display = 'none';
+        // Refresh grid after unlock
+        fetchObjectsGrid();
+      } else {
+        alert("비밀번호가 틀렸습니다.");
+      }
+    } catch (err) {
+      alert("서버 연결 실패");
     }
   });
 
@@ -41,7 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadObjects() {
     try {
-      const res = await fetch('/api/v1/admin/objects');
+      const res = await fetch('/api/v1/admin/objects', {
+        headers: { 'Authorization': 'Bearer ' + adminToken }
+      });
       const data = await res.json();
       
       grid.innerHTML = '';
@@ -82,7 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
             addLog(`> DELETE_CMD: ${id}`, 'log-delete');
             await fetch('/api/v1/admin/delete', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + adminToken 
+              },
               body: JSON.stringify({ id })
             });
             setTimeout(loadObjects, 500);
@@ -104,7 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshQrBtn.addEventListener('click', async () => {
       addLog("> QR_REFRESH_CMD: QR코드 강제 갱신 요청...");
       try {
-        await fetch('/api/v1/admin/qr/refresh', { method: 'POST' });
+        await fetch('/api/v1/admin/qr/refresh', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + adminToken }
+        });
       } catch (e) {
         addLog("> ERROR: QR 갱신 실패", "log-delete");
       }
