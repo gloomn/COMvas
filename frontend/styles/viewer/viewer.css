@@ -130,25 +130,25 @@ body, html {
 }
 
 .glow-cyan {
-  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #0284c7, 0 0 20px #0284c7, 0 0 30px #0369a1, 0 0 40px #0369a1;
+  text-shadow: 0 0 2px #00ffff, 0 0 5px #00ffff, 0 0 10px #0284c7, 0 0 20px #0284c7;
   animation: neon-pulse-cyan 2s infinite alternate;
 }
 
 @keyframes neon-pulse-cyan {
-  0% { opacity: 1; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #0284c7, 0 0 20px #0284c7, 0 0 30px #0369a1, 0 0 40px #0369a1; }
-  50% { opacity: 0.8; text-shadow: 0 0 2px #00ffff, 0 0 5px #00ffff, 0 0 8px #0284c7, 0 0 10px #0284c7, 0 0 15px #0369a1, 0 0 20px #0369a1; }
-  100% { opacity: 1; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #0284c7, 0 0 20px #0284c7, 0 0 30px #0369a1, 0 0 40px #0369a1; }
+  0% { opacity: 1; text-shadow: 0 0 2px #00ffff, 0 0 5px #00ffff, 0 0 10px #0284c7, 0 0 20px #0284c7; }
+  50% { opacity: 0.85; text-shadow: 0 0 1px #00ffff, 0 0 3px #00ffff, 0 0 7px #0284c7, 0 0 15px #0284c7; }
+  100% { opacity: 1; text-shadow: 0 0 2px #00ffff, 0 0 5px #00ffff, 0 0 10px #0284c7, 0 0 20px #0284c7; }
 }
 
 .glow-orange {
-  text-shadow: 0 0 5px #ff7a00, 0 0 10px #ff7a00, 0 0 15px #ea580c, 0 0 20px #ea580c, 0 0 30px #c2410c, 0 0 40px #c2410c;
+  text-shadow: 0 0 2px #ff7a00, 0 0 5px #ff7a00, 0 0 10px #ea580c, 0 0 20px #ea580c;
   animation: neon-pulse-orange 2s infinite alternate;
 }
 
 @keyframes neon-pulse-orange {
-  0% { opacity: 1; text-shadow: 0 0 5px #ff7a00, 0 0 10px #ff7a00, 0 0 15px #ea580c, 0 0 20px #ea580c, 0 0 30px #c2410c, 0 0 40px #c2410c; }
-  50% { opacity: 0.8; text-shadow: 0 0 2px #ff7a00, 0 0 5px #ff7a00, 0 0 8px #ea580c, 0 0 10px #ea580c, 0 0 15px #c2410c, 0 0 20px #c2410c; }
-  100% { opacity: 1; text-shadow: 0 0 5px #ff7a00, 0 0 10px #ff7a00, 0 0 15px #ea580c, 0 0 20px #ea580c, 0 0 30px #c2410c, 0 0 40px #c2410c; }
+  0% { opacity: 1; text-shadow: 0 0 2px #ff7a00, 0 0 5px #ff7a00, 0 0 10px #ea580c, 0 0 20px #ea580c; }
+  50% { opacity: 0.85; text-shadow: 0 0 1px #ff7a00, 0 0 3px #ff7a00, 0 0 7px #ea580c, 0 0 15px #ea580c; }
+  100% { opacity: 1; text-shadow: 0 0 2px #ff7a00, 0 0 5px #ff7a00, 0 0 10px #ea580c, 0 0 20px #ea580c; }
 }
 
 /* Neon Sign Animation */
