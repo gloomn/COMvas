@@ -147,9 +147,9 @@ class DrawingPadCanvas {
     this.canvas.addEventListener('touchend', (e) => this.stopDrawing(e));
 
     // Color buttons
-    document.querySelectorAll('.color-btn:not(.eraser-btn):not(.neon-toggle-btn)').forEach(btn => {
+    document.querySelectorAll('.color-btn:not(.eraser-btn):not(.neon-toggle-btn):not(.upload-btn)').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.color-btn:not(.neon-toggle-btn)').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.color-btn:not(.neon-toggle-btn):not(.upload-btn)').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         this.setColor(e.target.dataset.color);
         // Sync custom picker background if we want, but it's fine as is.
@@ -160,7 +160,7 @@ class DrawingPadCanvas {
     const customColorInput = document.getElementById('customColor');
     if (customColorInput) {
       customColorInput.addEventListener('input', (e) => {
-        document.querySelectorAll('.color-btn:not(.neon-toggle-btn)').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.color-btn:not(.neon-toggle-btn):not(.upload-btn)').forEach(b => b.classList.remove('active'));
         // Make its wrapper look active
         customColorInput.parentElement.classList.add('active');
         this.setColor(e.target.value);
@@ -180,7 +180,7 @@ class DrawingPadCanvas {
     const eraserBtn = document.getElementById('eraserBtn');
     if (eraserBtn) {
       eraserBtn.addEventListener('click', () => {
-        document.querySelectorAll('.color-btn:not(.neon-toggle-btn)').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.color-btn:not(.neon-toggle-btn):not(.upload-btn)').forEach(b => b.classList.remove('active'));
         if (customColorInput) customColorInput.parentElement.classList.remove('active');
         eraserBtn.classList.add('active');
         this.setEraser();
