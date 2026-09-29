@@ -8,9 +8,8 @@
   <link rel="icon" type="image/png" href="/frontend/assets/logo.png">
   <style>
     :root { 
-      --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #060810 100%);
-      --surface: rgba(20, 22, 35, 0.6); 
-      --surface-hover: rgba(30, 32, 50, 0.8);
+      --bg: #0a0a0f;
+      --surface: rgba(255, 255, 255, 0.03);
       --primary: #a855f7; 
       --primary-glow: rgba(168, 85, 247, 0.4);
       --text: #f8fafc; 
@@ -19,18 +18,15 @@
     }
     
     body { 
-      background: var(--bg-gradient); 
-      background-attachment: fixed;
+      background: var(--bg); 
       color: var(--text); 
       font-family: 'Pretendard', sans-serif; 
       margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; 
     }
     
     header { 
-      background: rgba(10, 11, 16, 0.7); 
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      background: transparent;
       padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; 
-      border-bottom: var(--glass-border); 
       z-index: 10; 
     }
     
@@ -59,12 +55,12 @@
     
     /* Stats Glass Pills */
     .stats { 
-      display: flex; gap: 20px; margin-bottom: 40px; 
+      display: flex; flex-direction: column; gap: 15px; margin: 25px; margin-bottom: 0;
     }
     .stat-box { 
-      background: var(--surface); border: var(--glass-border); backdrop-filter: blur(20px);
-      padding: 20px 30px; border-radius: 20px; font-size: 1.1rem; font-weight: 600; 
-      display: flex; align-items: center; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      background: rgba(255, 255, 255, 0.02); border: var(--glass-border); 
+      padding: 15px 25px; border-radius: 16px; font-size: 1.1rem; font-weight: 600; 
+      display: flex; align-items: center; gap: 15px; 
     }
     .stat-box span { font-size: 2rem; font-weight: 900; }
     
@@ -94,8 +90,8 @@
     
     /* Sidebar (Logs) */
     .sidebar { 
-      width: 450px; background: rgba(5, 6, 10, 0.8); border-left: var(--glass-border); 
-      backdrop-filter: blur(20px); display: flex; flex-direction: column; z-index: 5; 
+      width: 450px; display: flex; flex-direction: column; z-index: 5; 
+      border-left: var(--glass-border);
     }
     .sidebar-header { 
       padding: 25px; border-bottom: var(--glass-border); color: #34d399; 
@@ -198,7 +194,7 @@
   </div>
 
   <header>
-    <h1 style="display:flex; align-items:center; gap:10px;"><img src="/frontend/assets/logo.png" alt="logo" style="width: 28px; height: 28px; border-radius: 6px;">COMvas Admin Center</h1>
+    <h1 style="display:flex; align-items:center; gap:10px;"><img src="/frontend/assets/logo.png" alt="logo" style="width: 28px; height: 28px; border-radius: 6px;">COMvas Admin</h1>
     <div style="display: flex; gap: 12px;">
       <a href="/viewer" target="_blank" class="btn" style="display: flex; align-items: center; gap: 6px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
@@ -225,6 +221,13 @@
   
   <div class="container">
     <div class="main-content">
+      
+      <div class="grid" id="objectsGrid">
+        <div style="color: var(--text-dim); font-size: 1.2rem; padding: 40px; text-align: center; grid-column: 1 / -1;">무대 데이터를 불러오는 중입니다...</div>
+      </div>
+    </div>
+    
+    <div class="sidebar">
       <div class="stats">
         <div class="stat-box" style="display: flex; align-items: center; gap: 8px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -235,13 +238,6 @@
           무대 소품: <span id="staticCount" style="color: #3b82f6; font-size: 1.5rem;">0</span>
         </div>
       </div>
-      
-      <div class="grid" id="objectsGrid">
-        <div style="color: var(--text-dim); font-size: 1.2rem; padding: 40px; text-align: center; grid-column: 1 / -1;">무대 데이터를 불러오는 중입니다...</div>
-      </div>
-    </div>
-    
-    <div class="sidebar">
       <div class="sidebar-header">
         <span style="display: flex; align-items: center; gap: 8px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>

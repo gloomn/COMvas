@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // WebSocket for Live Logs
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const wsUrl = `${protocol}//${window.location.host}/ws/stage`;
+  const wsUrl = `${protocol}//${window.location.host}/api/v1/ws`;
   
   let ws;
   function connectWebSocket() {
