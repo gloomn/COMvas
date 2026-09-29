@@ -24,8 +24,10 @@
 
     <!-- Drawing Mode Tabs -->
     <div id="drawingTabs" style="display: flex; justify-content: center; gap: 10px; padding: 10px 16px;">
-      <button id="tabPerson" class="btn btn-primary" style="flex: 1; border-radius: 20px; font-size: 0.9rem;">🕺 댄서 그리기</button>
-      <button id="tabStatic" class="btn btn-secondary" style="flex: 1; border-radius: 20px; font-size: 0.9rem;">⭐ 소품 꾸미기</button>
+      <button id="tabPerson" class="btn btn-primary" style="flex: 1; border-radius: 20px; font-size: 0.9rem;">댄서
+        그리기</button>
+      <button id="tabStatic" class="btn btn-secondary" style="flex: 1; border-radius: 20px; font-size: 0.9rem;">소품
+        꾸미기</button>
     </div>
 
     <!-- Drawing Canvas Section -->
@@ -48,9 +50,12 @@
 
       <!-- Real-time Loading Bar -->
       <div id="progressContainer" class="hidden" style="margin-top: 20px; width: 100%; text-align: center;">
-        <div style="font-size: 0.85rem; color: #a855f7; margin-bottom: 8px; font-weight: 700;" id="progressText">대기열 진입 중... (0%)</div>
+        <div style="font-size: 0.85rem; color: #a855f7; margin-bottom: 8px; font-weight: 700;" id="progressText">대기열 진입
+          중... (0%)</div>
         <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-          <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #a855f7, #6366f1); transition: width 0.3s ease;"></div>
+          <div id="progressBar"
+            style="width: 0%; height: 100%; background: linear-gradient(90deg, #a855f7, #6366f1); transition: width 0.3s ease;">
+          </div>
         </div>
       </div>
     </main>
@@ -66,9 +71,10 @@
         <div class="color-picker-wrapper">
           <input type="color" id="customColor" class="custom-color-input" value="#ff00ff">
         </div>
-        
+
         <!-- Neon Toggle -->
-        <button class="color-btn neon-toggle-btn" id="neonToggleBtn" title="네온 브러시 효과 켜기/끄기" style="background: linear-gradient(45deg, #a855f7, #ec4899); color: white; display:flex; justify-content:center; align-items:center;">✨</button>
+        <button class="color-btn neon-toggle-btn" id="neonToggleBtn" title="네온 브러시 효과 켜기/끄기"
+          style="background: linear-gradient(45deg, #a855f7, #ec4899); color: white; display:flex; justify-content:center; align-items:center;">✨</button>
 
         <!-- Eraser -->
         <button class="color-btn eraser-btn" id="eraserBtn" title="지우개">🧽</button>
@@ -85,8 +91,11 @@
     <!-- Joint Adjust Controls (Hidden initially) -->
     <footer class="controls hidden" id="jointControls">
       <div style="width: 100%; margin-bottom: 12px;">
-        <label for="motionSelect" style="font-size: 0.85rem; color: #555; font-weight: 600; display: block; margin-bottom: 6px;">🎬 어떤 모션으로 춤출까요?</label>
-        <select id="motionSelect" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; font-size: 0.95rem; background: #fff; color: #333; outline: none; cursor: pointer;">
+        <label for="motionSelect"
+          style="font-size: 0.85rem; color: #555; font-weight: 600; display: block; margin-bottom: 6px;">🎬 어떤 모션으로
+          춤출까요?</label>
+        <select id="motionSelect"
+          style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; font-size: 0.95rem; background: #fff; color: #333; outline: none; cursor: pointer;">
           <option value="random">🎲 아무거나 랜덤 (Random)</option>
           <option value="jumping">🏃‍♂️ 달리기 (Running Jump)</option>
           <option value="jumping_jacks">🤸 점핑잭 (Jumping Jacks)</option>
@@ -94,12 +103,16 @@
           <option value="jesse_dance">🕺 제시 댄스 (Jesse Dance)</option>
           <option value="wave_hello">👋 인사하기 (Wave Hello)</option>
           <option value="zombie">🧟 좀비 워킹 (Zombie Walk)</option>
+          <option value="breakdance_freeze">🥶 비보이 프리즈 (B-boy Freeze)</option>
+          <option value="flair">🌪️ 플레어 (Flair)</option>
+          <option value="hiphopdancing">🧢 힙합 댄스 (Hip Hop)</option>
         </select>
       </div>
       <div class="brush-tools" style="width: 100%; justify-content: space-between; align-items: center;">
         <button id="backBtn" class="btn btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;">⬅️ 다시 그리기</button>
         <div style="font-size: 0.8rem; color: #777; text-align: center; line-height: 1.2;">점을 드래그하여<br>관절에 맞추세요</div>
-        <button id="submitBtn" class="btn btn-primary" style="padding: 8px 12px; font-size: 0.9rem;">🚀 무대에 전송하기</button>
+        <button id="submitBtn" class="btn btn-primary" style="padding: 8px 12px; font-size: 0.9rem;">🚀 무대에
+          전송하기</button>
       </div>
     </footer>
   </div>

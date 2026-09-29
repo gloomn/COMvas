@@ -41,7 +41,7 @@ class StageCharacter {
     } else if (data.motion === 'zombie') {
       this.vx = (Math.random() > 0.5 ? 1 : -1) * (this.speed * 0.4); // Zombies walk slower!
     } else {
-      // Stationary animations (jumping_jacks, dab, jesse_dance, wave_hello) stay exactly where they spawn
+      // Stationary animations (jumping_jacks, dab, jesse_dance, wave_hello, breakdance_freeze, flair, hiphopdancing) stay exactly where they spawn
       this.vx = 0;
     }
 
