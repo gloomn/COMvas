@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       tabPerson.classList.replace('btn-secondary', 'btn-primary');
       tabStatic.classList.replace('btn-primary', 'btn-secondary');
       guideCanvas.style.display = 'block';
-      guideTip.innerHTML = `<span>💡 <b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>`;
-      nextBtn.textContent = "➡️ 뼈대 맞추기";
+      guideTip.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fbbf24; flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <span><b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>`;
+      nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
     });
 
     tabStatic.addEventListener('click', () => {
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       tabStatic.classList.replace('btn-secondary', 'btn-primary');
       tabPerson.classList.replace('btn-primary', 'btn-secondary');
       guideCanvas.style.display = 'none';
-      guideTip.innerHTML = `<span>⭐ <b>팁:</b> 무대 하늘을 장식할 별, 하트, 문구 등을 자유롭게 그려주세요!</span>`;
-      nextBtn.textContent = "🚀 바로 무대로 전송하기";
+      guideTip.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fbbf24; flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <span><b>팁:</b> 무대 하늘을 장식할 별, 하트, 문구 등을 자유롭게 그려주세요!</span>`;
+      nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg> 바로 무대로 전송하기`;
     });
   }
 
@@ -107,7 +107,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       formData.append('file', file);
       
       try {
-        uploadBtn.textContent = '⏳';
+        uploadBtn.disabled = true;
+        uploadBtn.style.opacity = '0.5';
         document.getElementById('fullScreenLoading').style.display = 'flex';
         document.getElementById('loadingMessage').textContent = '이미지 처리 중...';
         
@@ -131,7 +132,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (err) {
         alert('서버 에러');
       } finally {
-        uploadBtn.textContent = '📸';
+        uploadBtn.disabled = false;
+        uploadBtn.style.opacity = '1';
         uploadInput.value = '';
         document.getElementById('fullScreenLoading').style.display = 'none';
       }
@@ -143,9 +145,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function submitDrawing() {
     const btnToDisable = currentMode === 'person' ? submitBtn : nextBtn;
-    const originalText = btnToDisable.textContent;
+    const originalHTML = btnToDisable.innerHTML;
     btnToDisable.disabled = true;
-    btnToDisable.textContent = "⌛ 전송 준비 중...";
+    btnToDisable.innerHTML = "전송 준비 중...";
     document.getElementById('fullScreenLoading').style.display = 'flex';
     document.getElementById('loadingMessage').textContent = '무대로 전송 중...';
     
@@ -183,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           setTimeout(() => {
             pad.clear();
             pad.saveState();
-            resetUI(btnToDisable, originalText);
+            resetUI(btnToDisable, originalHTML);
           }, 1500);
           return;
         }
@@ -205,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setTimeout(() => {
                   pad.clear();
                   pad.saveState();
-                  resetUI(btnToDisable, originalText);
+                  resetUI(btnToDisable, originalHTML);
                 }, 1500);
               }
             }
@@ -215,18 +217,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         const errorData = await res.json();
         alert(`전송 실패: ${errorData.detail || "오류가 발생했습니다."}`);
-        resetUI(btnToDisable, originalText);
+        resetUI(btnToDisable, originalHTML);
       }
     } catch (err) {
       alert("전송 중 네트워크 오류가 발생했습니다.");
-      resetUI(btnToDisable, originalText);
+      resetUI(btnToDisable, originalHTML);
       document.getElementById('fullScreenLoading').style.display = 'none';
     }
   }
 
-  function resetUI(btn, originalText) {
+  function resetUI(btn, originalHTML) {
     btn.disabled = false;
-    btn.textContent = originalText;
+    btn.innerHTML = originalHTML;
     if (currentMode === 'person') jointControls.classList.remove('hidden');
     else drawingControls.classList.remove('hidden');
     progressContainer.classList.add('hidden');
