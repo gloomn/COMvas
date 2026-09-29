@@ -90,6 +90,50 @@ document.addEventListener('DOMContentLoaded', async () => {
   const progressText = document.getElementById('progressText');
   const progressBar = document.getElementById('progressBar');
 
+  const uploadBtn = document.getElementById('uploadBtn');
+  const uploadInput = document.getElementById('uploadInput');
+  
+  if (uploadBtn && uploadInput) {
+    uploadBtn.addEventListener('click', () => {
+      uploadInput.click();
+    });
+    
+    uploadInput.addEventListener('change', async (e) => {
+      if (!e.target.files.length) return;
+      const file = e.target.files[0];
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      try {
+        uploadBtn.textContent = '⏳';
+        
+        const res = await fetch('/api/v1/drawing/remove-bg', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          const img = new Image();
+          img.onload = () => {
+            pad.ctx.clearRect(0, 0, pad.canvas.width, pad.canvas.height);
+            pad.ctx.drawImage(img, 0, 0, pad.canvas.width, pad.canvas.height);
+            pad.saveState();
+          };
+          img.src = data.image;
+        } else {
+          alert('배경 제거 실패');
+        }
+      } catch (err) {
+        alert('서버 에러');
+      } finally {
+        uploadBtn.textContent = '📸';
+        uploadInput.value = '';
+      }
+    });
+  }
+
   // 2. Submit drawing handler (Person mode confirms via submitBtn)
   submitBtn.addEventListener('click', submitDrawing);
 

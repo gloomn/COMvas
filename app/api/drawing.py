@@ -7,6 +7,30 @@ from app.services.queue_manager import queue_manager
 
 router = APIRouter(prefix="/api/v1/drawing", tags=["Drawing Submission"])
 
+@router.post("/remove-bg")
+async def remove_background(file: UploadFile = File(...)):
+    import rembg
+    from PIL import Image
+    import io
+    image_bytes = await file.read()
+    output_bytes = rembg.remove(image_bytes)
+    
+    # We want to ensure it fits the 512x512 canvas well without stretching
+    img = Image.open(io.BytesIO(output_bytes)).convert("RGBA")
+    img.thumbnail((512, 512), Image.Resampling.LANCZOS)
+    
+    # Center the image on a 512x512 transparent canvas
+    final_img = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+    x = (512 - img.width) // 2
+    y = (512 - img.height) // 2
+    final_img.paste(img, (x, y))
+    
+    out_io = io.BytesIO()
+    final_img.save(out_io, format="PNG")
+    import base64
+    b64 = base64.b64encode(out_io.getvalue()).decode("utf-8")
+    return {"image": f"data:image/png;base64,{b64}"}
+
 @router.post("/submit")
 async def submit_drawing(
     token: str = Form(...),
