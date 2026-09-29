@@ -46,18 +46,28 @@
 
       <!-- Credit Sub-Arch -->
       <path id="subArchPath" d="M 50,370 A 350,200 0 0,1 750,370" fill="transparent" />
-      <text width="800" fill="#fff" font-family="'Outfit', sans-serif" font-size="22px" font-weight="800"
+      <text width="800" font-family="'Outfit', sans-serif" font-size="22px" font-weight="800"
         class="developer-credit-text">
         <textPath href="#subArchPath" startOffset="50%" text-anchor="middle" dominant-baseline="middle">
-          Semicolon(;) | Lee Ki Joon
+          <tspan fill="#38bdf8">Computer Education</tspan>
+          <tspan fill="#ffffff"> | </tspan>
+          <tspan fill="#a855f7">Semicolon(;)</tspan>
         </textPath>
       </text>
     </svg>
   </div>
+  
+  <!-- Copyright Neon Sign -->
+  <div style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 100; pointer-events: none;">
+    <span style="font-family: 'Outfit', 'Pretendard', sans-serif; font-size: 14px; font-weight: 800; color: #fff; text-shadow: 0 0 5px #f43f5e, 0 0 10px #f43f5e, 0 0 15px #e11d48, 0 0 20px #e11d48; letter-spacing: 2px; opacity: 0.8;">
+      © leekijoon
+    </span>
+  </div>
+
   <script src="/frontend/scripts/viewer/stage.js?v=5"></script>
-  <script src="/frontend/scripts/viewer/character.js?v=14"></script>
+  <script src="/frontend/scripts/viewer/character.js?v=15"></script>
   <script src="/frontend/scripts/viewer/queue.js?v=3"></script>
-  <script src="/frontend/scripts/viewer/websocket.js?v=3"></script>
+  <script src="/frontend/scripts/viewer/websocket.js?v=4"></script>
 </body>
 
 </html>

@@ -9,11 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function addLog(msg, type = '') {
     const logItem = document.createElement('div');
     logItem.className = `log-item ${type}`;
-    const time = new Date().toLocaleTimeString();
-    logItem.innerHTML = `<span class="log-time">[${time}]</span> ${msg}`;
-    logContainer.prepend(logItem); // Add to top
-    if (logContainer.children.length > 50) {
-      logContainer.removeChild(logContainer.lastChild);
+    const now = new Date();
+    const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+    logItem.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-msg">${msg}</span>`;
+    logContainer.append(logItem); // Terminal style adds to bottom
+    logContainer.scrollTop = logContainer.scrollHeight; // Auto scroll
+    if (logContainer.children.length > 200) {
+      logContainer.removeChild(logContainer.firstChild);
     }
   }
 
@@ -101,14 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const msg = JSON.parse(event.data);
         if (msg.type === 'NEW_CHARACTER') {
-          addLog(`✨ 새 캐릭터 등장! (${msg.data.character_id})`, 'log-new');
+          addLog(`✨ NEW_CHAR: ${msg.data.character_id}`, 'log-new');
           loadObjects();
         } else if (msg.type === 'NEW_STATIC') {
-          addLog(`🌟 새 소품 등장! (${msg.data.object_id})`, 'log-new');
+          addLog(`🌟 NEW_STATIC: ${msg.data.object_id}`, 'log-new');
           loadObjects();
         } else if (msg.type === 'DELETE_OBJECT') {
-          addLog(`🗑️ 오브젝트 삭제됨 (${msg.data.id})`, 'log-delete');
+          addLog(`🗑️ DEL_OBJ: ${msg.data.id}`, 'log-delete');
           loadObjects();
+        } else if (msg.type === 'SERVER_LOG') {
+          addLog(`> ${msg.message}`, 'log-server');
         }
       } catch(e) {}
     };

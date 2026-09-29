@@ -16,29 +16,39 @@ class JetsonAIQueueManager:
         self.worker_task = None
         self.task_progress = {}
         self.recent_objects = []
+        self.loop = None
+
+    def server_log(self, message: str):
+        print(message)
+        if self.loop is not None and self.loop.is_running():
+            asyncio.run_coroutine_threadsafe(
+                self.broadcast({"type": "SERVER_LOG", "message": message}), 
+                self.loop
+            )
 
     def update_progress(self, task_id: str, progress: int, status: str):
         self.task_progress[task_id] = {"progress": progress, "status": status}
-        print(f"[JetsonAIQueueManager] Task {task_id}: {progress}% - {status}")
+        self.server_log(f"[Task {task_id}] {progress}% - {status}")
 
     def start_worker(self):
         if self.worker_task is None:
+            self.loop = asyncio.get_running_loop()
             self.worker_task = asyncio.create_task(self._worker_loop())
-            print("[JetsonAIQueueManager] Single worker loop started.")
+            self.server_log("Single worker loop started.")
 
     async def register_websocket(self, websocket: WebSocket):
         await websocket.accept()
         self.active_websockets.add(websocket)
-        print(f"[JetsonAIQueueManager] WebSocket connected. Total clients: {len(self.active_websockets)}")
+        self.server_log(f"WebSocket connected. Total clients: {len(self.active_websockets)}")
 
     def unregister_websocket(self, websocket: WebSocket):
         self.active_websockets.discard(websocket)
-        print(f"[JetsonAIQueueManager] WebSocket disconnected. Remaining clients: {len(self.active_websockets)}")
+        self.server_log(f"WebSocket disconnected. Remaining clients: {len(self.active_websockets)}")
 
     async def broadcast(self, message: dict):
         """Broadcast message to all connected Stage Display Viewers."""
         
-        # Track objects for Admin deletion
+        # Track objects for Admin and Stage restoration
         event_type = message.get("type") or message.get("event")
         if event_type in ["NEW_STATIC", "NEW_CHARACTER"]:
             data = message.get("data", {})
@@ -51,7 +61,8 @@ class JetsonAIQueueManager:
                 self.recent_objects.append({
                     "id": obj_id,
                     "type": "STATIC" if event_type == "NEW_STATIC" else "CHARACTER",
-                    "thumbnail": thumb
+                    "thumbnail": thumb,
+                    "full_message": message # Store full payload for Stage Viewer refresh
                 })
                 if len(self.recent_objects) > 50:
                     self.recent_objects.pop(0)
@@ -76,7 +87,7 @@ class JetsonAIQueueManager:
     async def enqueue_task(self, task_id: str, image_bytes: bytes, custom_skeleton: dict = None, motion: str = "random"):
         self.update_progress(task_id, 0, "대기열 진입 중...")
         await self.queue.put((task_id, image_bytes, custom_skeleton, motion))
-        print(f"[JetsonAIQueueManager] Enqueued task {task_id}. Queue size: {self.queue.qsize()}")
+        self.server_log(f"Enqueued task {task_id}. Queue size: {self.queue.qsize()}")
 
     async def _worker_loop(self):
         while True:
@@ -101,9 +112,9 @@ class JetsonAIQueueManager:
                     "event": "NEW_CHARACTER",
                     "data": result
                 })
-                print(f"[JetsonAIQueueManager] Successfully completed task {task_id}.")
+                self.server_log(f"Successfully completed task {task_id}.")
             except Exception as e:
-                print(f"[JetsonAIQueueManager] Error processing task {task_id}: {e}")
+                self.server_log(f"Error processing task {task_id}: {e}")
                 traceback.print_exc()
             finally:
                 self.queue.task_done()

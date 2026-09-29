@@ -50,6 +50,8 @@ async def stage_websocket_endpoint(websocket: WebSocket):
 # HTML Page Routes
 @app.get("/draw")
 async def get_drawing_pad():
+    # When a user scans the QR code and visits this page, let the QR screen know to refresh!
+    await queue_manager.broadcast({"event": "QR_SCANNED"})
     pad_html = os.path.join(frontend_dir, "pages", "pad", "index.html")
     return FileResponse(pad_html)
 

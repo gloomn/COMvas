@@ -22,28 +22,22 @@ class StageCharacter {
     // Exact Border Bouncing Margin
     this.margin = 50;
 
-    // Spawn character at the bottom border of the screen (ground level)
-    // Add a slight random Y offset (-40 to +20) for pseudo-3D depth on the stage
-    this.x = this.stageApp.screen.width / 2;
-    this.y = this.stageApp.screen.height - this.margin - (Math.random() * 60 - 20);
+    // Check animation type (removed movement logic as requested)
+    this.vx = 0;
+
+    // Spawn character across the stage randomly, but keep them strictly inside bounds
+    // Margin prevents them from spawning half-off the screen
+    const spawnMargin = this.margin + 100; // Extra padding
+    this.x = spawnMargin + Math.random() * (this.stageApp.screen.width - spawnMargin * 2);
+    
+    // Fixed height so they all align perfectly on the stage floor
+    this.y = this.stageApp.screen.height - this.margin - 80;
+    
     this.sprite.x = this.x;
     this.sprite.y = this.y;
     
     // Set zIndex based on Y position (pseudo-3D depth sorting)
     this.sprite.zIndex = this.y;
-
-    // Movement Velocity (Walk horizontally left or right)
-    this.speed = 1.0 + Math.random() * 0.6;
-    
-    // Check animation type: only moving animations (e.g. running jump) should travel across the screen
-    if (data.motion === 'jumping') {
-      this.vx = (Math.random() > 0.5 ? 1 : -1) * this.speed;
-    } else if (data.motion === 'zombie') {
-      this.vx = (Math.random() > 0.5 ? 1 : -1) * (this.speed * 0.4); // Zombies walk slower!
-    } else {
-      // Stationary animations (jumping_jacks, dab, jesse_dance, wave_hello, breakdance_freeze, flair, hiphopdancing) stay exactly where they spawn
-      this.vx = 0;
-    }
 
     // Add to WebGL stage
     this.stageApp.stage.addChild(this.sprite);

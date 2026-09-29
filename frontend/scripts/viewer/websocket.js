@@ -42,4 +42,31 @@ function connectStageWebSocket() {
   };
 }
 
-document.addEventListener('DOMContentLoaded', connectStageWebSocket);
+async function syncExistingObjects() {
+  try {
+    const res = await fetch('/api/v1/admin/objects');
+    const data = await res.json();
+    if (data.objects) {
+      // Objects are returned newest first, so we reverse to render oldest first
+      const oldestFirst = data.objects.slice().reverse();
+      oldestFirst.forEach(obj => {
+        if (obj.full_message) {
+          const msg = obj.full_message;
+          const eventType = msg.type || msg.event;
+          if (eventType === 'NEW_CHARACTER') {
+            window.queueManager.addCharacter(msg.data);
+          } else if (eventType === 'NEW_STATIC') {
+            window.queueManager.addStatic(msg.data);
+          }
+        }
+      });
+    }
+  } catch (e) {
+    console.error('[Stage Sync] Failed to sync existing objects:', e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  syncExistingObjects();
+  connectStageWebSocket();
+});

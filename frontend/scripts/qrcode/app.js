@@ -39,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (msg.event === 'NEW_CHARACTER') {
           console.log('[QRCodePage] Drawing submitted! Generating fresh QR...');
           fetchAndRenderQR();
+        } else if (msg.event === 'QR_SCANNED') {
+          console.log('[QRCodePage] QR was scanned by a user! Generating fresh QR for the next person...');
+          fetchAndRenderQR();
         }
       } catch (e) {}
     };
