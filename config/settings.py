@@ -1,4 +1,9 @@
 import os
+import sys
+
+# Set global pycache prefix to a single folder at the project root
+sys.pycache_prefix = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".pycache")
+
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
