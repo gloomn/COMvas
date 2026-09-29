@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const qrBox = document.getElementById('qrBox');
   const urlDisplay = document.getElementById('urlDisplay');
-  const refreshBtn = document.getElementById('refreshBtn');
 
   async function fetchAndRenderQR() {
     try {
