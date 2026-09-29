@@ -15,11 +15,23 @@ async def remove_background(file: UploadFile = File(...)):
     image_bytes = await file.read()
     output_bytes = rembg.remove(image_bytes)
     
-    # We want to ensure it fits the 512x512 canvas well without stretching
     img = Image.open(io.BytesIO(output_bytes)).convert("RGBA")
-    img.thumbnail((512, 512), Image.Resampling.LANCZOS)
     
-    # Center the image on a 512x512 transparent canvas
+    # 1. Find bounding box of non-transparent pixels and crop
+    bbox = img.getbbox()
+    if bbox:
+        img = img.crop(bbox)
+        
+    # 2. Resize so the longest edge is 480px (leaves a 16px margin on 512x512)
+    max_size = 480
+    longest_side = max(img.width, img.height)
+    if longest_side > 0:
+        scale = max_size / longest_side
+        new_w = int(img.width * scale)
+        new_h = int(img.height * scale)
+        img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+    
+    # 3. Center the image on a 512x512 transparent canvas
     final_img = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
     x = (512 - img.width) // 2
     y = (512 - img.height) // 2

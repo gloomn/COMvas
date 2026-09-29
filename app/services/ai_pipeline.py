@@ -22,7 +22,7 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     2. Auto-aligns pose using MediaPipe (or uses custom skeleton from UI) to create `char_cfg.yaml`
     3. Generates rendered GIF frames of a normal dance
     """
-    if progress_callback: progress_callback(10, "이미지 저장 및 배경 처리 중...")
+    if progress_callback: progress_callback(6, "이미지 저장 및 배경 처리 중...")
     
     # Create specific character directory for Meta Animated Drawings
     char_dir = os.path.join(settings.OUTPUT_DIR, task_id)
@@ -53,7 +53,7 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     transparent_img.save(buffered, format="PNG")
     img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
-    if progress_callback: progress_callback(30, "AI 골격 분석 중...")
+    if progress_callback: progress_callback(8, "AI 골격 분석 중...")
     
     # 2. Skeleton alignment
     if custom_skeleton:
@@ -66,12 +66,12 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     with open(char_cfg_path, 'w', encoding='utf-8') as f:
         yaml.dump(skeleton_data, f, sort_keys=False)
     
-    if progress_callback: progress_callback(50, "애니메이션 렌더링 중... (최대 30초 소요)")
+    if progress_callback: progress_callback(10, "애니메이션 렌더링 중... (최대 30초 소요)")
     
     # Simulate smooth progress from 50% to 95% while the synchronous render is blocking
     rendering_active = True
     def progress_simulator():
-        curr_progress = 50
+        curr_progress = 10
         while rendering_active and curr_progress < 95:
             time.sleep(0.7) # Increment roughly every 0.7s (reaches 95% in ~30 seconds)
             curr_progress += 1

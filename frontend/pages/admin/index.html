@@ -6,44 +6,73 @@
   <title>COMvas - Admin Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      background: #0a0b10;
-      color: #fff;
-      font-family: 'Pretendard', sans-serif;
-      margin: 0; padding: 20px;
-    }
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
-    h1 { margin: 0; font-size: 1.5rem; color: #a855f7; }
-    .refresh-btn { background: #333; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-    .card { background: #1e1e24; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #333; }
-    .card img { max-width: 100%; height: 120px; object-fit: contain; background: #000; border-radius: 8px; margin-bottom: 10px; }
-    .card .type { font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px; }
-    .card .id { font-size: 0.7rem; color: #555; word-break: break-all; margin-bottom: 10px; }
-    .delete-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
-    .delete-btn:hover { background: #dc2626; }
+    :root { --bg: #0f111a; --surface: #1e1e28; --primary: #a855f7; --text: #f1f5f9; --text-dim: #94a3b8; }
+    body { background: var(--bg); color: var(--text); font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    header { background: var(--surface); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; box-shadow: 0 4px 20px rgba(0,0,0,0.5); z-index: 10; }
+    h1 { margin: 0; font-size: 1.5rem; background: linear-gradient(90deg, #a855f7, #ec4899); -webkit-background-clip: text; color: transparent; }
+    .btn { background: #333; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.2s; }
+    .btn:hover { background: #444; }
+    .btn-primary { background: var(--primary); }
+    .btn-primary:hover { background: #9333ea; }
+    
+    .container { display: flex; flex: 1; overflow: hidden; }
+    .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+    .stats { display: flex; gap: 30px; margin-bottom: 30px; background: var(--surface); padding: 20px 30px; border-radius: 16px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .stat-box { font-size: 1.2rem; font-weight: 600; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
+    .card { background: var(--surface); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid #333; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 10px 25px rgba(168, 85, 247, 0.2); }
+    .card img { width: 100%; height: 160px; object-fit: contain; background: #000; border-radius: 12px; margin-bottom: 15px; border: 1px solid #222; }
+    .card .type { font-size: 0.9rem; color: var(--primary); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .card .id { font-size: 0.75rem; color: #666; word-break: break-all; margin-bottom: 20px; font-family: monospace; }
+    .delete-btn { background: #ef4444; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: 0.2s; }
+    .delete-btn:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239,68,68,0.4); }
+    
+    .sidebar { width: 380px; background: var(--surface); border-left: 1px solid #333; display: flex; flex-direction: column; box-shadow: -4px 0 20px rgba(0,0,0,0.5); z-index: 5; }
+    .sidebar-header { padding: 20px; border-bottom: 1px solid #333; font-weight: 800; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); }
+    .log-container { flex: 1; padding: 20px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; display: flex; flex-direction: column; gap: 12px; }
+    .log-item { background: #111; padding: 12px 15px; border-radius: 8px; border-left: 4px solid #555; word-break: break-word; line-height: 1.4; box-shadow: 0 2px 5px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    .log-time { color: #888; font-size: 0.75rem; margin-bottom: 6px; display: block; }
+    .log-new { border-left-color: var(--primary); }
+    .log-delete { border-left-color: #ef4444; }
   </style>
 </head>
 <body>
   <header>
-    <h1>COMvas Stage Admin</h1>
-    <div style="display: flex; gap: 15px; align-items: center;">
-      <a href="/viewer" target="_blank" style="color: #a7f3d0; text-decoration: none; font-weight: bold;">🖥️ 뷰어 띄우기</a>
-      <a href="/qrcode" target="_blank" style="color: #93c5fd; text-decoration: none; font-weight: bold;">📱 QR코드 띄우기</a>
-      <a href="/keepdraw" target="_blank" style="color: #fca5a5; text-decoration: none; font-weight: bold;">♾️ 무제한모드 띄우기</a>
-      <button class="refresh-btn" id="refreshBtn">새로고침</button>
+    <h1>COMvas Admin Center</h1>
+    <div style="display: flex; gap: 12px;">
+      <a href="/viewer" target="_blank" class="btn">🖥️ 무대 뷰어</a>
+      <a href="/qrcode" target="_blank" class="btn">📱 QR 스캐너</a>
+      <a href="/keepdraw" target="_blank" class="btn">♾️ 무제한 패드</a>
+      <button class="btn btn-primary" id="refreshBtn">🔄 데이터 동기화</button>
     </div>
   </header>
   
-  <div style="margin-bottom: 20px; font-size: 1.1rem; color: #cbd5e1; display: flex; gap: 20px;">
-    <div>정적 모형(소품): <span id="staticCount" style="color: #a855f7; font-weight: bold;">0</span>개</div>
-    <div>사람 모형(캐릭터): <span id="charCount" style="color: #3b82f6; font-weight: bold;">0</span>개</div>
-  </div>
-  
-  <div class="grid" id="objectsGrid">
-    <div style="color: #666;">로딩 중...</div>
+  <div class="container">
+    <div class="main-content">
+      <div class="stats">
+        <div class="stat-box">🧍 춤추는 캐릭터: <span id="charCount" style="color: var(--primary); font-size: 1.5rem;">0</span></div>
+        <div class="stat-box">🧊 무대 소품: <span id="staticCount" style="color: #3b82f6; font-size: 1.5rem;">0</span></div>
+      </div>
+      
+      <div class="grid" id="objectsGrid">
+        <div style="color: var(--text-dim); font-size: 1.2rem; padding: 40px; text-align: center; grid-column: 1 / -1;">무대 데이터를 불러오는 중입니다...</div>
+      </div>
+    </div>
+    
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span>📡 라이브 시스템 로그</span>
+        <button id="clearLogBtn" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-weight:bold; font-size:0.8rem; padding:5px 10px; border-radius:4px;">지우기</button>
+      </div>
+      <div class="log-container" id="logContainer">
+        <!-- Logs will appear here -->
+      </div>
+    </div>
   </div>
 
-  <script src="/frontend/scripts/admin/app.js?v=1"></script>
+  <script src="/frontend/scripts/admin/app.js?v=2"></script>
 </body>
 </html>

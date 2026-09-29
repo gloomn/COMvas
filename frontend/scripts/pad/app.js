@@ -131,6 +131,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       try {
         uploadBtn.textContent = '⏳';
+        document.getElementById('fullScreenLoading').style.display = 'flex';
+        document.getElementById('loadingMessage').textContent = '이미지 처리 중...';
         
         const res = await fetch('/api/v1/drawing/remove-bg', {
           method: 'POST',
@@ -154,6 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } finally {
         uploadBtn.textContent = '📸';
         uploadInput.value = '';
+        document.getElementById('fullScreenLoading').style.display = 'none';
       }
     });
   }
@@ -166,6 +169,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const originalText = btnToDisable.textContent;
     btnToDisable.disabled = true;
     btnToDisable.textContent = "⌛ 전송 준비 중...";
+    document.getElementById('fullScreenLoading').style.display = 'flex';
+    document.getElementById('loadingMessage').textContent = '무대로 전송 중...';
     
     if (currentMode === 'person') jointControls.classList.add('hidden');
     else drawingControls.classList.add('hidden');
@@ -230,6 +235,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
       alert("전송 중 네트워크 오류가 발생했습니다.");
       resetUI(btnToDisable, originalText);
+      document.getElementById('fullScreenLoading').style.display = 'none';
     }
   }
 

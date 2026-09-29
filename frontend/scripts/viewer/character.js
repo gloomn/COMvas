@@ -17,7 +17,7 @@ class StageCharacter {
     }
 
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
-    this.sprite.scale.set(0.7); // Increased scale significantly as requested
+    this.sprite.scale.set(1.2); // Increased scale significantly as requested
 
     // Exact Border Bouncing Margin
     this.margin = 50;

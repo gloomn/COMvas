@@ -10,6 +10,13 @@
 </head>
 
 <body>
+  <!-- Full Screen Loading Overlay -->
+  <div id="fullScreenLoading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <div style="font-size: 3rem; margin-bottom: 20px; animation: spin 2s linear infinite;">✨</div>
+    <div id="loadingMessage" style="color: white; font-weight: bold; font-size: 1.2rem;">처리 중...</div>
+    <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
+  </div>
+
   <div class="app-container">
     <!-- Header -->
     <header class="app-header">
