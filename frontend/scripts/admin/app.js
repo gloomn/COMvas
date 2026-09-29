@@ -7,6 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearLogBtn = document.getElementById('clearLogBtn');
   const refreshQrBtn = document.getElementById('refreshQrBtn');
 
+  // Password Unlock Logic
+  const overlay = document.getElementById('passwordOverlay');
+  const passInput = document.getElementById('adminPassword');
+  const unlockBtn = document.getElementById('unlockBtn');
+  let isAdminUnlocked = false;
+
+  unlockBtn.addEventListener('click', () => {
+    if (passInput.value === 'semicolon2026!') {
+      isAdminUnlocked = true;
+      overlay.style.display = 'none';
+    } else {
+      alert("비밀번호가 틀렸습니다.");
+    }
+  });
+
   function addLog(msg, type = '') {
     const logItem = document.createElement('div');
     logItem.className = `log-item ${type}`;

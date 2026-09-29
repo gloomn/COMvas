@@ -233,3 +233,37 @@ body {
   border-color: #60a5fa;
   box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
 }
+
+/* Desktop Responsiveness */
+@media (min-width: 768px) {
+  body {
+    align-items: center;
+  }
+  .app-container {
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    grid-template-areas: 
+      "header header"
+      "canvas tabs"
+      "canvas tip"
+      "canvas controls"
+      "canvas progress";
+    align-items: center;
+    align-content: center;
+    gap: 20px 40px;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .app-header { grid-area: header; margin-bottom: 20px; padding-bottom: 20px; }
+  #drawingTabs { grid-area: tabs; margin: 0; padding: 0; }
+  .canvas-wrapper { grid-area: canvas; margin: 0; width: 100%; display: flex; justify-content: flex-end; }
+  .canvas-card { max-width: 512px; width: 100%; aspect-ratio: 1; margin: 0; }
+  .guide-tip { grid-area: tip; max-width: 100%; margin: 0; text-align: left; justify-content: flex-start !important; }
+  .controls { grid-area: controls; border-top: none; padding-top: 0; gap: 20px; }
+  #progressContainer { grid-area: progress; }
+  .color-btn { width: 44px; height: 44px; }
+  .color-picker-wrapper { width: 44px; height: 44px; }
+  .btn { padding: 18px 0; font-size: 1.1rem; }
+}
