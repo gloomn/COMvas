@@ -63,32 +63,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Next Button (Switch to Skeleton Mode OR Submit if Static)
   if (nextBtn) {
-    nextBtn.addEventListener('click', async () => {
+    nextBtn.addEventListener('click', () => {
       if (currentMode === 'person') {
-        // Fetch auto pose
-        nextBtn.textContent = "⏳ AI 뼈대 분석 중...";
-        nextBtn.disabled = true;
-        try {
-          const blob = await pad.toBlob();
-          const formData = new FormData();
-          formData.append('file', blob);
-          const res = await fetch('/api/v1/drawing/detect-pose', {
-            method: 'POST',
-            body: formData
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.skeleton) {
-              skeletonUI.setJoints(data.skeleton);
-            }
-          }
-        } catch (e) {
-          console.error("Auto pose detection failed:", e);
-        } finally {
-          nextBtn.textContent = "➡️ 뼈대 맞추기";
-          nextBtn.disabled = false;
-        }
-
         drawingControls.classList.add('hidden');
         jointControls.classList.remove('hidden');
         guideTip.classList.add('hidden');
