@@ -32,9 +32,9 @@ class MetaAnimator:
             'jesse_dance': ('motion/jesse_dance.yaml', 'retarget/mixamo_fff.yaml'),
             'wave_hello': ('motion/wave_hello.yaml', 'retarget/fair1_ppf.yaml'),
             'zombie': ('motion/zombie.yaml', 'retarget/fair1_ppf.yaml'),
-            'breakdance_freeze': ('motion/breakdance_freeze.yaml', 'retarget/mixamo_fff.yaml'),
-            'flair': ('motion/flair.yaml', 'retarget/mixamo_fff.yaml'),
-            'hiphopdancing': ('motion/hiphopdancing.yaml', 'retarget/mixamo_fff.yaml')
+            'breakdance_freeze': ('motion/breakdance_freeze.yaml', 'retarget/mixamo_standard.yaml'),
+            'flair': ('motion/flair.yaml', 'retarget/mixamo_standard.yaml'),
+            'hiphopdancing': ('motion/hiphopdancing.yaml', 'retarget/mixamo_standard.yaml')
         }
         
         # Select motion
