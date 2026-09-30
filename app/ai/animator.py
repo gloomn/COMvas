@@ -34,7 +34,8 @@ class MetaAnimator:
             'zombie': ('motion/zombie.yaml', 'retarget/fair1_ppf.yaml'),
             'breakdance_freeze': ('motion/breakdance_freeze.yaml', 'retarget/mixamo_standard.yaml'),
             'flair': ('motion/flair.yaml', 'retarget/mixamo_standard.yaml'),
-            'hiphopdancing': ('motion/hiphopdancing.yaml', 'retarget/mixamo_standard.yaml')
+            'hiphopdancing': ('motion/hiphopdancing.yaml', 'retarget/mixamo_standard.yaml'),
+            'gangnamstyle': ('motion/gangnamstyle.yaml', 'retarget/mixamo_standard.yaml')
         }
         
         # Select motion
