@@ -1,11 +1,11 @@
 filepath: examples/bvh/mixamo/gangnamstyle.bvh
 start_frame_idx: 0
 end_frame_idx: 250
-groundplane_joint: RightToeBase
+groundplane_joint: mixamorig:RightToeBase
 forward_perp_joint_vectors:
-  - - LeftShoulder
-    - RightShoulder
-  - - LeftUpLeg
-    - RightUpLeg
+  - - mixamorig:LeftShoulder
+    - mixamorig:RightShoulder
+  - - mixamorig:LeftUpLeg
+    - mixamorig:RightUpLeg
 scale: 0.01
 up: +y
