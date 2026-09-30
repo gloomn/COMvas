@@ -8,7 +8,7 @@ router = APIRouter(prefix="/api/v1/admin", tags=["Admin"])
 class DeleteRequest(BaseModel):
     id: str
 
-@router.get("/objects", dependencies=[Depends(verify_admin)])
+@router.get("/objects")
 async def get_recent_objects():
     # Return recent objects list (reverse order so newest is first)
     return {"objects": queue_manager.recent_objects[::-1]}
