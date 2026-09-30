@@ -223,6 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (currentMode === 'person') jointControls.classList.remove('hidden');
     else drawingControls.classList.remove('hidden');
     progressContainer.classList.add('hidden');
+    document.getElementById('fullScreenLoading').style.display = 'none';
   }
 
   function showError(msg) {
