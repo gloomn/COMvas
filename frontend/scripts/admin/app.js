@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isAdminUnlocked = true;
         overlay.style.display = 'none';
         // Refresh grid after unlock
-        fetchObjectsGrid();
+        loadObjects();
       } else {
         alert("비밀번호가 틀렸습니다.");
       }

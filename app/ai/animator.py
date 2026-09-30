@@ -56,7 +56,7 @@ class MetaAnimator:
                 }]
             },
             'view': {
-                'USE_TRACKING_CAMERA': True,
+                'USE_TRACKING_CAMERA': False,
                 'WINDOW_DIMENSIONS': [512, 512]
             },
             'controller': {
