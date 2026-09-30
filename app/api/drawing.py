@@ -73,7 +73,8 @@ async def submit_drawing(
     db: Session = Depends(get_db)
 ):
     # 1. Atomically consume token (or bypass for admin keepdraw)
-    if token not in ACTIVE_ADMIN_TOKENS:
+    from app.api.deps import ADMIN_MASTER_TOKEN
+    if token != ADMIN_MASTER_TOKEN and token not in ACTIVE_ADMIN_TOKENS:
         success = verify_and_consume_token(db, token)
         if not success:
             raise HTTPException(

@@ -28,7 +28,7 @@ def verify_token_endpoint(token: str, db: Session = Depends(get_db)):
 
 from pydantic import BaseModel
 import secrets
-from app.api.deps import ACTIVE_ADMIN_TOKENS
+from app.api.deps import ACTIVE_ADMIN_TOKENS, ADMIN_MASTER_TOKEN
 
 class AdminLoginRequest(BaseModel):
     password: str
@@ -37,8 +37,5 @@ class AdminLoginRequest(BaseModel):
 def admin_login(req: AdminLoginRequest):
     """Verifies admin password and issues a session token."""
     if req.password == "semicolon2026!":
-        # Generate a secure 32-byte hex token
-        token = secrets.token_hex(32)
-        ACTIVE_ADMIN_TOKENS.add(token)
-        return {"admin_token": token}
+        return {"admin_token": ADMIN_MASTER_TOKEN}
     raise HTTPException(status_code=401, detail="Invalid password")
