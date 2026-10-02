@@ -85,21 +85,29 @@ class MetaAnimator:
         frames_b64 = []
         if os.path.exists(output_gif):
             with Image.open(output_gif) as gif:
+                extracted_frames = []
                 for frame_idx in range(gif.n_frames):
                     gif.seek(frame_idx)
-                    frame = gif.convert("RGBA")
-                    
+                    extracted_frames.append(gif.convert("RGBA"))
+                
+                import concurrent.futures
+
+                def process_frame(frame):
                     # Make pure white background transparent (Vectorized with NumPy for speed)
                     frame_array = np.array(frame)
                     # Mask where R, G, B are all > 240
                     white_mask = (frame_array[:, :, 0] > 240) & (frame_array[:, :, 1] > 240) & (frame_array[:, :, 2] > 240)
                     frame_array[white_mask, 3] = 0 # Set alpha to 0
-                    frame = Image.fromarray(frame_array)
+                    processed_frame = Image.fromarray(frame_array)
                     
                     buffered = io.BytesIO()
-                    frame.save(buffered, format="PNG")
-                    b64_str = "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
-                    frames_b64.append(b64_str)
+                    # compress_level=1 is significantly faster than default (usually 15s -> 2.6s for 250 frames)
+                    processed_frame.save(buffered, format="PNG", compress_level=1)
+                    return "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+                # Use ThreadPoolExecutor to parallelize I/O bound image encoding
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    frames_b64 = list(executor.map(process_frame, extracted_frames))
                     
             # Cleanup
             try:
