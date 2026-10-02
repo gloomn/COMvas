@@ -79,7 +79,25 @@ class SkeletonUI {
       
       // Create label
       const label = document.createElement('div');
-      label.textContent = name.replace('_', ' ');
+      const koreanNames = {
+        root: '중심',
+        hip: '골반',
+        torso: '몸통',
+        neck: '목',
+        right_shoulder: '오른쪽 어깨',
+        right_elbow: '오른쪽 팔꿈치',
+        right_hand: '오른손',
+        left_shoulder: '왼쪽 어깨',
+        left_elbow: '왼쪽 팔꿈치',
+        left_hand: '왼손',
+        right_hip: '오른쪽 엉덩이',
+        right_knee: '오른쪽 무릎',
+        right_foot: '오른발',
+        left_hip: '왼쪽 엉덩이',
+        left_knee: '왼쪽 무릎',
+        left_foot: '왼발'
+      };
+      label.textContent = koreanNames[name] || name.replace('_', ' ');
       label.style.position = 'absolute';
       label.style.top = '-20px';
       label.style.left = '50%';
