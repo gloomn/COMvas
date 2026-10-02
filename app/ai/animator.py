@@ -26,12 +26,6 @@ class MetaAnimator:
         
         # Define available dynamic motions and their corresponding retarget configs
         available_motions = {
-            'dab': ('motion/dab.yaml', 'retarget/fair1_ppf.yaml'),
-            'jumping': ('motion/jumping.yaml', 'retarget/fair1_ppf.yaml'),
-            'jumping_jacks': ('motion/jumping_jacks.yaml', 'retarget/cmu1_pfp.yaml'),
-            'jesse_dance': ('motion/jesse_dance.yaml', 'retarget/mixamo_fff.yaml'),
-            'wave_hello': ('motion/wave_hello.yaml', 'retarget/fair1_ppf.yaml'),
-            'zombie': ('motion/zombie.yaml', 'retarget/fair1_ppf.yaml'),
             'breakdance_freeze': ('motion/breakdance_freeze.yaml', 'retarget/mixamo_standard.yaml'),
             'flair': ('motion/flair.yaml', 'retarget/mixamo_standard.yaml'),
             'hiphopdancing': ('motion/hiphopdancing.yaml', 'retarget/mixamo_standard.yaml'),
