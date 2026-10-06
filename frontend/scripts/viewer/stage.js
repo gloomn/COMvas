@@ -4,8 +4,8 @@ class StageEngine {
     this.app = new PIXI.Application({
       resizeTo: window,
       backgroundAlpha: 0,
-      antialias: true, // Enable smooth edges
-      resolution: window.devicePixelRatio || 2, // Retina display quality
+      antialias: true, // Keep smooth edges
+      resolution: 1, // Lock to 1x to ensure buttery smooth 60fps on all GPUs
       autoDensity: true,
       powerPreference: 'high-performance'
     });
