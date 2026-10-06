@@ -8,7 +8,7 @@ class StageCharacter {
     if (data.frames && data.frames.length > 0) {
       const textures = data.frames.map(b64 => PIXI.Texture.from(b64));
       this.sprite = new PIXI.AnimatedSprite(textures);
-      this.sprite.animationSpeed = 0.65; // Even Faster Dance Motion!
+      this.sprite.animationSpeed = 0.3; // Natural, elegant dance speed
       this.sprite.play();
     } else {
       // Fallback single texture
