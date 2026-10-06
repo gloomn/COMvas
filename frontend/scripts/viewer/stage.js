@@ -11,6 +11,15 @@ class StageEngine {
 
     this.container.appendChild(this.app.view);
     this.initBackgroundGrid();
+
+    // Responsive scaling based on a base height of 1080
+    this.resizeStage();
+    window.addEventListener('resize', () => this.resizeStage());
+  }
+
+  resizeStage() {
+    const scale = this.app.screen.height / 1080;
+    this.app.stage.scale.set(scale);
   }
 
   initBackgroundGrid() {

@@ -98,12 +98,17 @@ class CharacterQueueManager {
     sprite.scale.set(0.4);
     sprite.anchor.set(0.5);
     
+    // Compute logical screen bounds
+    const scale = this.stageEngine.app.stage.scale.x || 1;
+    const logicalWidth = this.stageEngine.app.screen.width / scale;
+    const logicalHeight = this.stageEngine.app.screen.height / scale;
+
     // Random position in the top 40% of the screen (Sky/Background area)
     const padding = 100;
     const minX = padding;
-    const maxX = this.stageEngine.app.screen.width - padding;
+    const maxX = logicalWidth - padding;
     sprite.x = minX + Math.random() * (maxX - minX);
-    sprite.y = padding + Math.random() * (this.stageEngine.app.screen.height * 0.35);
+    sprite.y = padding + Math.random() * (logicalHeight * 0.35);
     
     // Z-index sorting for static props (they should be strictly behind the characters, but in front of background)
     sprite.zIndex = -50 + sprite.y;

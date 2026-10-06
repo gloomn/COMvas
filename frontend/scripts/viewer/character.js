@@ -17,21 +17,25 @@ class StageCharacter {
     }
 
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
-    this.sprite.scale.set(0.85); // Reduced scale as requested
+    this.sprite.scale.set(0.85); // Constant scale relative to 1080p base logical space
 
-    // Exact Border Bouncing Margin
+    // Exact Border Bouncing Margin (logical space)
     this.margin = 50;
 
     // Give characters random initial velocity
     this.vx = (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 1.5);
 
+    // Compute logical screen bounds relative to scale
+    const scale = this.stageApp.stage.scale.x || 1;
+    const logicalWidth = this.stageApp.screen.width / scale;
+    const logicalHeight = this.stageApp.screen.height / scale;
+
     // Spawn character across the stage randomly, but keep them strictly inside bounds
-    // Margin prevents them from spawning half-off the screen
     const spawnMargin = this.margin + 100; // Extra padding
-    this.x = spawnMargin + Math.random() * (this.stageApp.screen.width - spawnMargin * 2);
+    this.x = spawnMargin + Math.random() * (logicalWidth - spawnMargin * 2);
     
     // Fixed height so they all align perfectly on the stage floor
-    this.y = this.stageApp.screen.height - this.margin - 80;
+    this.y = logicalHeight - this.margin - 80;
     
     this.sprite.x = this.x;
     this.sprite.y = this.y;
@@ -49,9 +53,8 @@ class StageCharacter {
     // 1. Move character horizontally
     this.sprite.x += this.vx * delta;
 
-    // 2. Exact Border Bouncing Logic using PIXI logical screen width
-    // margin=50 allows the visible pixels (arms) to perfectly touch the screen edge
-    // because the 512x512 GIF has some transparent padding around the character.
+    const scale = this.stageApp.stage.scale.x || 1;
+    const logicalWidth = this.stageApp.screen.width / scale;
     const margin = this.margin; 
     
     // Left border hit
@@ -60,8 +63,8 @@ class StageCharacter {
       this.vx = Math.abs(this.vx); // Bounce right
     } 
     // Right border hit
-    else if (this.sprite.x >= this.stageApp.screen.width - margin) {
-      this.sprite.x = this.stageApp.screen.width - margin;
+    else if (this.sprite.x >= logicalWidth - margin) {
+      this.sprite.x = logicalWidth - margin;
       this.vx = -Math.abs(this.vx); // Bounce left
     }
 

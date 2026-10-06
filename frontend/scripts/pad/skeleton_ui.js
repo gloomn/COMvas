@@ -27,22 +27,22 @@ class SkeletonUI {
     
     // Standard 16 joints required by Animated Drawings
     this.defaultJoints = {
-      root: [256, 260],
-      hip: [256, 260],
+      root: [256, 270],
+      hip: [256, 270],
       torso: [256, 200],
       neck: [256, 140],
-      right_shoulder: [200, 150],
-      right_elbow: [150, 150],
-      right_hand: [100, 150],
-      left_shoulder: [312, 150],
-      left_elbow: [362, 150],
-      left_hand: [412, 150],
-      right_hip: [220, 260],
-      right_knee: [190, 350],
-      right_foot: [160, 440],
-      left_hip: [292, 260],
-      left_knee: [322, 350],
-      left_foot: [352, 440]
+      right_shoulder: [200, 160],
+      right_elbow: [140, 160],
+      right_hand: [80, 160],
+      left_shoulder: [312, 160],
+      left_elbow: [372, 160],
+      left_hand: [432, 160],
+      right_hip: [220, 270],
+      right_knee: [180, 370],
+      right_foot: [150, 460],
+      left_hip: [292, 270],
+      left_knee: [332, 370],
+      left_foot: [362, 460]
     };
     
     this.init();
