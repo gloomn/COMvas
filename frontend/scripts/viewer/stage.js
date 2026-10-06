@@ -4,8 +4,8 @@ class StageEngine {
     this.app = new PIXI.Application({
       resizeTo: window,
       backgroundAlpha: 0,
-      antialias: false, // Turn off MSAA to save GPU
-      resolution: 1,    // Lock to 1x to prevent 4x VRAM usage on Mac/Retina
+      antialias: true, // Enable smooth edges
+      resolution: window.devicePixelRatio || 2, // Retina display quality
       autoDensity: true,
       powerPreference: 'high-performance'
     });
