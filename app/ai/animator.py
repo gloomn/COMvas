@@ -26,9 +26,6 @@ class MetaAnimator:
         
         # Define available dynamic motions and their corresponding retarget configs
         available_motions = {
-            'breakdance_freeze': ('motion/breakdance_freeze.yaml', 'retarget/mixamo_standard.yaml'),
-            'flair': ('motion/flair.yaml', 'retarget/mixamo_standard.yaml'),
-            'hiphopdancing': ('motion/hiphopdancing.yaml', 'retarget/mixamo_standard.yaml'),
             'gangnamstyle': ('motion/gangnamstyle.yaml', 'retarget/mixamo_standard.yaml')
         }
         

@@ -7,6 +7,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearLogBtn = document.getElementById('clearLogBtn');
   const refreshQrBtn = document.getElementById('refreshQrBtn');
 
+  // Tab Logic
+  const tabDashboard = document.getElementById('tabDashboard');
+  const tabObjects = document.getElementById('tabObjects');
+  const viewDashboard = document.getElementById('viewDashboard');
+  const viewObjects = document.getElementById('viewObjects');
+
+  tabDashboard.addEventListener('click', () => {
+    tabDashboard.classList.add('active');
+    tabObjects.classList.remove('active');
+    tabDashboard.style.background = 'rgba(255,255,255,0.1)';
+    tabDashboard.style.color = 'white';
+    tabDashboard.style.borderColor = 'var(--glass-border)';
+    tabObjects.style.background = 'transparent';
+    tabObjects.style.color = 'var(--text-dim)';
+    tabObjects.style.borderColor = 'transparent';
+    
+    viewDashboard.style.display = 'flex';
+    viewObjects.style.display = 'none';
+  });
+
+  tabObjects.addEventListener('click', () => {
+    tabObjects.classList.add('active');
+    tabDashboard.classList.remove('active');
+    tabObjects.style.background = 'rgba(255,255,255,0.1)';
+    tabObjects.style.color = 'white';
+    tabObjects.style.borderColor = 'var(--glass-border)';
+    tabDashboard.style.background = 'transparent';
+    tabDashboard.style.color = 'var(--text-dim)';
+    tabDashboard.style.borderColor = 'transparent';
+    
+    viewObjects.style.display = 'block';
+    viewDashboard.style.display = 'none';
+  });
+
   // Password Unlock Logic
   const overlay = document.getElementById('passwordOverlay');
   const passInput = document.getElementById('adminPassword');

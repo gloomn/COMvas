@@ -219,46 +219,62 @@
     </div>
   </header>
   
-  <div class="container">
-    <div class="main-content">
+  <div class="tabs-container" style="padding: 0 40px 20px 40px; border-bottom: var(--glass-border); display: flex; gap: 15px;">
+    <button class="tab-btn active" id="tabDashboard" style="background: rgba(255,255,255,0.1); color: white; border: var(--glass-border); padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;">📊 대시보드 (Queue & Logs)</button>
+    <button class="tab-btn" id="tabObjects" style="background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;">🎭 무대 객체 관리 (Objects)</button>
+  </div>
+  
+  <div class="container" style="flex-direction: column;">
+    
+    <!-- DASHBOARD VIEW -->
+    <div id="viewDashboard" style="display: flex; width: 100%; flex: 1; overflow: hidden;">
+      <!-- Left side: Stats & Queue -->
+      <div style="flex: 1; padding: 30px; display: flex; flex-direction: column; gap: 30px; border-right: var(--glass-border); overflow-y: auto;">
+        
+        <div class="stats" style="flex-direction: row; margin: 0; justify-content: flex-start;">
+          <div class="stat-box" style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            캐릭터: <span id="charCount" style="color: var(--primary); font-size: 1.8rem;">0</span>
+          </div>
+          <div class="stat-box" style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #3b82f6;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+            무대 소품: <span id="staticCount" style="color: #3b82f6; font-size: 1.8rem;">0</span>
+          </div>
+        </div>
+
+        <div style="background: var(--surface); border: var(--glass-border); border-radius: 16px; padding: 25px; flex: 1; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-weight: bold; font-size: 1.1rem; color: #f8fafc;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Active Task & Queue
+          </div>
+          <div id="adminQueueContainer" style="display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; padding-right: 10px;">
+            <div style="color: var(--text-dim); font-size: 0.95rem; text-align: center; margin-top: 20px;">현재 진행 중인 작업이 없습니다.</div>
+          </div>
+        </div>
+      </div>
       
+      <!-- Right side: Logs -->
+      <div style="flex: 1; display: flex; flex-direction: column;">
+        <div class="sidebar-header" style="border-top: none;">
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+            System Logs
+          </span>
+          <button id="clearLogBtn" style="background:rgba(255,255,255,0.05); border:var(--glass-border); color:#94a3b8; cursor:pointer; font-weight:bold; font-size:0.85rem; padding:8px 16px; border-radius:8px; transition: 0.3s;">Clear Logs</button>
+        </div>
+        <div class="log-container" id="logContainer" style="flex: 1; padding: 25px; overflow-y: auto;">
+          <!-- Logs will appear here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- OBJECTS VIEW -->
+    <div id="viewObjects" style="display: none; width: 100%; flex: 1; padding: 40px; overflow-y: auto;">
       <div class="grid" id="objectsGrid">
         <div style="color: var(--text-dim); font-size: 1.2rem; padding: 40px; text-align: center; grid-column: 1 / -1;">무대 데이터를 불러오는 중입니다...</div>
       </div>
     </div>
     
-    <div class="sidebar">
-      <div class="stats">
-        <div class="stat-box" style="display: flex; align-items: center; gap: 8px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          캐릭터: <span id="charCount" style="color: var(--primary); font-size: 1.5rem;">0</span>
-        </div>
-        <div class="stat-box" style="display: flex; align-items: center; gap: 8px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #3b82f6;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-          무대 소품: <span id="staticCount" style="color: #3b82f6; font-size: 1.5rem;">0</span>
-        </div>
-      </div>
-      <div class="sidebar-header" style="border-top: none;">
-        <span style="display: flex; align-items: center; gap: 8px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-          Active Task & Queue
-        </span>
-      </div>
-      <div id="adminQueueContainer" style="padding: 20px; border-bottom: var(--glass-border); display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto;">
-        <div style="color: var(--text-dim); font-size: 0.9rem; text-align: center;">현재 진행 중인 작업이 없습니다.</div>
-      </div>
-      
-      <div class="sidebar-header">
-        <span style="display: flex; align-items: center; gap: 8px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-          System Logs
-        </span>
-        <button id="clearLogBtn" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-weight:bold; font-size:0.8rem; padding:5px 10px; border-radius:4px;">Clear</button>
-      </div>
-      <div class="log-container" id="logContainer">
-        <!-- Logs will appear here -->
-      </div>
-    </div>
   </div>
 
   <script src="/frontend/scripts/admin/app.js?v=7"></script>

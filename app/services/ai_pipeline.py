@@ -22,7 +22,7 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     2. Auto-aligns pose using MediaPipe (or uses custom skeleton from UI) to create `char_cfg.yaml`
     3. Generates rendered GIF frames of a normal dance
     """
-    if progress_callback: progress_callback(6, "이미지 저장 및 배경 처리 중...")
+    if progress_callback: progress_callback(2, "이미지 분석 시작...")
     
     # Create specific character directory for Meta Animated Drawings
     char_dir = os.path.join(settings.OUTPUT_DIR, task_id)
@@ -30,6 +30,8 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     
     # 1. Background removal
     transparent_img = bg_remover.process_image(image_bytes)
+    
+    if progress_callback: progress_callback(4, "배경 제거 완료, 텍스처 추출 중...")
     
     # Save texture.png (Required by Meta Animated Drawings)
     texture_path = os.path.join(char_dir, "texture.png")
@@ -39,6 +41,8 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     # Extract alpha channel to create a binary mask
     np_img = np.array(transparent_img)
     mask = (np_img[:, :, 3] > 0).astype(np.uint8) * 255
+    
+    if progress_callback: progress_callback(6, "캐릭터 실루엣 윤곽선 생성 중...")
     
     # 널럴하게(Aggressively) dilate the mask to ensure skeleton points fall inside the mesh!
     kernel = np.ones((35, 35), np.uint8)
@@ -53,13 +57,15 @@ def process_sketch_pipeline(task_id: str, image_bytes: bytes, custom_skeleton: d
     transparent_img.save(buffered, format="PNG")
     img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
-    if progress_callback: progress_callback(8, "AI 골격 분석 중...")
+    if progress_callback: progress_callback(7, "AI 골격 분석 및 관절 추론 중...")
     
     # 2. Skeleton alignment
     if custom_skeleton:
         skeleton_data = custom_skeleton
     else:
         skeleton_data = pose_estimator.get_aligned_skeleton(texture_path)
+    
+    if progress_callback: progress_callback(9, "골격 데이터 생성 완료...")
     
     # Save char_cfg.yaml (Required by Meta Animated Drawings)
     char_cfg_path = os.path.join(char_dir, "char_cfg.yaml")
