@@ -81,9 +81,7 @@ class StageCharacter {
       this.sprite.scale.x = -Math.abs(this.sprite.scale.x);
     }
     
-    // 4. Strict Y Coordinate Lock
-    this.sprite.y = this.y;
-    this.sprite.zIndex = this.sprite.y;
+    // Strict Y Coordinate Lock is removed from ticker because Y doesn't change after spawn
   }
 
   fadeOutAndDestroy(durationMs = 2000, onComplete) {
@@ -98,7 +96,18 @@ class StageCharacter {
         this.sprite.alpha = 0;
         this.stageApp.stage.removeChild(this.sprite);
         this.stageApp.ticker.remove(fadeTicker);
-        this.sprite.destroy();
+        
+        // --- MEMORY OPTIMIZATION ---
+        // Destroy all base64 textures from GPU VRAM completely to prevent memory leaks
+        if (this.sprite.textures) {
+          this.sprite.textures.forEach(t => t.destroy(true));
+        } else if (this.sprite.texture) {
+          this.sprite.texture.destroy(true);
+        }
+        
+        this.sprite.destroy({ children: true, texture: false, baseTexture: false });
+        // ---------------------------
+
         if (onComplete) onComplete(this.id);
       } else {
         this.sprite.alpha = 1.0 - progress;

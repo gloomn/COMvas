@@ -39,19 +39,26 @@ class CharacterQueueManager {
         
         // Hit detection (90px threshold for character width)
         if (dist < 90) {
-          // Check if they are moving towards each other or overlapping too much
-          if ((charA.sprite.x < charB.sprite.x && charA.vx > 0 && charB.vx < 0) || 
-              (charA.sprite.x > charB.sprite.x && charA.vx < 0 && charB.vx > 0) ||
-              dist < 30) 
-          {
+          // Check if they are moving towards each other (catching up or head-on)
+          const isMovingTowards = (charA.sprite.x < charB.sprite.x && charA.vx > charB.vx) || 
+                                  (charA.sprite.x > charB.sprite.x && charA.vx < charB.vx);
+          
+          if (isMovingTowards) {
             // Elastic Bounce (swap velocities)
             let tempVx = charA.vx;
             charA.vx = charB.vx;
             charB.vx = tempVx;
             
-            // Push apart slightly to prevent sticking
-            charA.sprite.x += charA.vx * 3;
-            charB.sprite.x += charB.vx * 3;
+            // Push apart forcefully to completely clear the overlap and prevent stickiness/flickering
+            const overlap = 90 - dist;
+            const pushAmt = (overlap / 2) + 1;
+            if (charA.sprite.x < charB.sprite.x) {
+              charA.sprite.x -= pushAmt;
+              charB.sprite.x += pushAmt;
+            } else {
+              charA.sprite.x += pushAmt;
+              charB.sprite.x -= pushAmt;
+            }
             
             // Spawn reaction emoji at midpoint
             this.spawnReactionEmoji(charA.sprite.x + (charB.sprite.x - charA.sprite.x)/2, charA.sprite.y - 140);
@@ -60,8 +67,7 @@ class CharacterQueueManager {
       }
     }
 
-    // Sort z-indices so characters overlap naturally
-    this.stageEngine.app.stage.children.sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
+    // Manual sort removed. PIXI's sortableChildren = true handles zIndex correctly.
   }
 
   spawnReactionEmoji(x, y) {

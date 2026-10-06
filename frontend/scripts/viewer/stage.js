@@ -4,9 +4,10 @@ class StageEngine {
     this.app = new PIXI.Application({
       resizeTo: window,
       backgroundAlpha: 0,
-      antialias: true,
-      resolution: window.devicePixelRatio || 1,
-      autoDensity: true
+      antialias: false, // Turn off MSAA to save GPU
+      resolution: 1,    // Lock to 1x to prevent 4x VRAM usage on Mac/Retina
+      autoDensity: true,
+      powerPreference: 'high-performance'
     });
 
     this.container.appendChild(this.app.view);
