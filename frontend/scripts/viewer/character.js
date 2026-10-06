@@ -8,7 +8,7 @@ class StageCharacter {
     if (data.frames && data.frames.length > 0) {
       const textures = data.frames.map(b64 => PIXI.Texture.from(b64));
       this.sprite = new PIXI.AnimatedSprite(textures);
-      this.sprite.animationSpeed = 0.22; // ~14 FPS Joint Dance Motion
+      this.sprite.animationSpeed = 0.45; // Faster Dance Motion!
       this.sprite.play();
     } else {
       // Fallback single texture
@@ -36,8 +36,8 @@ class StageCharacter {
     // Exact Border Bouncing Margin (logical space)
     this.margin = 50;
 
-    // Give characters random initial velocity
-    this.vx = (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 1.5);
+    // Give characters slower, more elegant random initial velocity (less chaotic)
+    this.vx = (Math.random() > 0.5 ? 1 : -1) * (0.3 + Math.random() * 0.5);
 
     // Spawn character across the stage randomly, but keep them strictly inside bounds
     const spawnMargin = this.margin + 100; // Extra padding
@@ -46,11 +46,18 @@ class StageCharacter {
     this.sprite.x = this.x;
     this.sprite.y = this.y;
     
-    // Set zIndex based on Y position (pseudo-3D depth sorting)
-    this.sprite.zIndex = this.y;
+    // Set zIndex based on Y position + random tie-breaker to prevent flickering (Z-fighting)
+    this.sprite.zIndex = this.y + (Math.random() * 0.5);
 
     // Add to WebGL stage
     this.stageApp.stage.addChild(this.sprite);
+
+    // Auto-cleanup: Fade out gracefully after 60~90 seconds to prevent overcrowding
+    setTimeout(() => {
+      if (!this.isFadingOut) {
+        this.fadeOutAndDestroy(2000);
+      }
+    }, 60000 + Math.random() * 30000);
   }
 
   update(delta) {
