@@ -51,13 +51,6 @@ class StageCharacter {
 
     // Add to WebGL stage
     this.stageApp.stage.addChild(this.sprite);
-
-    // Auto-cleanup: Fade out gracefully after 60~90 seconds to prevent overcrowding
-    setTimeout(() => {
-      if (!this.isFadingOut) {
-        this.fadeOutAndDestroy(2000);
-      }
-    }, 60000 + Math.random() * 30000);
   }
 
   update(delta) {

@@ -25,49 +25,8 @@ class CharacterQueueManager {
 
   update(delta) {
     this.activeCharacters.forEach(char => char.update(delta));
-    
-    // Character Collision Logic
-    for (let i = 0; i < this.activeCharacters.length; i++) {
-      for (let j = i + 1; j < this.activeCharacters.length; j++) {
-        let charA = this.activeCharacters[i];
-        let charB = this.activeCharacters[j];
-        
-        // Ignore fading out characters
-        if (charA.isFadingOut || charB.isFadingOut) continue;
-        
-        let dist = Math.abs(charA.sprite.x - charB.sprite.x);
-        
-        // Hit detection (90px threshold for character width)
-        if (dist < 90) {
-          // Check if they are moving towards each other (catching up or head-on)
-          const isMovingTowards = (charA.sprite.x < charB.sprite.x && charA.vx > charB.vx) || 
-                                  (charA.sprite.x > charB.sprite.x && charA.vx < charB.vx);
-          
-          if (isMovingTowards) {
-            // Elastic Bounce (swap velocities)
-            let tempVx = charA.vx;
-            charA.vx = charB.vx;
-            charB.vx = tempVx;
-            
-            // Push apart forcefully to completely clear the overlap and prevent stickiness/flickering
-            const overlap = 90 - dist;
-            const pushAmt = (overlap / 2) + 1;
-            if (charA.sprite.x < charB.sprite.x) {
-              charA.sprite.x -= pushAmt;
-              charB.sprite.x += pushAmt;
-            } else {
-              charA.sprite.x += pushAmt;
-              charB.sprite.x -= pushAmt;
-            }
-            
-            // Spawn reaction emoji at midpoint
-            this.spawnReactionEmoji(charA.sprite.x + (charB.sprite.x - charA.sprite.x)/2, charA.sprite.y - 140);
-          }
-        }
-      }
-    }
-
-    // Manual sort removed. PIXI's sortableChildren = true handles zIndex correctly.
+    // Physical collision pushing removed. 
+    // Characters will now elegantly pass each other using their 3D Z-index depths instead of clashing chaotically!
   }
 
   spawnReactionEmoji(x, y) {
@@ -100,8 +59,8 @@ class CharacterQueueManager {
     const sprite = new PIXI.Sprite(texture);
     sprite.id = data.id; // Important for deletion
     
-    // Scale it down slightly so it's not huge
-    sprite.scale.set(0.4);
+    // Scale it down slightly so it's not huge and doesn't overlap dancers
+    sprite.scale.set(0.25);
     sprite.anchor.set(0.5);
     
     // Compute logical screen bounds
@@ -109,12 +68,12 @@ class CharacterQueueManager {
     const logicalWidth = this.stageEngine.app.screen.width / scale;
     const logicalHeight = this.stageEngine.app.screen.height / scale;
 
-    // Random position in the top 40% of the screen (Sky/Background area)
+    // Random position in the top 25% of the screen (Sky/Background area)
     const padding = 100;
     const minX = padding;
     const maxX = logicalWidth - padding;
     sprite.x = minX + Math.random() * (maxX - minX);
-    sprite.y = padding + Math.random() * (logicalHeight * 0.35);
+    sprite.y = padding + Math.random() * (logicalHeight * 0.25);
     
     // Z-index sorting for static props (they should be strictly behind the characters, but in front of background)
     sprite.zIndex = -50 + sprite.y;
