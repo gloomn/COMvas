@@ -100,8 +100,19 @@ class MetaAnimator:
                     return "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode("utf-8")
 
                 # Use ThreadPoolExecutor to parallelize I/O bound image encoding
+                frames_b64 = [None] * len(extracted_frames)
+                total_f = len(extracted_frames)
+                
                 with concurrent.futures.ThreadPoolExecutor() as executor:
-                    frames_b64 = list(executor.map(process_frame, extracted_frames))
+                    futures = {executor.submit(process_frame, frame): i for i, frame in enumerate(extracted_frames)}
+                    completed = 0
+                    for future in concurrent.futures.as_completed(futures):
+                        idx = futures[future]
+                        frames_b64[idx] = future.result()
+                        completed += 1
+                        if progress_callback and completed % 5 == 0:
+                            pct = 80 + int((completed / total_f) * 19) # 80% to 99%
+                            progress_callback(pct, f"비디오 변환 중... ({completed} / {total_f} 프레임)")
                     
             # Cleanup
             try:

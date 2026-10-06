@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (statusRes.ok) {
               const statusData = await statusRes.json();
               progressBar.style.width = `${statusData.progress}%`;
-              progressText.textContent = `${statusData.status} (${statusData.progress}%)`;
+              progressText.textContent = statusData.status;
               
               if (statusData.progress >= 100) {
                 clearInterval(pollInterval);

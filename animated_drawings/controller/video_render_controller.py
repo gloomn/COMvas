@@ -108,8 +108,8 @@ class VideoRenderController(Controller):
         
         if hasattr(self, 'progress_callback') and self.progress_callback:
             max_f = self.frames_rendered + self.frames_left_to_render
-            pct = 10 + int((self.frames_rendered / max_f) * 85)
-            self.progress_callback(pct, f"애니메이션 렌더링 중... ({self.frames_rendered}/{max_f} 프레임)")
+            pct = 10 + int((self.frames_rendered / max_f) * 70)
+            self.progress_callback(pct, f"애니메이션 렌더링 중... ({self.frames_rendered} / {max_f} 프레임)")
 
     def _cleanup_after_run_loop(self) -> None:
         logging.info(f'Rendered {self.frames_rendered} frames in {time.time()-self.run_loop_start_time} seconds.')
