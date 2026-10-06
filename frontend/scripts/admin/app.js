@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     logItem.className = `log-item ${type}`;
     const now = new Date();
     const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-    logItem.innerHTML = `<span class="log-time">[${time}]</span> <span style="color: #60a5fa; margin-right: 8px;">root@COMvas:~#</span> <span class="log-msg">${msg}</span>`;
+    logItem.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-msg">${msg}</span>`;
     logContainer.append(logItem); // Terminal style adds to bottom
     logContainer.scrollTop = logContainer.scrollHeight; // Auto scroll
     if (logContainer.children.length > 200) {

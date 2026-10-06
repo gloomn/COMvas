@@ -17,7 +17,21 @@ class StageCharacter {
     }
 
     this.sprite.anchor.set(0.5, 0.9); // Anchor at bottom center (feet)
-    this.sprite.scale.set(0.85); // Constant scale relative to 1080p base logical space
+
+    // Compute logical screen bounds relative to scale
+    const scale = this.stageApp.stage.scale.x || 1;
+    const logicalWidth = this.stageApp.screen.width / scale;
+    const logicalHeight = this.stageApp.screen.height / scale;
+
+    // Stage pseudo-3D setup (Band depth)
+    const minY = logicalHeight - 350;
+    const maxY = logicalHeight - 80;
+    this.y = minY + Math.random() * (maxY - minY);
+    
+    // Scale characters based on Y (pseudo-3D perspective: objects further back are slightly smaller)
+    // Size goes from 0.85 at the back (minY) to 1.1 at the front (maxY)
+    const perspectiveScale = 0.85 + ((this.y - minY) / (maxY - minY)) * 0.25;
+    this.sprite.scale.set(perspectiveScale);
 
     // Exact Border Bouncing Margin (logical space)
     this.margin = 50;
@@ -25,17 +39,9 @@ class StageCharacter {
     // Give characters random initial velocity
     this.vx = (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 1.5);
 
-    // Compute logical screen bounds relative to scale
-    const scale = this.stageApp.stage.scale.x || 1;
-    const logicalWidth = this.stageApp.screen.width / scale;
-    const logicalHeight = this.stageApp.screen.height / scale;
-
     // Spawn character across the stage randomly, but keep them strictly inside bounds
     const spawnMargin = this.margin + 100; // Extra padding
     this.x = spawnMargin + Math.random() * (logicalWidth - spawnMargin * 2);
-    
-    // Fixed height so they all align perfectly on the stage floor
-    this.y = logicalHeight - this.margin - 80;
     
     this.sprite.x = this.x;
     this.sprite.y = this.y;
