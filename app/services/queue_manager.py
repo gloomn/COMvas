@@ -93,7 +93,7 @@ class JetsonAIQueueManager:
             return
         payload = json.dumps(message)
         disconnected = set()
-        for ws in self.active_websockets:
+        for ws in list(self.active_websockets):
             try:
                 await ws.send_text(payload)
             except Exception:

@@ -7,7 +7,7 @@ echo "=========================================================="
 
 echo "[1/3] Installing system dependencies (ffmpeg, OpenGL, xvfb)..."
 apt-get update
-apt-get install -y ffmpeg libgl1-mesa-glx xvfb sqlite3 git
+apt-get install -y ffmpeg libgl1 libglx-mesa0 libglib2.0-0 xvfb sqlite3 git
 
 echo "[2/3] Installing Python requirements..."
 # RunPod's PyTorch image already has a perfect Python environment
