@@ -62,6 +62,75 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Auto Draw Test Stick Figure
+  const autoDrawBtn = document.getElementById('autoDrawBtn');
+  if (autoDrawBtn) {
+    autoDrawBtn.addEventListener('click', () => {
+      if (currentMode !== 'person') return;
+      
+      const ctx = pad.ctx;
+      pad.clear(); // Clear existing drawing
+      
+      ctx.strokeStyle = '#000000';
+      ctx.fillStyle = '#000000';
+      ctx.lineWidth = 15;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Head
+      ctx.beginPath();
+      ctx.arc(256, 90, 26, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Neck
+      ctx.beginPath();
+      ctx.moveTo(256, 116);
+      ctx.lineTo(256, 140);
+      ctx.stroke();
+
+      // Torso
+      ctx.beginPath();
+      ctx.moveTo(200, 160);
+      ctx.lineTo(312, 160);
+      ctx.lineTo(292, 270);
+      ctx.lineTo(220, 270);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Right Arm
+      ctx.beginPath();
+      ctx.moveTo(200, 160);
+      ctx.lineTo(140, 160);
+      ctx.lineTo(80, 160);
+      ctx.stroke();
+      
+      // Left Arm
+      ctx.beginPath();
+      ctx.moveTo(312, 160);
+      ctx.lineTo(372, 160);
+      ctx.lineTo(432, 160);
+      ctx.stroke();
+
+      // Right Leg
+      ctx.beginPath();
+      ctx.moveTo(220, 270);
+      ctx.lineTo(180, 370);
+      ctx.lineTo(150, 460);
+      ctx.stroke();
+
+      // Left Leg
+      ctx.beginPath();
+      ctx.moveTo(292, 270);
+      ctx.lineTo(332, 370);
+      ctx.lineTo(362, 460);
+      ctx.stroke();
+
+      pad.saveState();
+    });
+  }
+
   // Next Button (Switch to Skeleton Mode OR Submit if Static)
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {

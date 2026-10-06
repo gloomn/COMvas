@@ -29,8 +29,8 @@ class StageCharacter {
     this.y = minY + Math.random() * (maxY - minY);
     
     // Scale characters based on Y (pseudo-3D perspective: objects further back are slightly smaller)
-    // Size goes from 0.85 at the back (minY) to 1.1 at the front (maxY)
-    const perspectiveScale = 0.85 + ((this.y - minY) / (maxY - minY)) * 0.25;
+    // Size goes from 1.05 at the back (minY) to 1.3 at the front (maxY)
+    const perspectiveScale = 1.05 + ((this.y - minY) / (maxY - minY)) * 0.25;
     this.sprite.scale.set(perspectiveScale);
 
     // Exact Border Bouncing Margin (logical space)
