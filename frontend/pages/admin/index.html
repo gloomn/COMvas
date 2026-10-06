@@ -105,22 +105,24 @@
     #clearLogBtn:hover { background: rgba(255,255,255,0.1); color: white; }
     
     .log-container { 
-      flex: 1; padding: 25px; overflow-y: auto; font-family: 'JetBrains Mono', 'Consolas', monospace; 
-      font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px; 
+      flex: 1; padding: 25px; overflow-y: auto; font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace; 
+      font-size: 0.85rem; display: flex; flex-direction: column; gap: 4px; 
+      background-color: #050505; border: 1px solid #1f2937; border-radius: 12px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     }
     .log-item { 
-      color: #e2e8f0; word-break: break-all; line-height: 1.5; display: flex; gap: 12px; 
-      background: rgba(255,255,255,0.02); padding: 12px 16px; border-radius: 12px; border: var(--glass-border);
-      transition: 0.2s;
+      color: #34d399; word-break: break-all; line-height: 1.4; display: flex; gap: 10px; 
+      padding: 4px 8px; border-radius: 4px;
+      transition: background 0.2s;
     }
-    .log-item:hover { background: rgba(255,255,255,0.05); transform: translateX(4px); }
-    .log-time { color: #6b7280; min-width: 70px; user-select: none; font-weight: bold; }
-    .log-new { color: #34d399; }
-    .log-delete { color: #f87171; }
+    .log-item:hover { background: rgba(52, 211, 153, 0.1); }
+    .log-time { color: #6b7280; min-width: 70px; user-select: none; font-weight: normal; }
+    .log-new { color: #a855f7; }
+    .log-delete { color: #ef4444; }
     .log-server { color: #60a5fa; }
     
     .log-container::-webkit-scrollbar { width: 8px; }
-    .log-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    .log-container::-webkit-scrollbar-thumb { background: rgba(52, 211, 153, 0.2); border-radius: 4px; }
     
     @media (max-width: 768px) {
       body { height: auto; overflow: visible; }
@@ -212,16 +214,12 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
         QR 갱신
       </button>
-      <button class="btn btn-primary" id="refreshBtn" style="display: flex; align-items: center; gap: 6px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
-        데이터 동기화
-      </button>
     </div>
   </header>
   
   <div class="tabs-container" style="padding: 0 40px 20px 40px; border-bottom: var(--glass-border); display: flex; gap: 15px;">
-    <button class="tab-btn active" id="tabDashboard" style="background: rgba(255,255,255,0.1); color: white; border: var(--glass-border); padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;">📊 대시보드 (Queue & Logs)</button>
-    <button class="tab-btn" id="tabObjects" style="background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;">🎭 무대 객체 관리 (Objects)</button>
+    <button class="tab-btn active" id="tabDashboard" style="background: rgba(255,255,255,0.1); color: white; border: var(--glass-border); padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;">대시보드 (Queue & Logs)</button>
+    <button class="tab-btn" id="tabObjects" style="background: transparent; color: var(--text-dim); border: 1px solid transparent; padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;">무대 객체 관리 (Objects)</button>
   </div>
   
   <div class="container" style="flex-direction: column;">
