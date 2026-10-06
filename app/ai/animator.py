@@ -17,7 +17,7 @@ class MetaAnimator:
     def __init__(self):
         pass
 
-    def generate_dance_frames(self, char_dir: str, requested_motion: str = "random") -> list:
+    def generate_dance_frames(self, char_dir: str, requested_motion: str = "random", progress_callback=None) -> list:
         """
         Runs Meta Animated Drawings pipeline.
         Returns a list of base64 PNG frames for PIXI.AnimatedSprite.
@@ -66,7 +66,7 @@ class MetaAnimator:
 
         # Render the animation (it only takes the single mvc config path)
         try:
-            render.start(mvc_cfg_path)
+            render.start(mvc_cfg_path, progress_callback=progress_callback)
         except Exception as e:
             print(f"[Animator] Error rendering animation: {e}")
             import traceback

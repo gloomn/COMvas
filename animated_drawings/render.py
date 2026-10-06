@@ -6,8 +6,7 @@ import logging
 import sys
 
 
-def start(user_mvc_cfg_fn: str):
-
+def start(user_mvc_cfg_fn: str, progress_callback=None):
     # build cfg
     from animated_drawings.config import Config
     cfg: Config = Config(user_mvc_cfg_fn)
@@ -23,6 +22,9 @@ def start(user_mvc_cfg_fn: str):
     # create controller
     from animated_drawings.controller.controller import Controller
     controller = Controller.create_controller(cfg.controller, scene, view)
+    
+    if progress_callback:
+        controller.progress_callback = progress_callback
 
     # start the run loop
     controller.run()
