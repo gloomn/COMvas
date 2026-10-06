@@ -45,11 +45,13 @@ class JetsonAIQueueManager:
                 self.loop
             )
 
-    def start_worker(self):
-        if self.worker_task is None:
+    def start_worker(self, num_workers=3):
+        if not getattr(self, 'workers_started', False):
             self.loop = asyncio.get_running_loop()
-            self.worker_task = asyncio.create_task(self._worker_loop())
-            self.server_log("Single worker loop started.")
+            for _ in range(num_workers):
+                asyncio.create_task(self._worker_loop())
+            self.workers_started = True
+            self.server_log(f"{num_workers} concurrent worker loops started.")
 
     async def register_websocket(self, websocket: WebSocket):
         await websocket.accept()

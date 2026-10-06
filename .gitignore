@@ -2,3 +2,24 @@
 .pycache/
 __pycache__/
 *.py[cod]
+
+# COMvas Generated Data
+data/outputs/
+data/db/
+data/qr_codes/
+*.db
+*.sqlite3
+festival_sketch.db
+
+# Logs & Error files
+error_log.txt
+data/error_log.txt
+*.log
+
+# Specific AI Pipeline output files (just in case they leak outside data/)
+mask.png
+texture.png
+char_cfg.yaml
+mvc_cfg.yaml
+*.gif
+*.mp4

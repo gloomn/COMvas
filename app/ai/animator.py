@@ -8,6 +8,20 @@ from config.settings import settings
 import yaml
 import random
 import numpy as np
+import multiprocessing as mp
+
+def _render_process_worker(mvc_cfg_path, queue):
+    # This runs in a pristine main thread of a new process, keeping GLFW happy on Mac!
+    def local_callback(pct, msg):
+        queue.put((pct, msg))
+    try:
+        from animated_drawings import render
+        render.start(mvc_cfg_path, progress_callback=local_callback)
+    except Exception as e:
+        import traceback
+        queue.put(("ERROR", traceback.format_exc()))
+    finally:
+        queue.put(None)
 
 class MetaAnimator:
     """
@@ -63,9 +77,26 @@ class MetaAnimator:
         with open(mvc_cfg_path, 'w') as f:
             yaml.dump(mvc_cfg, f)
 
-        # Render the animation (it only takes the single mvc config path)
+        # Render the animation in an isolated process to allow macOS main-thread GLFW initialization
         try:
-            render.start(mvc_cfg_path, progress_callback=progress_callback)
+            ctx = mp.get_context('spawn')
+            queue = ctx.Queue()
+            p = ctx.Process(target=_render_process_worker, args=(mvc_cfg_path, queue))
+            p.start()
+            
+            while True:
+                update = queue.get()
+                if update is None:
+                    break
+                if isinstance(update, tuple) and update[0] == "ERROR":
+                    raise Exception(update[1])
+                pct, msg = update
+                if progress_callback:
+                    progress_callback(pct, msg)
+            
+            p.join()
+            if p.exitcode != 0:
+                raise Exception(f"Render process crashed with exit code {p.exitcode}")
         except Exception as e:
             print(f"[Animator] Error rendering animation: {e}")
             import traceback
