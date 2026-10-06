@@ -36,8 +36,8 @@ class StageCharacter {
     // Exact Border Bouncing Margin (logical space)
     this.margin = 50;
 
-    // Give characters elegant but slightly faster random initial velocity
-    this.vx = (Math.random() > 0.5 ? 1 : -1) * (0.4 + Math.random() * 0.8);
+    // Give characters a slower velocity so they glide elegantly (hides FPS drops)
+    this.vx = (Math.random() > 0.5 ? 1 : -1) * (0.2 + Math.random() * 0.4);
 
     // Spawn character across the stage randomly, but keep them strictly inside bounds
     const spawnMargin = this.margin + 100; // Extra padding

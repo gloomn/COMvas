@@ -4,11 +4,13 @@ class StageEngine {
     this.app = new PIXI.Application({
       resizeTo: window,
       backgroundAlpha: 0,
-      antialias: true, // Keep smooth edges
-      resolution: 1, // Lock to 1x to ensure buttery smooth 60fps on all GPUs
+      antialias: false, // Force disable MSAA (huge cause of Mac Chrome stuttering)
+      resolution: 1, 
       autoDensity: true,
       powerPreference: 'high-performance'
     });
+    // Ensure pixel snapping to prevent sub-pixel interpolation jitter
+    PIXI.settings.ROUND_PIXELS = true;
 
     this.container.appendChild(this.app.view);
     this.initBackgroundGrid();
