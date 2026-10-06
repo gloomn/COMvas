@@ -112,7 +112,7 @@ class MetaAnimator:
                         completed += 1
                         if progress_callback and completed % 5 == 0:
                             pct = 80 + int((completed / total_f) * 19) # 80% to 99%
-                            progress_callback(pct, f"비디오 변환 중... ({completed} / {total_f} 프레임)")
+                            progress_callback(pct, f"프레임 송신 준비 중... ({completed} / {total_f} 프레임)")
                     
             # Cleanup
             try:

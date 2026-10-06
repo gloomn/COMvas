@@ -29,6 +29,21 @@ class JetsonAIQueueManager:
     def update_progress(self, task_id: str, progress: int, status: str):
         self.task_progress[task_id] = {"progress": progress, "status": status}
         self.server_log(f"[Task {task_id}] {progress}% - {status}")
+        self.broadcast_queue_status()
+
+    def broadcast_queue_status(self):
+        queue_items = [{"task_id": t[0], "motion": t[3]} for t in list(self.queue._queue)]
+        active_tasks = {k: v for k, v in self.task_progress.items() if v["progress"] < 100}
+        message = {
+            "type": "QUEUE_STATUS",
+            "active_tasks": active_tasks,
+            "queue": queue_items
+        }
+        if self.loop is not None and self.loop.is_running():
+            asyncio.run_coroutine_threadsafe(
+                self.broadcast(message), 
+                self.loop
+            )
 
     def start_worker(self):
         if self.worker_task is None:
@@ -88,6 +103,7 @@ class JetsonAIQueueManager:
         self.update_progress(task_id, 0, "대기열 진입 중...")
         await self.queue.put((task_id, image_bytes, custom_skeleton, motion))
         self.server_log(f"Enqueued task {task_id}. Queue size: {self.queue.qsize()}")
+        self.broadcast_queue_status()
 
     async def _worker_loop(self):
         while True:

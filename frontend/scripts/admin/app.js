@@ -167,6 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
           addLog(`> EVENT: QR코드 갱신 브로드캐스트 전송됨`, 'log-server');
         } else if (msg.type === 'QR_SCANNED' || msg.event === 'QR_SCANNED') {
           addLog(`> EVENT: 사용자 QR 스캔 감지됨`, 'log-server');
+        } else if (msg.type === 'QUEUE_STATUS' || msg.event === 'QUEUE_STATUS') {
+          renderQueueUI(msg.active_tasks, msg.queue);
         }
       } catch(e) {}
     };
@@ -175,6 +177,49 @@ document.addEventListener('DOMContentLoaded', () => {
       addLog("> WS_DISCONNECTED: 실시간 연결 끊김. 3초 후 재연결 시도...", "log-delete");
       setTimeout(connectWebSocket, 3000);
     };
+  }
+  
+  const queueContainer = document.getElementById('adminQueueContainer');
+  function renderQueueUI(active_tasks, queue_items) {
+    if (!queueContainer) return;
+    queueContainer.innerHTML = '';
+    let hasItems = false;
+    
+    for (const [taskId, taskInfo] of Object.entries(active_tasks || {})) {
+      hasItems = true;
+      const progress = taskInfo.progress;
+      const status = taskInfo.status;
+      const el = document.createElement('div');
+      el.style = 'background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 12px;';
+      el.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; font-weight: bold;">
+          <span style="color: #c084fc;">▶ [작업 중] ${taskId.substring(0,8)}...</span>
+          <span style="color: #e9d5ff;">${progress}%</span>
+        </div>
+        <div style="font-size: 0.8rem; color: #a855f7; margin-bottom: 8px;">${status}</div>
+        <div style="width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden;">
+          <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, #a855f7, #ec4899); transition: width 0.3s;"></div>
+        </div>
+      `;
+      queueContainer.appendChild(el);
+    }
+    
+    (queue_items || []).forEach((item, index) => {
+      hasItems = true;
+      const el = document.createElement('div');
+      el.style = 'background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; opacity: 0.7;';
+      el.innerHTML = `
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+          <span style="color: #94a3b8;">⏳ [대기 #${index+1}] ${item.task_id.substring(0,8)}...</span>
+          <span style="color: #64748b;">${item.motion}</span>
+        </div>
+      `;
+      queueContainer.appendChild(el);
+    });
+    
+    if (!hasItems) {
+      queueContainer.innerHTML = '<div style="color: var(--text-dim); font-size: 0.9rem; text-align: center;">현재 진행 중인 작업이 없습니다.</div>';
+    }
   }
   
   connectWebSocket();

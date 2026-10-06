@@ -16,7 +16,7 @@
     <svg style="margin-bottom: 20px; animation: spin 1s linear infinite; color: #a855f7;" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
     <div id="loadingMessage" style="color: white; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px;">처리 중...</div>
     
-    <div id="progressContainer" class="hidden" style="width: 80%; max-width: 300px; text-align: center;">
+    <div id="progressContainer" class="hidden" style="width: 80%; max-width: 300px; text-align: center; margin: 0 auto;">
       <div style="font-size: 0.95rem; color: #e9d5ff; margin-bottom: 8px; font-weight: 700;" id="progressText">대기열 진입 중...</div>
       <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.2); border-radius: 5px; overflow: hidden; position: relative;">
         <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #a855f7, #ec4899); transition: width 0.3s ease;"></div>
@@ -70,8 +70,6 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fbbf24;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
         <span><b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>
       </div>
-
-    <!-- Removed progress container from here -->
     </main>
 
     <!-- Toolbar Controls -->
@@ -129,12 +127,6 @@
         <select id="motionSelect"
           style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; font-size: 0.95rem; background: #fff; color: #333; outline: none; cursor: pointer;">
           <option value="random">🎲 아무거나 랜덤 (Random)</option>
-          <option value="jumping">🏃‍♂️ 달리기 (Running Jump)</option>
-          <option value="jumping_jacks">🤸 점핑잭 (Jumping Jacks)</option>
-          <option value="dab">😎 댑 댄스 (Dab Dance)</option>
-          <option value="jesse_dance">🕺 제시 댄스 (Jesse Dance)</option>
-          <option value="wave_hello">👋 인사하기 (Wave Hello)</option>
-          <option value="zombie">🧟 좀비 워킹 (Zombie Walk)</option>
           <option value="breakdance_freeze">🥶 비보이 프리즈 (B-boy Freeze)</option>
           <option value="flair">🌪️ 플레어 (Flair)</option>
           <option value="hiphopdancing">🧢 힙합 댄스 (Hip Hop)</option>
