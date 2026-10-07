@@ -66,16 +66,22 @@
         </div>
       </div>
 
-      <div class="guide-tip" id="guideTip" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fbbf24;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        <span><b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>
+      <div class="guide-tip" id="guideTip" style="display: flex; align-items: center; justify-content: center; gap: 6px; flex-direction: column;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #fbbf24;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span><b>팁:</b> 화면의 <b>'대자' 실루엣 가이드라인</b>에 맞춰 인물의 머리, 팔, 다리를 그려주세요!</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #60a5fa;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span><b>팁:</b> 전광판 배경이 어두우니 <b>밝은색</b>으로 그리시면 무대에서 훨씬 잘 보입니다!</span>
+        </div>
       </div>
     </main>
 
     <!-- Toolbar Controls -->
     <footer class="controls" id="drawingControls">
       <div class="color-palette">
-        <button class="color-btn active" style="background-color: #000000;" data-color="#000000"></button>
+        <button class="color-btn active" style="background-color: #64748b;" data-color="#64748b"></button>
         <button class="color-btn" style="background-color: #ff3b30;" data-color="#ff3b30"></button>
         <button class="color-btn" style="background-color: #007aff;" data-color="#007aff"></button>
 
@@ -159,9 +165,9 @@
   </div>
 
   <script src="/frontend/scripts/pad/silhouette.js?v=3"></script>
-  <script src="/frontend/scripts/pad/canvas.js?v=6"></script>
+  <script src="/frontend/scripts/pad/canvas.js?v=7"></script>
   <script src="/frontend/scripts/pad/skeleton_ui.js?v=4"></script>
-  <script src="/frontend/scripts/pad/app.js?v=12"></script>
+  <script src="/frontend/scripts/pad/app.js?v=13"></script>
 </body>
 
 </html>

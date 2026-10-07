@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const ctx = pad.ctx;
       pad.clear(); // Clear existing drawing
       
-      ctx.strokeStyle = '#000000';
-      ctx.fillStyle = '#000000';
+      ctx.strokeStyle = '#64748b';
+      ctx.fillStyle = '#64748b';
       ctx.lineWidth = 15;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
