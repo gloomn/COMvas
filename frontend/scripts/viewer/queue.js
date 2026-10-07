@@ -59,8 +59,8 @@ class CharacterQueueManager {
     const sprite = new PIXI.Sprite(texture);
     sprite.id = data.id; // Important for deletion
     
-    // Scale it down slightly so it's not huge and doesn't overlap dancers
-    sprite.scale.set(0.25);
+    // Scale it down slightly so it's not huge and doesn't overlap dancers, but big enough to see
+    sprite.scale.set(0.35);
     sprite.anchor.set(0.5);
     
     // Compute logical screen bounds
