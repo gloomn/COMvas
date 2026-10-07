@@ -105,8 +105,9 @@ class CharacterQueueManager {
   }
 
   removeObject(id) {
+    const targetId = String(id);
     // Try to remove character
-    const charIndex = this.activeCharacters.findIndex(c => c.id === id);
+    const charIndex = this.activeCharacters.findIndex(c => String(c.id) === targetId);
     if (charIndex !== -1) {
       const char = this.activeCharacters[charIndex];
       char.fadeOutAndDestroy(500, () => {

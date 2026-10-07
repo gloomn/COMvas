@@ -130,16 +130,23 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', async (e) => {
           const id = e.target.getAttribute('data-id');
           if (confirm('정말 삭제하시겠습니까? 무대에서 즉시 사라집니다.')) {
+            // Instantly remove from UI for fast UX
+            const card = e.target.closest('.card');
+            if (card) card.remove();
+            
             addLog(`> DELETE_CMD: ${id}`, 'log-delete');
-            await fetch('/api/v1/admin/delete', {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + adminToken 
-              },
-              body: JSON.stringify({ id })
-            });
-            setTimeout(loadObjects, 500);
+            try {
+              await fetch('/api/v1/admin/delete', {
+                method: 'POST',
+                headers: { 
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + adminToken 
+                },
+                body: JSON.stringify({ id })
+              });
+            } catch (err) {
+              console.error(err);
+            }
           }
         });
       });

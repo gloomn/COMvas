@@ -114,8 +114,8 @@ class JetsonAIQueueManager:
                     
         # Remove deleted objects from recent list
         if event_type == "DELETE_OBJECT":
-            obj_id = message.get("data", {}).get("id")
-            self.recent_objects = [obj for obj in self.recent_objects if obj["id"] != obj_id]
+            obj_id = str(message.get("data", {}).get("id"))
+            self.recent_objects = [obj for obj in self.recent_objects if str(obj["id"]) != obj_id]
             obj_path = f"data/objects/{obj_id}.json"
             if os.path.exists(obj_path):
                 os.remove(obj_path)
