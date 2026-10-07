@@ -29,3 +29,10 @@ class ProcessingTask(Base):
     error_message = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     completed_at = Column(DateTime, nullable=True)
+
+class ArchiveImage(Base):
+    __tablename__ = "archive_images"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    image_type = Column(String(32), nullable=False) # "CHARACTER" or "STATIC"
+    image_base64 = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

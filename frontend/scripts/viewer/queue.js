@@ -71,7 +71,8 @@ class CharacterQueueManager {
     // Random position in the top 25% of the screen (Sky/Background area)
     const padding = 100;
     const minX = padding;
-    const maxX = logicalWidth - padding;
+    // Prevent overlapping with the COMvas logo on the top right
+    const maxX = logicalWidth - Math.max(padding, 400);
     sprite.x = minX + Math.random() * (maxX - minX);
     sprite.y = padding + Math.random() * (logicalHeight * 0.25);
     

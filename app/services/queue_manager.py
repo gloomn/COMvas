@@ -97,7 +97,7 @@ class JetsonAIQueueManager:
                 }
                 self.recent_objects.append(new_obj)
                 
-                # Persist to disk asynchronously
+                # Persist to disk asynchronously for stage memory
                 def save_obj():
                     try:
                         with open(f"data/objects/{obj_id}.json", "w") as f:
@@ -105,6 +105,22 @@ class JetsonAIQueueManager:
                     except Exception as e:
                         print(f"Error saving object {obj_id}: {e}")
                 asyncio.create_task(asyncio.to_thread(save_obj))
+                
+                # Permanently archive to DB
+                def archive_to_db():
+                    try:
+                        from app.core.database import SessionLocal
+                        from app.db.models import ArchiveImage
+                        db = SessionLocal()
+                        db.add(ArchiveImage(
+                            image_type="STATIC" if event_type == "NEW_STATIC" else "CHARACTER",
+                            image_base64=thumb
+                        ))
+                        db.commit()
+                        db.close()
+                    except Exception as e:
+                        print(f"Error archiving to DB: {e}")
+                asyncio.create_task(asyncio.to_thread(archive_to_db))
                 
                 # Separate limits: max 15 characters, max 15 statics
                 chars = [obj for obj in self.recent_objects if obj["type"] == "CHARACTER"]

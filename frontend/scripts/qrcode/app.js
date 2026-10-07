@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlDisplay = document.getElementById('urlDisplay');
 
   async function fetchAndRenderQR() {
+    const overlay = document.getElementById('qrLoadingOverlay');
+    if (overlay) overlay.style.display = 'flex';
+    
+    // Give a small delay so users notice the refresh
+    await new Promise(r => setTimeout(r, 600));
+
     try {
       const res = await fetch('/api/v1/auth/token/generate', { method: 'POST' });
       if (res.ok) {
@@ -23,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.error('[QRCodePage] Error fetching token:', err);
+    } finally {
+      if (overlay) overlay.style.display = 'none';
     }
   }
 
