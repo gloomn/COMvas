@@ -185,10 +185,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const wsUrl = `${protocol}//${window.location.host}/ws/stage`;
   
   let ws;
+  let isReconnecting = false;
   function connectWebSocket() {
     ws = new WebSocket(wsUrl);
     
     ws.onopen = () => {
+      if (isReconnecting) {
+        window.location.reload();
+      }
       addLog("> WS_CONNECTED: 실시간 시스템 연결됨", "log-new");
     };
     
@@ -217,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     ws.onclose = () => {
+      isReconnecting = true;
       addLog("> WS_DISCONNECTED: 실시간 연결 끊김. 3초 후 재연결 시도...", "log-delete");
       setTimeout(connectWebSocket, 3000);
     };

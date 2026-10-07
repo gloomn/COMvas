@@ -35,10 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Connect WebSocket to auto-refresh when drawing is submitted
+  let isReconnecting = false;
   function initWebSocket() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws/stage`;
     const ws = new WebSocket(wsUrl);
+
+    ws.onopen = () => {
+      if (isReconnecting) {
+        window.location.reload();
+      }
+    };
 
     ws.onmessage = (event) => {
       try {
@@ -56,7 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {}
     };
 
-    ws.onclose = () => setTimeout(initWebSocket, 3000);
+    ws.onclose = () => {
+      isReconnecting = true;
+      setTimeout(initWebSocket, 3000);
+    };
   }
 
   // Initial load

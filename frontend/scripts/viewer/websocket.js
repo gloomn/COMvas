@@ -1,3 +1,4 @@
+let isReconnecting = false;
 function connectStageWebSocket() {
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   const wsUrl = `${protocol}//${window.location.host}/ws/stage`;
@@ -6,6 +7,9 @@ function connectStageWebSocket() {
   const ws = new WebSocket(wsUrl);
 
   ws.onopen = () => {
+    if (isReconnecting) {
+      window.location.reload();
+    }
     console.log('[StageWS] WebSocket Connected to Jetson Stage Server.');
   };
 
@@ -32,6 +36,7 @@ function connectStageWebSocket() {
   };
 
   ws.onclose = () => {
+    isReconnecting = true;
     console.warn('[StageWS] WebSocket disconnected. Retrying in 3 seconds...');
     setTimeout(connectStageWebSocket, 3000);
   };
