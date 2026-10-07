@@ -106,9 +106,23 @@ class JetsonAIQueueManager:
                         print(f"Error saving object {obj_id}: {e}")
                 asyncio.create_task(asyncio.to_thread(save_obj))
                 
-                if len(self.recent_objects) > 50:
-                    old_obj = self.recent_objects.pop(0)
-                    old_path = f"data/objects/{old_obj['id']}.json"
+                # Separate limits: max 15 characters, max 15 statics
+                chars = [obj for obj in self.recent_objects if obj["type"] == "CHARACTER"]
+                statics = [obj for obj in self.recent_objects if obj["type"] == "STATIC"]
+                
+                while len(chars) > 15:
+                    old_char = chars.pop(0)
+                    if old_char in self.recent_objects:
+                        self.recent_objects.remove(old_char)
+                    old_path = f"data/objects/{old_char['id']}.json"
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
+                        
+                while len(statics) > 15:
+                    old_static = statics.pop(0)
+                    if old_static in self.recent_objects:
+                        self.recent_objects.remove(old_static)
+                    old_path = f"data/objects/{old_static['id']}.json"
                     if os.path.exists(old_path):
                         os.remove(old_path)
                     
