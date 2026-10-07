@@ -17,6 +17,19 @@ class JetsonAIQueueManager:
         self.task_progress = {}
         self.recent_objects = []
         self.loop = None
+        
+        # Load persisted objects from disk
+        import os
+        os.makedirs("data/objects", exist_ok=True)
+        try:
+            files = [f for f in os.listdir("data/objects") if f.endswith(".json")]
+            files.sort(key=lambda x: os.path.getmtime(os.path.join("data/objects", x)))
+            for fname in files:
+                with open(os.path.join("data/objects", fname), "r") as f:
+                    self.recent_objects.append(json.load(f))
+            self.recent_objects = self.recent_objects[-50:]
+        except Exception as e:
+            print(f"Error loading persisted objects: {e}")
 
     def server_log(self, message: str):
         print(message)
@@ -64,6 +77,7 @@ class JetsonAIQueueManager:
 
     async def broadcast(self, message: dict):
         """Broadcast message to all connected Stage Display Viewers."""
+        import os
         
         # Track objects for Admin and Stage restoration
         event_type = message.get("type") or message.get("event")
@@ -75,19 +89,36 @@ class JetsonAIQueueManager:
                 if not thumb and data.get("frames"):
                     thumb = data.get("frames")[0]
                 
-                self.recent_objects.append({
+                new_obj = {
                     "id": obj_id,
                     "type": "STATIC" if event_type == "NEW_STATIC" else "CHARACTER",
                     "thumbnail": thumb,
                     "full_message": message # Store full payload for Stage Viewer refresh
-                })
+                }
+                self.recent_objects.append(new_obj)
+                
+                # Persist to disk asynchronously
+                def save_obj():
+                    try:
+                        with open(f"data/objects/{obj_id}.json", "w") as f:
+                            json.dump(new_obj, f)
+                    except Exception as e:
+                        print(f"Error saving object {obj_id}: {e}")
+                asyncio.create_task(asyncio.to_thread(save_obj))
+                
                 if len(self.recent_objects) > 50:
-                    self.recent_objects.pop(0)
+                    old_obj = self.recent_objects.pop(0)
+                    old_path = f"data/objects/{old_obj['id']}.json"
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
                     
         # Remove deleted objects from recent list
         if event_type == "DELETE_OBJECT":
             obj_id = message.get("data", {}).get("id")
             self.recent_objects = [obj for obj in self.recent_objects if obj["id"] != obj_id]
+            obj_path = f"data/objects/{obj_id}.json"
+            if os.path.exists(obj_path):
+                os.remove(obj_path)
 
         if not self.active_websockets:
             return
