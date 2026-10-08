@@ -49,11 +49,32 @@ async def stage_websocket_endpoint(websocket: WebSocket):
 
 # HTML Page Routes
 @app.get("/draw")
-async def get_drawing_pad():
+async def get_drawing_pad(token: str = None, db: Session = Depends(get_db)):
+    from app.db.models import Token, TokenStatus
+    from fastapi.responses import RedirectResponse
+    
+    if token:
+        db_token = db.query(Token).filter(Token.value == token).first()
+        # If someone already scanned it (status == SCANNED) or used it, redirect
+        if not db_token or db_token.status != TokenStatus.ACTIVE:
+            return RedirectResponse(url="/expired")
+        
+        # Mark as scanned so the next person gets rejected
+        db_token.status = TokenStatus.SCANNED
+        db.commit()
+
     # When a user scans the QR code and visits this page, let the QR screen know to refresh!
     await queue_manager.broadcast({"event": "QR_SCANNED"})
     pad_html = os.path.join(frontend_dir, "pages", "pad", "index.html")
     return FileResponse(pad_html)
+
+@app.get("/expired")
+async def get_expired_page():
+    return FileResponse(os.path.join(frontend_dir, "pages", "expired", "index.html"))
+
+@app.get("/success")
+async def get_success_page():
+    return FileResponse(os.path.join(frontend_dir, "pages", "success", "index.html"))
 
 @app.get("/viewer")
 async def get_stage_viewer():

@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentMode === 'static' || data.status === 'COMPLETED') {
           progressBar.style.width = `100%`;
           progressText.textContent = "🎉 전송 완료! 무대를 확인하세요!";
-          setTimeout(() => window.location.href = "about:blank", 2000);
+          setTimeout(() => window.location.href = "/success", 2000);
           return;
         }
 
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               if (statusData.progress >= 100) {
                 clearInterval(pollInterval);
                 progressText.textContent = "🎉 전송 완료! 무대를 확인하세요!";
-                setTimeout(() => window.location.href = "about:blank", 2000);
+                setTimeout(() => window.location.href = "/success", 2000);
               }
             }
           } catch (e) { console.error("Polling error:", e); }

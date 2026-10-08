@@ -27,7 +27,7 @@ def check_token_validity(db: Session, token_str: str) -> bool:
     token = db.query(Token).filter(Token.value == token_str).first()
     if not token:
         return False
-    if token.status != TokenStatus.ACTIVE:
+    if token.status not in [TokenStatus.ACTIVE, TokenStatus.SCANNED]:
         return False
     if token.expires_at < datetime.utcnow():
         token.status = TokenStatus.EXPIRED
@@ -41,7 +41,7 @@ def verify_and_consume_token(db: Session, token_str: str) -> bool:
     Returns True if token was valid and consumed, False otherwise.
     """
     token = db.query(Token).filter(Token.value == token_str).with_for_update().first()
-    if not token or token.status != TokenStatus.ACTIVE or token.expires_at < datetime.utcnow():
+    if not token or token.status not in [TokenStatus.ACTIVE, TokenStatus.SCANNED] or token.expires_at < datetime.utcnow():
         if token and token.expires_at < datetime.utcnow():
             token.status = TokenStatus.EXPIRED
             db.commit()

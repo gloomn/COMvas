@@ -7,6 +7,7 @@ Base = declarative_base()
 
 class TokenStatus(str, enum.Enum):
     ACTIVE = "ACTIVE"
+    SCANNED = "SCANNED"
     USED = "USED"
     EXPIRED = "EXPIRED"
 
