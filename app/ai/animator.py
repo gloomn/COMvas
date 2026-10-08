@@ -42,7 +42,14 @@ class MetaAnimator:
         available_motions = {
             'gangnamstyle': ('motion/gangnamstyle.yaml', 'retarget/mixamo_standard.yaml'),
             'bellydance': ('motion/bellydance.yaml', 'retarget/mixamo_standard.yaml'),
-            'wave': ('motion/wave.yaml', 'retarget/mixamo_standard.yaml')
+            'wave': ('motion/wave.yaml', 'retarget/mixamo_standard.yaml'),
+            'wave2': ('motion/wave2.yaml', 'retarget/mixamo_standard.yaml'),
+            'hiphopdancing': ('motion/hiphopdancing.yaml', 'retarget/mixamo_standard.yaml'),
+            'macarena': ('motion/macarena.yaml', 'retarget/mixamo_standard.yaml'),
+            'ymcadance': ('motion/ymcadance.yaml', 'retarget/mixamo_standard.yaml'),
+            'armshiphopdance': ('motion/armshiphopdance.yaml', 'retarget/mixamo_standard.yaml'),
+            'wavehiphopdance': ('motion/wavehiphopdance.yaml', 'retarget/mixamo_standard.yaml'),
+            'dancingtwerk': ('motion/dancingtwerk.yaml', 'retarget/mixamo_standard.yaml')
         }
         
         # Select motion
