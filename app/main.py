@@ -1,6 +1,8 @@
 import os
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
+from sqlalchemy.orm import Session
+from app.api.deps import get_db
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from app.core.database import init_db
