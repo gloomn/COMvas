@@ -118,5 +118,5 @@ pip install -r requirements.txt
 ---
 
 <div align="center">
-  <p><strong>Developed by Semicolon 2026</strong></p>
+  <p><strong>Developed by Semicolon 2026(LeeKiJoon)</strong></p>
 </div>
